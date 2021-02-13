@@ -1,0 +1,10 @@
+.form-section {
+  @apply  rounded-md border border-gray-200 p-5;
+}
+
+form {
+  @apply flex flex-col gap-y-5;
+}
+.form-item {
+  @apply flex flex-col gap-y-2;
+}

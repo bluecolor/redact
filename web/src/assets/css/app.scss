@@ -1,0 +1,36 @@
+@import '@/assets/css/page.scss';
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;200&family=Roboto:ital,wght@0,100;0,300;0,400;1,100;1,300&display=swap');
+
+html, body {
+  height: 100%;
+  font-weight: 300;
+  font-family: 'Roboto', sans-serif;
+}
+
+.text-base {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300 !important;
+}
+
+.beauty-scroll{
+  scrollbar-color: green red;
+  scrollbar-width: thin;
+  -ms-overflow-style:none;
+  position: relative;
+}
+
+.beauty-scroll::-webkit-scrollbar {
+  width: 5px;
+  height: 1px;
+}
+.beauty-scroll::-webkit-scrollbar {
+  border-radius: 3px;
+  background: gray;
+}
+
+.beauty-scroll::-webkit-scrollbar {
+  box-shadow: inset 0 0 1px rgba(0,0,0,0);
+  -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0);
+  border-radius: 3px;
+}

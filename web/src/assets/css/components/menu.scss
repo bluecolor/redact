@@ -1,0 +1,8 @@
+.menu {
+  @apply  p-2 ring-1 ring-black ring-opacity-5 shadow-lg w-64
+    rounded-md mt-3 absolute right-0 origin-top-right text-left;
+
+  .item {
+    @apply rounded-md hover:bg-blue-200 cursor-pointer;
+  }
+}
