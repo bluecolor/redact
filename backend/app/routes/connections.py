@@ -52,7 +52,7 @@ def update(
     return schemas.Connection.from_orm(conn)
 
 
-@router.get("/connections/{id}", response_model=schemas.Connection)
+@router.delete("/connections/{id}", response_model=schemas.Connection)
 def destroy(id: int, db: Session = Depends(get_db)):
     connection = (
         db.query(models.Connection).filter(models.Connection.id == id).first()

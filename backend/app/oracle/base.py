@@ -15,6 +15,15 @@ def fetchall(cursor):
     return rows
 
 
+def queryall(connection: models.Connection, query: str) -> Any:
+    with connect(connection=connection) as conn:
+        cursor = conn.cursor()
+        cursor.execute(query)
+        result = fetchall(cursor=cursor)
+        cursor.close()
+    return result
+
+
 def ping(connection: models.Connection):
     result = False
     with connect(connection) as conn:
