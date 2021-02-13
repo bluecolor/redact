@@ -9,21 +9,42 @@ from .base import callproc, queryall
 
 
 DBMS_REDACT = dict(
-    none=0,
-    full=1,
-    partial=2,
-    format_preserving=3,
-    random=4,
-    regexp=5,
-    nullify=6,
-    regexp_width=7,
-    add_column=1,
-    drop_column=2,
-    modify_expression=3,
-    modify_column=4,
-    set_policy_description=6,
-    set_column_description=6,
+    NONE=0,
+    FULL=1,
+    PARTIAL=2,
+    FORMAT_PRESERVING=3,
+    RANDOM=4,
+    REGEXP=5,
+    NULLIFY=6,
+    REGEXP_WIDTH=7,
+    ADD_COLUMN=1,
+    DROP_COLUMN=2,
+    MODIFY_EXPRESSION=3,
+    MODIFY_COLUMN=4,
+    SET_POLICY_DESCRIPTION=6,
+    SET_COLUMN_DESCRIPTION=6,
 )
+
+
+def get_function_types() -> List[schemas.RedactFunctionTypeOut]:
+    return parse_obj_as(
+        List[schemas.RedactFunctionTypeOut],
+        [
+            dict(function_type=DBMS_REDACT["NONE"], name="NONE"),
+            dict(function_type=DBMS_REDACT["FULL"], name="FULL"),
+            dict(function_type=DBMS_REDACT["PARTIAL"], name="PARTIAL"),
+            dict(
+                function_type=DBMS_REDACT["FORMAT_PRESERVING"],
+                name="FORMAT_PRESERVING",
+            ),
+            dict(function_type=DBMS_REDACT["RANDOM"], name="RANDOM",),
+            dict(function_type=DBMS_REDACT["REGEXP"], name="REGEXP",),
+            dict(function_type=DBMS_REDACT["NULLIFY"], name="NULLIFY",),
+            dict(
+                function_type=DBMS_REDACT["REGEXP_WIDTH"], name="REGEXP_WIDTH",
+            ),
+        ],
+    )
 
 
 def get_policies(

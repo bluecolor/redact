@@ -10,6 +10,14 @@ from app.database import get_db
 from app.oracle import redact
 
 
+@router.get(
+    "/redact/function_types",
+    response_model=List[schemas.RedactFunctionTypeOut],
+)
+def get_function_types() -> List[schemas.RedactFunctionTypeOut]:
+    return redact.get_function_types()
+
+
 @router.post(
     "/connections/{conn_id}/redact/policies", response_model=bool,
 )

@@ -85,3 +85,9 @@ class RedactionColumnOut(BaseModel):
     regexp_occurance: Optional[int]
     regexp_match_parameter: Optional[str]
     column_description: Optional[str]
+
+
+class RedactFunctionTypeOut(BaseModel):
+    function_type: int
+    name: str
+    description: Optional[str]
