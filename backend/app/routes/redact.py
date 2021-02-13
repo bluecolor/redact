@@ -1,9 +1,10 @@
-from typing import List
+from typing import List, Optional
 from fastapi import Depends
 from sqlalchemy.orm import Session
 import app.models.orm as models
 from app.models.orm.connection import Connection
 import app.models.pydantic as schemas
+from app.models.pydantic.redact import Policy
 from .base import router
 from app.database import get_db
 from app.oracle import redact
@@ -18,6 +19,48 @@ def add_policy(
     connection = db.query(models.Connection).get(conn_id)
     redact.add_policy(connection, policy.dict())
     return True
+
+
+@router.get(
+    "/connections/{conn_id}/redact/policies",
+    response_model=List[schemas.RedactionPolicyOut],
+)
+def get_policies(
+    conn_id: int,
+    owner: Optional[str] = None,
+    table_name: Optional[str] = None,
+    db: Session = Depends(get_db),
+) -> List[schemas.RedactionPolicyOut]:
+    connection = db.query(models.Connection).get(conn_id)
+    return redact.get_policies(connection, owner=owner, table_name=table_name)
+
+
+@router.get(
+    "/connections/{conn_id}/redact/expressions",
+    response_model=List[schemas.RedactionExpressionOut],
+)
+def get_expressions(
+    conn_id: int,
+    object_owner: Optional[str] = None,
+    object_name: Optional[str] = None,
+    db: Session = Depends(get_db),
+) -> List[schemas.RedactionExpressionOut]:
+    connection = db.query(models.Connection).get(conn_id)
+    return redact.get_expressions(connection, object_owner, object_name)
+
+
+@router.get(
+    "/connections/{conn_id}/redact/columns",
+    response_model=List[schemas.RedactionColumnOut],
+)
+def get_columns(
+    conn_id: int,
+    object_owner: Optional[str] = None,
+    object_name: Optional[str] = None,
+    db: Session = Depends(get_db),
+) -> List[schemas.RedactionColumnOut]:
+    connection = db.query(models.Connection).get(conn_id)
+    return redact.get_columns(connection, object_owner, object_name)
 
 
 @router.delete(

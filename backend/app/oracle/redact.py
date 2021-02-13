@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Optional
 
 from pydantic import parse_obj_as
 from .base import connect
@@ -26,11 +26,37 @@ DBMS_REDACT = dict(
 )
 
 
-def get_redaction_policies(
-    connection: models.Connection, owner: str = None, table: str = None
-) -> Any:
-    query = q.redaction_policies(owner=owner, table=table)
-    return parse_obj_as(List[schemas.Policy], queryall(connection, query))
+def get_policies(
+    connection: models.Connection,
+    owner: Optional[str] = None,
+    table_name: Optional[str] = None,
+) -> List[schemas.RedactionPolicyOut]:
+    query = q.redaction_policies(owner=owner, table_name=table_name)
+    return parse_obj_as(
+        List[schemas.RedactionPolicyOut], queryall(connection, query)
+    )
+
+
+def get_expressions(
+    connection: models.Connection,
+    object_owner: Optional[str] = None,
+    object_name: Optional[str] = None,
+) -> List[schemas.RedactionExpressionOut]:
+    query = q.redaction_expressions(object_owner, object_name)
+    return parse_obj_as(
+        List[schemas.RedactionExpressionOut], queryall(connection, query)
+    )
+
+
+def get_columns(
+    connection: models.Connection,
+    object_owner: Optional[str] = None,
+    object_name: Optional[str] = None,
+) -> List[schemas.RedactionColumnOut]:
+    query = q.redaction_columns(object_owner, object_name)
+    return parse_obj_as(
+        List[schemas.RedactionColumnOut], queryall(connection, query)
+    )
 
 
 def add_policy(connection: models.Connection, policy: dict):

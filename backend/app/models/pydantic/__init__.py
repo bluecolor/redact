@@ -13,4 +13,7 @@ from .redact import (
     CreatePolicyExpressionIn,
     ApplyPolicyExprToColIn,
     UpdatePolicyExpressionIn,
+    RedactionPolicyOut,
+    RedactionExpressionOut,
+    RedactionColumnOut,
 )
