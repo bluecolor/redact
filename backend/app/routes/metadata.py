@@ -13,9 +13,9 @@ from app.oracle import metadata as md
     "/connections/{conn_id}/metadata/tables",
     response_model=List[schemas.Table],
 )
-def tables(conn_id: int, db: Session = Depends(get_db)):
+def tables(conn_id: int, owner: Optional[str], db: Session = Depends(get_db)):
     conn = db.query(models.Connection).get(conn_id)
-    return md.get_all_tables(connection=conn)
+    return md.get_all_tables(connection=conn, owner=owner)
 
 
 @router.get(

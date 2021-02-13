@@ -10,11 +10,11 @@ from app.oracle import redact
 
 
 @router.post(
-    "/connections/{conn_id}/redact/policy",
-    response_model=List[schemas.Policy],
+    "/connections/{conn_id}/redact/policies", response_model=bool,
 )
 def add_policy(
     policy: schemas.PolicyIn, conn_id: int, db: Session = Depends(get_db),
 ):
     connection = db.query(models.Connection).get(conn_id)
-    return redact.add_policy(connection, policy.dict())
+    redact.add_policy(connection, policy.dict())
+    return True

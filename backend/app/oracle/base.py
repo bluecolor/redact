@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 import app.models.orm as models
 import cx_Oracle
 
@@ -32,3 +32,13 @@ def ping(connection: models.Connection):
         except:
             result = False
     return result
+
+
+def callproc(
+    connection: models.Connection, proc: str, params: Optional[dict] = dict()
+) -> Any:
+    with connect(connection) as conn:
+        cursor = conn.cursor()
+        print(params)
+        cursor.callproc(proc, keywordParameters=params)
+        cursor.close()

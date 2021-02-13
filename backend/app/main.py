@@ -9,7 +9,7 @@ from starlette.datastructures import Secret
 
 from app.app import app
 from app.routes import router
-from app.routes import connections, users, metadata
+from app.routes import connections, users, metadata, redact
 
 app.include_router(router, prefix="/api/v1")
 
