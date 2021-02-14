@@ -1,7 +1,7 @@
 from typing import Any, List, Optional
 from .base import connect, fetchall, queryall
 import app.models.orm as models
-import app.models.pydantic as schemas
+import app.models.schemas as schemas
 from . import queries as q
 from pydantic import parse_obj_as
 

@@ -1,5 +1,5 @@
 import app.models.orm as model
-from app.models.pydantic.user import User, UserCreateIn
+from app.models.schemas.user import User, UserCreateIn
 from .base import router
 
 

@@ -3,7 +3,7 @@ from typing import Any, List, Optional
 from pydantic import parse_obj_as
 from .base import connect
 import app.models.orm as models
-import app.models.pydantic as schemas
+import app.models.schemas as schemas
 from . import queries as q
 from .base import callproc, queryall
 
@@ -21,7 +21,7 @@ DBMS_REDACT = dict(
     DROP_COLUMN=2,
     MODIFY_EXPRESSION=3,
     MODIFY_COLUMN=4,
-    SET_POLICY_DESCRIPTION=6,
+    SET_POLICY_DESCRIPTION=5,
     SET_COLUMN_DESCRIPTION=6,
 )
 
@@ -42,6 +42,29 @@ def get_function_types() -> List[schemas.RedactFunctionTypeOut]:
             dict(function_type=DBMS_REDACT["NULLIFY"], name="NULLIFY",),
             dict(
                 function_type=DBMS_REDACT["REGEXP_WIDTH"], name="REGEXP_WIDTH",
+            ),
+        ],
+    )
+
+
+def get_actions() -> List[schemas.RedactActionOut]:
+    return parse_obj_as(
+        List[schemas.RedactActionOut],
+        [
+            dict(action=DBMS_REDACT["ADD_COLUMN"], name="ADD_COLUMN"),
+            dict(action=DBMS_REDACT["DROP_COLUMN"], name="DROP_COLUMN"),
+            dict(
+                action=DBMS_REDACT["MODIFY_EXPRESSION"],
+                name="MODIFY_EXPRESSION",
+            ),
+            dict(action=DBMS_REDACT["MODIFY_COLUMN"], name="MODIFY_COLUMN"),
+            dict(
+                action=DBMS_REDACT["SET_POLICY_DESCRIPTION"],
+                name="SET_POLICY_DESCRIPTION",
+            ),
+            dict(
+                action=DBMS_REDACT["SET_COLUMN_DESCRIPTION"],
+                name="SET_COLUMN_DESCRIPTION",
             ),
         ],
     )

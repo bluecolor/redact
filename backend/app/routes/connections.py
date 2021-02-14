@@ -3,7 +3,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 import app.models.orm as models
 from app.models.orm.connection import Connection
-import app.models.pydantic as schemas
+import app.models.schemas as schemas
 from .base import router
 from app.database import get_db
 from app.oracle import ping

@@ -91,3 +91,9 @@ class RedactFunctionTypeOut(BaseModel):
     function_type: int
     name: str
     description: Optional[str]
+
+
+class RedactActionOut(BaseModel):
+    action: int
+    name: str
+    description: Optional[str]

@@ -17,4 +17,5 @@ from .redact import (
     RedactionExpressionOut,
     RedactionColumnOut,
     RedactFunctionTypeOut,
+    RedactActionOut,
 )

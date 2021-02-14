@@ -2,9 +2,7 @@ from typing import List, Optional
 from fastapi import Depends
 from sqlalchemy.orm import Session
 import app.models.orm as models
-from app.models.orm.connection import Connection
-import app.models.pydantic as schemas
-from app.models.pydantic.redact import Policy
+import app.models.schemas as schemas
 from .base import router
 from app.database import get_db
 from app.oracle import redact
@@ -16,6 +14,13 @@ from app.oracle import redact
 )
 def get_function_types() -> List[schemas.RedactFunctionTypeOut]:
     return redact.get_function_types()
+
+
+@router.get(
+    "/redact/actions", response_model=List[schemas.RedactActionOut],
+)
+def get_function_types() -> List[schemas.RedactActionOut]:
+    return redact.get_actions()
 
 
 @router.post(
