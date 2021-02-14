@@ -1,6 +1,6 @@
 <template lang="pug">
 .main-layout.h-full.w-full.overflow-y-hidden
-  navbar.z-50(@toggle-left-menu="isSidebarOpen=!isSidebarOpen")
+  navbar.z-40(@toggle-left-menu="isSidebarOpen=!isSidebarOpen")
   .page-container.h-full.w-full.overflow-hidden
     router-view
 </template>

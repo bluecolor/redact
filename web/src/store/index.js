@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import connection from './modules/connection'
 
 export default createStore({
   state: {
@@ -15,5 +16,6 @@ export default createStore({
     }
   },
   modules: {
+    connection
   }
 })

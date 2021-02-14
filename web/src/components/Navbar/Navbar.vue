@@ -5,6 +5,7 @@ nav
       .flex.items-center
         svg-icon.cursor-pointer.home(name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-900")
       .flex.items-center.pr-2(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
+        .icon-btn.las.la-search.mr-4
         nav-menu.icon-btn.icon.mr-4(to="/settings/projects")
         profile-menu
 </template>

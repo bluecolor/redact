@@ -12,8 +12,10 @@
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^2.0.2",
+    "@meforma/vue-toaster": "^1.2.2",
     "@tailwindcss/postcss7-compat": "^2.0.2",
     "autoprefixer": "^9.8.6",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "eslint-import-resolver-webpack": "^0.13.0",
     "he-tree-vue": "^2.0.7",
@@ -24,12 +26,12 @@
     "postcss": "^7.0.35",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
     "uuid": "^8.3.2",
-    "vue-click-outside": "^1.1.0",
     "vue": "^3.0.0",
+    "vue-click-outside": "^1.1.0",
     "vue-router": "^4.0.0-0",
+    "vue-splitpane": "^1.0.6",
     "vue3-router-tree": "^0.2.4",
-    "vuex": "^4.0.0-0",
-    "vue-splitpane": "^1.0.6"
+    "vuex": "^4.0.0-0"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
@@ -39,6 +41,7 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
+    "dotenv-webpack": "^6.0.0",
     "eslint": "^7.16.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-google": "^0.14.0",
@@ -61,7 +64,7 @@
     "stylelint-csstree-validator": "^1.9.0",
     "stylelint-scss": "^3.18.0",
     "stylus": "^0.54.8",
-    "stylus-loader": "^4.3.1",
+    "stylus-loader": "^3.0.2",
     "vue-cli-plugin-pug": "~2.0.0",
     "vue-html-loader": "^1.2.4",
     "vue-template-compiler": "^2.6.11"

@@ -1,69 +1,62 @@
 <template lang="pug">
 .page
   .flex.justify-center.flex-col(class="w-1/3")
-    form.mt-10(autocomplete="off")
+    form.mt-10(autocomplete="off" @submit="onCreate")
       .form-item
         label Name
-        input(name='name' required autofocus)
+        input(v-model="payload.name" name='name' required autofocus)
       .form-item
-        label Hostname
-        input(name='host')
+        label Host
+        input(v-model="payload.host" name='host' required)
       .form-item
         label Port
-        input(name='port' type='number')
+        input(v-model.number="payload.port" name='port' required type='number')
       .form-item
         label Service
-        input(name='service')
+        input(v-model="payload.service" name='service' required)
       .form-item
         label Username
-        input(name='username')
+        input(v-model="payload.username" name='username' required)
       .form-item
         label Password
-        input(name='password' type="password")
+        input(v-model="payload.password" name='password' type="password" required)
       .form-item.mt-5
-        button.btn(tag="button" type="submit")
-          | Create
+        button.btn(tag="button" type="submit" value="submit")
+          .pr-8.lds-dual-ring(v-if="isSpinner")
+          |Create
 
 </template>
 
 <script>
-
-import VSelect from '@/components/Select'
-import { PostgreSettings } from '@/components/settings'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
-    VSelect,
-    PostgreSettings
   },
   data () {
     return {
-      database: 'postgresql',
-      databases: [{
-        id: 'snowflake',
-        title: 'Snowflake'
-      }, {
-        id: 'postgresql',
-        title: 'Postgre SQL'
-      }, {
-        id: 'redshift',
-        title: 'Redshift'
-      }, {
-        id: 'bigquery',
-        title: 'BigQuery'
-      }, {
-        id: 'mysql',
-        title: 'MySQL'
-      }, {
-        id: 'oracle',
-        title: 'Oracle'
-      }, {
-        id: 'sqlserver',
-        title: 'SQL Server'
-      }, {
-        id: 'presto',
-        title: 'Presto'
-      }]
+      isSpinner: false,
+      isValid: false,
+      payload: {
+        name: '',
+        host: '',
+        port: 1521,
+        service: 'orcl',
+        username: '',
+        password: ''
+      }
+    }
+  },
+  methods: {
+    ...mapActions('connection', ['createConnection']),
+    onCreate (e) {
+      e.preventDefault()
+      this.isSpinner = true
+      this.createConnection(this.payload).then(() => {
+        this.$toast.success('Success Connection created')
+      }).finally(() => {
+        this.isSpinner = false
+      })
     }
   }
 }

@@ -6,12 +6,27 @@ sys.path.extend(["./"])
 
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from starlette.datastructures import Secret
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.app import app
 from app.routes import router
 from app.routes import connections, users, metadata, redact
 
 app.include_router(router, prefix="/api/v1")
+
+origins = [
+    "http://localhost:8082",
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origin_regex="http://localhost:.*",
+    # allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 
 if __name__ == "__main__":
     import uvicorn
