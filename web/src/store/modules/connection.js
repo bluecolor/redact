@@ -6,6 +6,7 @@ import api from '@/api/connection'
 const CREATE = 'CREATE'
 const SET_ALL = 'SET_ALL'
 const DELETE = 'DELETE'
+const UPDATE = 'UPDATE'
 
 const state = {
   connections: []
@@ -29,6 +30,9 @@ const actions = {
       return result
     })
   },
+  getConnection ({ commit }, id) {
+    return api.getOne(id)
+  },
   deleteConnection ({ commit }, id) {
     return api.delete(id).then(result => {
       commit(DELETE, id)
@@ -37,6 +41,12 @@ const actions = {
   },
   testConnection ({ commit }, payload) {
     return api.test(payload)
+  },
+  updateConnection ({ commit }, payload) {
+    return api.update(payload).then(result => {
+      commit(UPDATE, result)
+      return result
+    })
   }
 }
 
@@ -51,6 +61,13 @@ const mutations = {
     const i = _.findIndex(state.connections, { id })
     if (i !== -1) {
       state.connections.splice(i, 1)
+    }
+  },
+  [UPDATE]: (state, data) => {
+    const { id } = data
+    const i = _.findIndex(state.connections, { id })
+    if (i !== -1) {
+      state.connections.splice(i, 1, data)
     }
   }
 }

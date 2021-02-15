@@ -21,22 +21,24 @@
         label Password
         input(v-model="payload.password" name='password' type="password" required)
       .form-item.mt-5
-        .flex.gap-x-3(class="w-1/2")
-          button.btn(tag="button" type="submit" value="submit")
-            .pr-8.lds-dual-ring(v-if="isSpinner")
-            span Save
-          button.btn(tag="button" type="submit" value="submit")
-            .pr-8.lds-dual-ring(v-if="isSpinner")
-            span Test
-          button.btn(tag="button" type="submit" value="submit")
-            |Cancel
-
+        .flex.justify-between.items-center
+          simple-spinner(v-if="isSpinner")
+          .flex.gap-x-3(v-else class="w-1/2")
+            button.btn(tag="button" type="submit" value="submit")
+              span Save
+            button.btn(tag="button" @click="onTest")
+              span Test
+          .end
+            button.btn(tag="button" @click="onCancel")
+              | Close
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import mixin from './mixin'
 
 export default {
+  mixins: [mixin],
   components: {
   },
   data () {

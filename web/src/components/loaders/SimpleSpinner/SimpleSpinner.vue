@@ -1,5 +1,5 @@
 <template lang="pug">
-.loading.flex.items-center.gap-x-3(v-if="isSpinner")
+.loading.flex.items-center.gap-x-3
   .lds-dual-ring.h-full.w-full.flex
   .saving {{text}}
 </template>

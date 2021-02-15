@@ -4,9 +4,10 @@ nav
     .relative.flex.items-center.justify-between.h-12
       .flex.items-center
         svg-icon.cursor-pointer.home(name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-900")
-      .flex.items-center.pr-2(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
-        .icon-btn.las.la-search.mr-4
-        nav-menu.icon-btn.icon.mr-4(to="/settings/projects")
+      .flex.items-center.pr-2.gap-x-4(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
+        .icon-btn.las.la-search
+        connections-menu.icon-btn.icon
+        nav-menu.icon-btn.icon(to="/settings/projects")
         profile-menu
 </template>
 
@@ -14,13 +15,15 @@ nav
 import ProfileMenu from '@/components/ProfileMenu'
 import NavMenu from '@/components/NavMenu'
 import SvgIcon from '@/components/SvgIcon'
+import ConnectionsMenu from '@/components/ConnectionsMenu'
 
 export default {
   name: 'Navbar',
   components: {
     ProfileMenu,
     NavMenu,
-    SvgIcon
+    SvgIcon,
+    ConnectionsMenu
   },
   data () {
     return {

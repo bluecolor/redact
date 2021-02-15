@@ -9,6 +9,9 @@ export default {
   getAll () {
     return request.get('/connections')
   },
+  getOne (id) {
+    return request.get(`/connections/${id}`)
+  },
   delete (id) {
     return request.delete(`/connections/${id}`)
   },
@@ -18,6 +21,10 @@ export default {
     } else {
       return request.get(`/connections/${payload}/test`)
     }
+  },
+  update (payload) {
+    const { id } = payload
+    return request.put(`/connections/${id}`, payload)
   }
 
 }

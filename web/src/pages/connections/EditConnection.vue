@@ -1,4 +1,5 @@
 <template lang="pug">
+page-loader(v-if="isPageLoader")
 .page
   .flex.justify-center.flex-col(class="w-1/3")
     form.mt-10(autocomplete="off" @submit="onSubmit")
@@ -30,59 +31,83 @@
               span Test
           .end
             button.btn(tag="button" @click="onCancel")
-              |Cancel
+              | Close
 
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import { SimpleSpinner } from '@/components/loaders'
+import _ from 'lodash'
+import { mapGetters, mapActions } from 'vuex'
+import PageLoader, { SimpleSpinner } from '@/components/loaders'
+import mixin from './mixin'
 
 export default {
   props: ['id'],
+  mixins: [mixin],
   components: {
-    SimpleSpinner
+    SimpleSpinner, PageLoader
   },
   data () {
     return {
+      isPageLoader: false,
       isSpinner: false,
       isValid: false,
       payload: {
         name: '',
-        host: 'localhost',
-        port: 1521,
-        service: 'orcl',
+        host: '',
+        port: undefined,
+        service: '',
         username: '',
         password: ''
       }
     }
   },
+  computed: {
+    ...mapGetters('connection', ['connections'])
+  },
   methods: {
-    ...mapActions('connection', ['createConnection', 'testConnection']),
+    ...mapActions('connection', [
+      'createConnection', 'getConnections', 'getConnection',
+      'updateConnection']),
     onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
-    },
-    onTest () {
-      this.isSpinner = true
-      this.testConnection(this.payload).then(result => {
-        if (result) {
-          this.$toast.success('Success')
-        } else {
-          this.$toast.error('Error')
-        }
+      this.updateConnection(this.payload).then(() => {
+        this.$toast.success('Success. Connection updated')
       }).catch(error => {
         console.log(error)
-        this.$toast.error('Error')
+        this.$toast.error('Error. Failed to update connection')
       }).finally(() => {
         this.isSpinner = false
       })
     },
-    onCancel () { window.history.back() }
+    loadConnection (c) {
+      if (_.isObject(c)) {
+        this.payload = { ...c }
+        return c
+      } else {
+        const connection = _.find(this.connections, { c })
+        if (connection) {
+          this.payload = { ...connection }
+          return connection
+        }
+      }
+    }
   },
   mounted () {
+    this.isPageLoader = true
     const id = +this.id
-    console.log(id)
+    if (!this.loadConnection(id)) {
+      this.isPageLoader = true
+      this.getConnection(id).then(result => {
+        this.loadConnection(result)
+      }).catch(error => {
+        console.log(error)
+        this.$toast.error('Failed to find connection')
+      }).finally(() => {
+        this.isPageLoader = false
+      })
+    }
   }
 }
 </script>
