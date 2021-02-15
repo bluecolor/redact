@@ -8,7 +8,7 @@
   .fixed.inset-0(v-if="isOpen", @click="isOpen = false", tabindex="-1")
   .menu(v-if="isOpen")
       template(v-for="i in items")
-        router-link.item.flex.px-2.content-center(:to="i.path")
+        router-link.item.flex.px-2.content-center.items-center(:to="i.path")
           .icon(:class="i.icon")
           .text-base.block.px-4.py-2.leading-tight(v-if="i !== '-'" to="#") {{i.title}}
         .border-t.border-gray-200(v-if="i === '-'")

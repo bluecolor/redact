@@ -11,7 +11,7 @@ import Settings, {
   CreateProject,
   Appearance
 } from '@/pages/settings'
-import Connections, { CreateConnection } from '@/pages/connections'
+import Connections, { CreateConnection, EditConnection } from '@/pages/connections'
 
 // Vue.use(VueRouter)
 
@@ -63,6 +63,12 @@ const routes = [
         name: 'createConnection',
         path: 'connections/create',
         component: CreateConnection
+      },
+      {
+        name: 'editConnection',
+        path: 'connections/:id/edit',
+        component: EditConnection,
+        props: true
       },
       {
         name: 'dbtProfile',

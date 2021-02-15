@@ -1,7 +1,7 @@
 <template lang="pug">
 .page
   .flex.justify-center.flex-col(class="w-1/3")
-    form.mt-10(autocomplete="off" @submit="onCreate")
+    form.mt-10(autocomplete="off" @submit="onSubmit")
       .form-item
         label Name
         input(v-model="payload.name" name='name' required autofocus)
@@ -21,23 +21,27 @@
         label Password
         input(v-model="payload.password" name='password' type="password" required)
       .form-item.mt-5
-        .flex.gap-x-3(class="w-1/2")
-          button.btn(tag="button" type="submit" value="submit")
-            .pr-8.lds-dual-ring(v-if="isSpinner")
-            span Save
-          button.btn(tag="button" type="submit" value="submit")
-            .pr-8.lds-dual-ring(v-if="isSpinner")
-            span Test
-          button.btn(tag="button" type="submit" value="submit")
-            |Cancel
+        .flex.justify-between.items-center
+          simple-spinner(v-if="isSpinner")
+          .flex.gap-x-3(v-else class="w-1/2")
+            button.btn(tag="button" type="submit" value="submit")
+              span Save
+            button.btn(tag="button" @click="onTest")
+              span Test
+          .end
+            button.btn(tag="button" @click="onCancel")
+              |Cancel
 
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import { SimpleSpinner } from '@/components/loaders'
 
 export default {
+  props: ['id'],
   components: {
+    SimpleSpinner
   },
   data () {
     return {
@@ -54,16 +58,31 @@ export default {
     }
   },
   methods: {
-    ...mapActions('connection', ['createConnection']),
-    onCreate (e) {
+    ...mapActions('connection', ['createConnection', 'testConnection']),
+    onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
-      this.createConnection(this.payload).then(() => {
-        this.$toast.success('Success Connection created')
+    },
+    onTest () {
+      this.isSpinner = true
+      this.testConnection(this.payload).then(result => {
+        if (result) {
+          this.$toast.success('Success')
+        } else {
+          this.$toast.error('Error')
+        }
+      }).catch(error => {
+        console.log(error)
+        this.$toast.error('Error')
       }).finally(() => {
         this.isSpinner = false
       })
-    }
+    },
+    onCancel () { window.history.back() }
+  },
+  mounted () {
+    const id = +this.id
+    console.log(id)
   }
 }
 </script>

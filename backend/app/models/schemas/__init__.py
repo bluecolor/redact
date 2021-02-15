@@ -3,6 +3,7 @@ from .connection import (
     Connection,
     ConnectionCreateIn,
     ConnectionUpdateIn,
+    ConnectionTestIn
 )
 from .metadata import Table, Column
 from .redact import (

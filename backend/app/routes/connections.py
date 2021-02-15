@@ -63,9 +63,15 @@ def destroy(id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/connections/{id}/test", response_model=bool)
-def test(id: int, db: Session = Depends(get_db)):
+def test_with_id(id: int, db: Session = Depends(get_db)):
     connection = (
         db.query(models.Connection).filter(models.Connection.id == id).first()
     )
     return ping(connection)
+
+@router.post("/connections/test", response_model=bool)
+def test_with_payload(connection: schemas.ConnectionTestIn):
+    conn: models.Connection = models.Connection(**connection.dict())
+    return ping(conn)
+
 

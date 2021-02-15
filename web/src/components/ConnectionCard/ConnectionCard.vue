@@ -8,9 +8,9 @@ prompt(:params="prompt" v-if="prompt.show" @hide="prompt.show=false")
         | {{connection.name}}
       .actions.flex.justify-end
         // button link
-        .btns.gap-x-3.flex(v-if="!spinner")
-          .icon-btn.las.la-pen
-          .icon-btn.las.la-vial
+        .btns.gap-x-3.flex(v-if="!isSpinner")
+          router-link.icon-btn.las.la-pen(:to="`/connections/${connection.id}/edit`")
+          .icon-btn.las.la-vial(@click="onTest(connection.id)")
           .icon-btn.las.la-trash-alt.danger(@click="onDelete(connection.id)")
         .spinner.lds-dual-ring(v-else)
     // card body
@@ -34,16 +34,34 @@ export default {
         show: false,
         title: 'Delete Connection?',
         description: 'This will only delete connection. All redactions will be kept on database.',
-        ok: 'Delete'
+        ok: 'Delete',
+        cb: { ok: () => {}, cancel: () => {} }
       }
     }
   },
   methods: {
-    ...mapActions('connection', ['deleteConnection']),
+    ...mapActions('connection', ['deleteConnection', 'testConnection']),
     onDelete (id) {
-      this.prompt.show = true
       this.isSpinner = true
-      this.deleteConnection(id).finally(() => { this.isSpinner = false })
+      this.prompt.cb.ok = () => {
+        this.deleteConnection(id).finally(() => { this.isSpinner = false })
+      }
+      this.prompt.show = true
+    },
+    onTest (id) {
+      this.isSpinner = true
+      this.testConnection(id).then(result => {
+        if (result) {
+          this.$toast.success('Success')
+        } else {
+          this.$toast.success('Error')
+        }
+      }).catch(e => {
+        console.log(e)
+        this.$toast.error('Error!')
+      }).finally(() => {
+        this.isSpinner = false
+      })
     }
   }
 

@@ -34,6 +34,9 @@ const actions = {
       commit(DELETE, id)
       return result
     })
+  },
+  testConnection ({ commit }, payload) {
+    return api.test(payload)
   }
 }
 

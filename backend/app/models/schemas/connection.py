@@ -29,3 +29,11 @@ class ConnectionUpdateIn(BaseModel):
     service: Optional[str]
     username: Optional[str]
     password: Optional[str]
+
+class ConnectionTestIn(BaseModel):
+    name: Optional[str]
+    host: str
+    port: int
+    service: str
+    username: str
+    password: str

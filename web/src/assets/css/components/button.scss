@@ -11,15 +11,10 @@
 }
 
 
-// .btn {
-//   @apply focus:outline-none rounded-md ring-1 focus:ring-2 flex justify-center px-4 py-2 text-sm font-medium
-//   text-gray-500 hover:text-gray-700 cursor-pointer;
-// }
-
 .btn {
-  @apply w-full inline-flex justify-center rounded-md border
-    border-gray-300 shadow-sm py-2 bg-white text-base
-    font-medium text-gray-700;
+  @apply flex justify-center rounded-md border
+    border-gray-300 py-2 px-4 bg-white text-base
+    font-medium text-gray-500;
   @apply hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2
-    focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm;
+    focus:ring-blue-500
 }

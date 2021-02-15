@@ -19,7 +19,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
-import PageLoader from '@/components/PageLoader'
+import PageLoader from '@/components/loaders'
 import ConnectionCard from '@/components/ConnectionCard'
 
 export default {
