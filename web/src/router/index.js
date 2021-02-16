@@ -39,22 +39,26 @@ const routes = [
             name: 'categories',
             path: '/connections/:connectionId/categories',
             props: true,
-            component: Categories
+            component: Categories,
+            meta: { group: 'categories' }
           }, {
             name: 'expressions',
             path: '/connections/:connectionId/expressions',
             props: true,
-            component: Expressions
+            component: Expressions,
+            meta: { group: 'expressions' }
           }, {
             name: 'createExpression',
             path: '/connections/:connectionId/expressions/create',
             props: true,
-            component: CreateExpression
+            component: CreateExpression,
+            meta: { group: 'expressions' }
           }, {
             name: 'editExpression',
             path: '/connections/:connectionId/expressions/:policy_expression_name',
             props: true,
-            component: EditExpression
+            component: EditExpression,
+            meta: { group: 'expressions' }
           }
         ]
       }

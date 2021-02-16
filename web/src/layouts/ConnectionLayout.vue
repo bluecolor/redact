@@ -1,7 +1,7 @@
 <template lang="pug">
 .flex.justify-center
   .settings-layout(class="w-10/12")
-    left-nav.nav(:connectionId="connectionId")
+    left-nav.left-nav(:connectionId="connectionId")
     .content
       router-view
 </template>
@@ -23,7 +23,7 @@ export default {
 .settings-layout {
   @apply flex justify-center pt-10 content-center space-x-10;
 }
-.settings-layout .nav {
+.settings-layout .left-nav {
   @apply w-2/12;
 }
 .settings-layout .content {

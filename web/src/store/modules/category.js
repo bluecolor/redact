@@ -3,27 +3,28 @@
 // import _ from 'lodash'
 import api from '@/api/category'
 
-const SET_ALL_CATEGORIES = 'SET_ALL_CATEGORIES'
+const SET_CATEGORIES = 'SET_CATEGORIES'
 
 const state = {
   categories: []
 }
 
 const getters = {
-  categories: state => state.categories
+  categories: state => state.categories,
+  isCategoriesEmpty: state => state.categories.length === 0
 }
 
 const actions = {
-  getAllCategories ({ commit }, connectionId) {
-    return api.getAllCategories(connectionId).then(result => {
-      commit(SET_ALL_CATEGORIES, result)
+  getCategories ({ commit }, connectionId) {
+    return api.getCategories(connectionId).then(result => {
+      commit(SET_CATEGORIES, result)
       return result
     })
   }
 }
 
 const mutations = {
-  [SET_ALL_CATEGORIES]: (state, data) => {
+  [SET_CATEGORIES]: (state, data) => {
     state.categories = data
   }
 }

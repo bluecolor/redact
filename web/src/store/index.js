@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import connection from './modules/connection'
 import redact from './modules/redact'
+import category from './modules/category'
 
 export default createStore({
   state: {
@@ -17,6 +18,6 @@ export default createStore({
     }
   },
   modules: {
-    connection, redact
+    connection, redact, category
   }
 })

@@ -37,7 +37,7 @@ export default {
 }
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 nav {
   @apply border-b border-gray-300 relative px-0 bg-white;
 }
