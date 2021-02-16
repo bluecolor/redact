@@ -44,6 +44,9 @@ def redaction_expressions(object_owner: str = None, object_name: str = None):
     return f"{REDACTION_EXPRESSIONS} where {' and '.join(filters)}"
 
 
+def redaction_expression(name: str) -> str:
+    return f"{REDACTION_EXPRESSIONS} where policy_expression_name = '{name}'"
+
 def redaction_columns(
     object_owner: str = None, object_name: str = None
 ) -> str:

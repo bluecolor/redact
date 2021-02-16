@@ -36,10 +36,12 @@
 <script>
 import { mapActions } from 'vuex'
 import mixin from './mixin'
+import { SimpleSpinner } from '@/components/loaders'
 
 export default {
   mixins: [mixin],
   components: {
+    SimpleSpinner
   },
   data () {
     return {

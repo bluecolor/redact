@@ -12,7 +12,7 @@
             | Create New Connection
       .connections.gap-y-3.flex.flex-col.w-full(v-if="!isConnectionsEmpty")
         connection-card(v-for="c in connections" :connection="c")
-      router-link.btn.create-btn.mt-10.w-full(tag="button" to="/connections/create")
+      router-link.btn.create-btn.mt-10.w-full(tag="button" to="/settings/connections/create")
         | Create New Connection
 </template>
 

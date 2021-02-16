@@ -1,19 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainLayout from '@/layouts/MainLayout.vue'
-import AuthLayout from '@/layouts/AuthLayout.vue'
-import SettingsLayout from '@/layouts/SettingsLayout.vue'
+import AuthLayout, { ConnectionLayout } from '@/layouts'
 
 import Home from '@/pages/Home.vue'
 import Login from '@/pages/Login.vue'
-import Settings, {
-  DbtProfiles,
-  Projects,
-  CreateProject,
-  Appearance
-} from '@/pages/settings'
-import Connections, { CreateConnection, EditConnection } from '@/pages/connections'
-
-// Vue.use(VueRouter)
+import Connections, { CreateConnection, EditConnection } from '@/pages/settings/connections'
+import Categories from '@/pages/categories'
+import Expressions, { CreateExpression, EditExpression } from '@/pages/expressions'
 
 const routes = [
   {
@@ -23,61 +16,50 @@ const routes = [
     children: [
       { name: 'home', path: '', component: Home },
       {
-        name: 'settings',
-        path: 'settings',
-        component: SettingsLayout,
-        children: [{
-          name: 'settings',
-          path: '',
-          component: Settings
-        }, {
-          name: 'projects',
-          meta: { group: 'projects' },
-          path: 'projects',
-          component: Projects
-        }, {
-          name: 'createProject',
-          meta: { group: 'projects' },
-          path: 'projects/create',
-          component: CreateProject
-        }, {
-          name: 'profiles',
-          meta: { group: 'profiles' },
-          path: 'profiles',
-          component: DbtProfiles
-        }, {
-          name: 'connections',
-          meta: { group: 'connections' },
-          path: 'connections',
-          component: Connections
-        }, {
-          name: 'appearance',
-          meta: { group: 'appearance' },
-          path: 'appearance',
-          component: Appearance
-        }]
-      },
-      { name: 'projects', path: 'projects', component: Projects },
-      { name: 'connections', path: 'connections', component: Connections },
-      {
         name: 'createConnection',
-        path: 'connections/create',
+        path: 'settings/connections/create',
         component: CreateConnection
       },
       {
         name: 'editConnection',
-        path: 'connections/:id/edit',
+        path: 'settings/connections/:id/edit',
         component: EditConnection,
         props: true
-      },
-      {
-        name: 'dbtProfile',
-        path: 'settings/dbt-profile',
-        component: DbtProfiles
+      }, {
+        name: 'editConnection',
+        path: 'settings/connections',
+        component: Connections
+      }, {
+        name: 'connectionsLayout',
+        path: '/connections/:connectionId',
+        props: true,
+        component: ConnectionLayout,
+        children: [
+          {
+            name: 'categories',
+            path: '/connections/:connectionId/categories',
+            props: true,
+            component: Categories
+          }, {
+            name: 'expressions',
+            path: '/connections/:connectionId/expressions',
+            props: true,
+            component: Expressions
+          }, {
+            name: 'createExpression',
+            path: '/connections/:connectionId/expressions/create',
+            props: true,
+            component: CreateExpression
+          }, {
+            name: 'editExpression',
+            path: '/connections/:connectionId/expressions/:policy_expression_name',
+            props: true,
+            component: EditExpression
+          }
+        ]
       }
     ]
-  },
-  {
+  }, {
     path: '/about',
     name: 'About',
     component: () => import(/* webpackChunkName: "about" */ '../pages/About.vue')

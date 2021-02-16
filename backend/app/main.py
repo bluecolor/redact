@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.app import app
 from app.routes import router
-from app.routes import connections, users, metadata, redact
+from app.routes import connections, users, metadata, redact, categories
 
 app.include_router(router, prefix="/api/v1")
 

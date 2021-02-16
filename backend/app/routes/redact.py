@@ -61,6 +61,19 @@ def get_expressions(
     connection = db.query(models.Connection).get(conn_id)
     return redact.get_expressions(connection, object_owner, object_name)
 
+@router.get(
+    "/connections/{conn_id}/redact/expressions/{policy_expression_name}",
+    response_model=schemas.RedactionExpressionOut,
+)
+def get_expression(
+    conn_id: int,
+    policy_expression_name: str = None,
+    db: Session = Depends(get_db),
+) -> schemas.RedactionExpressionOut:
+    connection = db.query(models.Connection).get(conn_id)
+    return redact.get_expression(connection, policy_expression_name)
+
+
 
 @router.get(
     "/connections/{conn_id}/redact/columns",
@@ -99,7 +112,7 @@ def alter_policy(
 
 
 @router.post(
-    "/connections/{conn_id}/redact/policies/expressions", response_model=bool,
+    "/connections/{conn_id}/redact/expressions", response_model=bool,
 )
 def alter_policy(
     policy_expression: schemas.CreatePolicyExpressionIn,
@@ -112,9 +125,10 @@ def alter_policy(
 
 
 @router.put(
-    "/connections/{conn_id}/redact/policies/expressions", response_model=bool,
+    "/connections/{conn_id}/redact/expressions/{policy_expression_name}", response_model=bool,
 )
 def update_policy_expression(
+    policy_expression_name: str,
     payload: schemas.UpdatePolicyExpressionIn,
     conn_id: int,
     db: Session = Depends(get_db),
@@ -125,7 +139,7 @@ def update_policy_expression(
 
 
 @router.delete(
-    "/connections/{conn_id}/redact/policies/expressions", response_model=bool,
+    "/connections/{conn_id}/redact/expressions", response_model=bool,
 )
 def drop_policy_expression(
     conn_id: int, name=str, db: Session = Depends(get_db),
@@ -136,7 +150,7 @@ def drop_policy_expression(
 
 
 @router.post(
-    "/connections/{conn_id}/redact/policies/expressions/apply",
+    "/connections/{conn_id}/redact/expressions/apply",
     response_model=bool,
 )
 def apply_policy_expr_to_col(

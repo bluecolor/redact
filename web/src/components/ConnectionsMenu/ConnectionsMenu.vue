@@ -8,7 +8,7 @@
   .fixed.inset-0(v-if="isOpen", @click="isOpen = false", tabindex="-1")
   .menu(v-if="isOpen")
     template(v-if="!isSpinner && connections.length > 0" v-for="c in connections")
-      router-link.item.flex.px-2.content-center.items-center(to="/")
+      router-link.item.flex.px-2.content-center.items-center(:to="'/connections/' + c.id")
         .text-base.block.px-4.py-2.leading-tight {{c.name}}
     SimpleSpinner(v-else)
     .empty.p-2.text-base(v-if="connections.length === 0")

@@ -5,17 +5,18 @@ prompt(:params="prompt" v-if="prompt.show" @hide="prompt.show=false")
     // card header
     .card-heder.px-3.py-3.bg-white.border-b.border-gray-200.uppercase.flex.justify-between
       .title
-        | {{connection.name}}
+        | {{expression.policy_expression_name}}
       .actions.flex.justify-end
         // button link
         .btns.gap-x-3.flex(v-if="!isSpinner")
-          router-link.icon-btn.las.la-pen(:to="`/settings/connections/${connection.id}/edit`")
-          .icon-btn.las.la-vial(@click="onTest(connection.id)")
-          .icon-btn.las.la-trash-alt.danger(@click="onDelete(connection.id)")
+          router-link.icon-btn.las.la-pen(:to="`expressions/${encodeURI(expression.policy_expression_name)}`")
+          .icon-btn.las.la-trash-alt.danger(@click="onDelete()")
         .spinner.lds-dual-ring(v-else)
     // card body
     .p-3.bg-white.border-gray-200
-      |{{connection.host}}:{{connection.port}}/{{connection.service}}
+      span(v-if="expression.policy_expression_description")
+        |{{expression.policy_expression_description}}
+      span(v-else) No description
 </template>
 
 <script>
@@ -24,7 +25,7 @@ import Prompt from '@/components/Prompt'
 
 export default {
   props: {
-    connection: { type: Object, default: () => {} }
+    expression: { type: Object, default: () => {} }
   },
   components: { Prompt },
   data () {
@@ -32,7 +33,7 @@ export default {
       isSpinner: false,
       prompt: {
         show: false,
-        title: 'Delete Connection?',
+        title: 'Delete Expression?',
         description: 'This will only delete connection. All redactions will be kept on database.',
         ok: 'Delete',
         cb: { ok: () => {}, cancel: () => {} }
@@ -47,21 +48,6 @@ export default {
         this.deleteConnection(id).finally(() => { this.isSpinner = false })
       }
       this.prompt.show = true
-    },
-    onTest (id) {
-      this.isSpinner = true
-      this.testConnection(id).then(result => {
-        if (result) {
-          this.$toast.success('Success')
-        } else {
-          this.$toast.success('Error')
-        }
-      }).catch(e => {
-        console.log(e)
-        this.$toast.error('Error!')
-      }).finally(() => {
-        this.isSpinner = false
-      })
     }
   }
 

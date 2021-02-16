@@ -1,17 +1,20 @@
 <template lang="pug">
 .flex.justify-center
   .settings-layout(class="w-10/12")
-    settings-navigator.nav
+    left-nav.nav(:connectionId="connectionId")
     .content
       router-view
 </template>
 
 <script>
-import { SettingsNavigator } from '@/components/settings'
+import LeftNav from '@/components/LeftNav'
 
 export default {
+  props: ['connectionId'],
   components: {
-    SettingsNavigator
+    LeftNav
+  },
+  mounted () {
   }
 }
 </script>

@@ -1,5 +1,6 @@
 from cryptography.fernet import Fernet
 
+from sqlalchemy.orm import relationship
 from sqlalchemy import (
     func,
     BigInteger,
@@ -28,6 +29,8 @@ class Connection(Base):
     service = Column(String(100))
     username = Column(String(255))
     encrypted_password = Column(String)
+
+    categories = relationship("Category", back_populates="connection")
 
     def __init__(self, **kw):
         super().__init__(**kw)

@@ -23,7 +23,7 @@ export default {
     return {
       isOpen: false,
       items: [{
-        path: '/connections',
+        path: '/settings/connections',
         icon: 'las la-plug',
         title: 'Connections'
       }, {

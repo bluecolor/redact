@@ -91,6 +91,13 @@ def get_expressions(
         List[schemas.RedactionExpressionOut], queryall(connection, query)
     )
 
+def get_expression(connection: models.Connection, policy_expression_name: str) -> schemas.RedactionExpressionOut:
+    query = q.redaction_expression(policy_expression_name)
+    result = queryall(connection, query)
+    if len(result) > 0:
+        return parse_obj_as(schemas.RedactionExpressionOut, result[0])
+    return None
+
 
 def get_columns(
     connection: models.Connection,

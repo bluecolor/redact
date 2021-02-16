@@ -67,9 +67,6 @@ class RedactionPolicyOut(BaseModel):
 class RedactionExpressionOut(BaseModel):
     policy_expression_name: str
     expression: str
-    object_owner: str
-    object_name: str
-    column_name: str
     policy_expression_description: Optional[str]
 
 
