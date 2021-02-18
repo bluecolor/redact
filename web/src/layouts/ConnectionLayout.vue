@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import LeftNav from '@/components/LeftNav'
 
 export default {
@@ -14,8 +15,18 @@ export default {
   components: {
     LeftNav
   },
-  mounted () {
+  methods: {
+    ...mapActions('app', ['setConnection'])
+  },
+  watch: {
+    connectionId (id) {
+      this.setConnection(id)
+    }
+  },
+  created () {
+    this.setConnection(this.connectionId)
   }
+
 }
 </script>
 

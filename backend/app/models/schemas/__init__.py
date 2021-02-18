@@ -24,4 +24,4 @@ from .redact import (
 
 from .policy import PolicyExpression
 
-from .category import CategoryOut, CategoryCreateIn
+from .category import CategoryOut, CategoryCreateIn, CategoryUpdateIn

@@ -12,8 +12,16 @@ class CategoryCreateIn(BaseModel):
     function_parameters: Optional[str]
     policy_expression_name: str
 
+class CategoryUpdateIn(BaseModel):
+    name: str
+    description: Optional[str]
+    function_type: int
+    function_parameters: Optional[str]
+    policy_expression_name: str
+
+
 class CategoryOut(Base):
-    id: str
+    id: int
     name: str
     description: Optional[str]
     function_type: int

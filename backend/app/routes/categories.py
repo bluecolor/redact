@@ -43,8 +43,29 @@ def create(conn_id: int, category: schemas.CategoryCreateIn, db: Session = Depen
     new_category.policy_expression = policy_expression
     return schemas.CategoryOut.from_orm(new_category)
 
-@router.delete("/categories/{id}", response_model=schemas.CategoryOut)
-def destroy(id: int, db: Session = Depends(get_db)):
+
+@router.post(
+    "/connections/{conn_id}/categories/{id}", tags=["Categories"], response_model=schemas.CategoryOut
+)
+def update(conn_id: int, id: int, category: schemas.CategoryUpdateIn, db: Session = Depends(get_db)):
+    cat = db.query(models.Category).get(id)
+    if cat is None:
+        return None
+
+    for var, value in vars(category).items():
+        setattr(cat, var, value) if value else None
+
+    db.add(cat)
+    db.commit()
+    db.refresh(cat)
+    return schemas.CategoryOut.from_orm(cat)
+
+
+
+@router.delete("/connections/{conn_id}/categories/{id}", response_model=schemas.CategoryOut)
+def destroy(
+    conn_id: int, # reserved
+    id: int, db: Session = Depends(get_db)):
     category = db.query(models.Category).get(id)
     db.delete(category)
     db.commit()

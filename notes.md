@@ -5,5 +5,5 @@ PYTHONPATH=. alembic upgrade head
 
 
 
-PYTHONPATH=. alembic revision --autogenerate -m "categoriy name unique"
+PYTHONPATH=. alembic revision --autogenerate -m "scripts"
 PYTHONPATH=. alembic upgrade head

@@ -38,6 +38,7 @@ export default {
   props: {
     params: { type: Object, default: () => {} }
   },
+  emits: ['hide'],
   data () {
     return {
       prompt: _.extend({
