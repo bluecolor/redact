@@ -15,6 +15,12 @@ from app.oracle import redact
 def get_function_types() -> List[schemas.RedactFunctionTypeOut]:
     return redact.get_function_types()
 
+@router.get(
+    "/redact/function_parameters",
+    response_model=List[schemas.RedactFunctionParametersOut],
+)
+def get_function_parameters():
+    return redact.get_function_parameters()
 
 @router.get(
     "/redact/actions", response_model=List[schemas.RedactActionOut],

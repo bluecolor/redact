@@ -19,6 +19,7 @@ from .redact import (
     RedactionColumnOut,
     RedactFunctionTypeOut,
     RedactActionOut,
+    RedactFunctionParametersOut
 )
 
 from .policy import PolicyExpression

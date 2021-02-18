@@ -3,6 +3,12 @@ import request from './request'
 
 export default {
 
+  getFunctionTypes () {
+    return request.get('/redact/function_types')
+  },
+  getFunctionParameters () {
+    return request.get('/redact/function_parameters')
+  },
   getPolicies (connectionId) {
     return request.get(`/connections/${connectionId}/redact/policies`)
   },

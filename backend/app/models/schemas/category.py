@@ -7,7 +7,7 @@ from .base import Base
 
 class CategoryCreateIn(BaseModel):
     name: str
-    description: str
+    description: Optional[str]
     function_type: int
     function_parameters: Optional[str]
     policy_expression_name: str
@@ -15,7 +15,7 @@ class CategoryCreateIn(BaseModel):
 class CategoryOut(Base):
     id: str
     name: str
-    description: str
+    description: Optional[str]
     function_type: int
     function_parameters: Optional[str]
     policy_expression: Optional[PolicyExpression]

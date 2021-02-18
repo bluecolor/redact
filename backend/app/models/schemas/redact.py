@@ -94,3 +94,6 @@ class RedactActionOut(BaseModel):
     action: int
     name: str
     description: Optional[str]
+
+class RedactFunctionParametersOut(BaseModel):
+    function_parameters: str

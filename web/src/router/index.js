@@ -5,7 +5,7 @@ import AuthLayout, { ConnectionLayout } from '@/layouts'
 import Home from '@/pages/Home.vue'
 import Login from '@/pages/Login.vue'
 import Connections, { CreateConnection, EditConnection } from '@/pages/settings/connections'
-import Categories from '@/pages/categories'
+import Categories, { CreateCategory } from '@/pages/categories'
 import Expressions, { CreateExpression, EditExpression } from '@/pages/expressions'
 
 const routes = [
@@ -40,6 +40,12 @@ const routes = [
             path: '/connections/:connectionId/categories',
             props: true,
             component: Categories,
+            meta: { group: 'categories' }
+          }, {
+            name: 'createCategory',
+            path: '/connections/:connectionId/categories/create',
+            props: true,
+            component: CreateCategory,
             meta: { group: 'categories' }
           }, {
             name: 'expressions',

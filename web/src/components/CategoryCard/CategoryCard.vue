@@ -5,17 +5,17 @@ prompt(:params="prompt" v-if="prompt.show" @hide="prompt.show=false")
     // card header
     .card-heder.px-3.py-3.bg-white.border-b.border-gray-200.uppercase.flex.justify-between
       .title
-        | {{expression.policy_expression_name}}
+        | {{category.policy_expression?.policy_expression_name}}
       .actions.flex.justify-end
         // button link
         .btns.gap-x-3.flex(v-if="!isSpinner")
-          router-link.icon-btn.las.la-pen(:to="`expressions/${encodeURI(expression.policy_expression_name)}`")
+          router-link.icon-btn.las.la-pen(:to="`expressions/${encodeURI(category.policy_expression_name)}`")
           .icon-btn.las.la-trash-alt.danger(@click="onDelete()")
         .spinner.lds-dual-ring(v-else)
     // card body
     .p-3.bg-white.border-gray-200
-      span(v-if="expression.policy_expression_description")
-        |{{expression.policy_expression_description}}
+      span(v-if="category.policy_expression_description")
+        |{{category.policy_expression_description}}
       span(v-else) No description
 </template>
 
@@ -25,7 +25,7 @@ import Prompt from '@/components/Prompt'
 
 export default {
   props: {
-    expression: { type: Object, default: () => {} }
+    category: { type: Object, default: () => {} }
   },
   components: { Prompt },
   data () {
@@ -33,8 +33,8 @@ export default {
       isSpinner: false,
       prompt: {
         show: false,
-        title: 'Delete Expression?',
-        description: 'This will only delete connection. All redactions will be kept on database.',
+        title: 'Delete Category',
+        description: 'This will only delete category definition. Related expression will remain.',
         ok: 'Delete',
         cb: { ok: () => {}, cancel: () => {} }
       }

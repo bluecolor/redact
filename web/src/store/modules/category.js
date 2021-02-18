@@ -4,6 +4,7 @@
 import api from '@/api/category'
 
 const SET_CATEGORIES = 'SET_CATEGORIES'
+const CREATE = 'CREATE'
 
 const state = {
   categories: []
@@ -20,12 +21,21 @@ const actions = {
       commit(SET_CATEGORIES, result)
       return result
     })
+  },
+  createCategory ({ commit }, params) {
+    return api.create(params).then(result => {
+      commit(CREATE, result)
+      return result
+    })
   }
 }
 
 const mutations = {
   [SET_CATEGORIES]: (state, data) => {
     state.categories = data
+  },
+  [CREATE]: (state, data) => {
+    state.categories.push(data)
   }
 }
 

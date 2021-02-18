@@ -7,19 +7,37 @@ const SET_POLICIES = 'SET_POLICIES'
 const SET_EXPRESSIONS = 'SET_EXPRESSIONS'
 const CREATE_EXPRESSION = 'CREATE_EXPRESSION'
 const UPDATE_EXPRESSION = 'UPDATE_EXPRESSION'
+const SET_FUNCTION_TYPES = 'SET_FUNCTION_TYPES'
+const SET_FUNCTION_PARAMETERS = 'SET_FUNCTION_PARAMETERS'
 
 const state = {
   policies: [],
-  expressions: []
+  expressions: [],
+  functionTypes: [],
+  functionParameters: []
 }
 
 const getters = {
   policies: state => state.policies,
   expressions: state => state.expressions,
-  isExpressionsEmpty: state => state.expressions.length === 0
+  isExpressionsEmpty: state => state.expressions.length === 0,
+  functionTypes: state => state.functionTypes,
+  functionParameters: state => state.functionParameters
 }
 
 const actions = {
+  getFunctionParameters ({ commit }) {
+    return api.getFunctionParameters().then(result => {
+      commit(SET_FUNCTION_PARAMETERS, result)
+      return result
+    })
+  },
+  getFunctionTypes ({ commit }) {
+    return api.getFunctionTypes().then(result => {
+      commit(SET_FUNCTION_TYPES, result)
+      return result
+    })
+  },
   getPolicies ({ commit }, connectionId) {
     return api.getPolicies(connectionId).then(result => {
       commit(SET_POLICIES, result)
@@ -65,6 +83,12 @@ const mutations = {
     if (i !== -1) {
       state.expressions.splice(i, 1, data)
     }
+  },
+  [SET_FUNCTION_TYPES]: (state, data) => {
+    state.functionTypes = data
+  },
+  [SET_FUNCTION_PARAMETERS]: (state, data) => {
+    state.functionParameters = data
   }
 }
 
