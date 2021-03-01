@@ -12,13 +12,13 @@ export default {
       this.isSpinner = true
       this.testConnection(this.payload).then(result => {
         if (result) {
-          this.$toast.success('Success')
+          this.$toasted.success('Success')
         } else {
-          this.$toast.error('Error')
+          this.$toasted.error('Error')
         }
       }).catch(error => {
         console.log(error)
-        this.$toast.error('Error')
+        this.$toasted.error('Error')
       }).finally(() => {
         this.isSpinner = false
       })

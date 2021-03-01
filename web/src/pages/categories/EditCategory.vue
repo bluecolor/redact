@@ -2,59 +2,56 @@
 .flex.justify-center.flex-col(class="w-3/4")
   form(autocomplete="off" @submit="onCreate")
     .form-item
-      label Name
-      input(v-model="payload.name" name='policy_expression_name' required autofocus)
+      t-input-group(label='Name', required)
+        t-input(v-model="payload.name" required autofocus)
     .form-item
-      label Expression
-      v-select(
-        v-model="payload.policy_expression_name"
-        :data="expressions",
-        valueProp='policy_expression_name',
-        displayProp="policy_expression_name"
-        required
-      )
+      t-input-group(label='Expression')
+        t-select(
+          v-model="payload.policy_expression_name"
+          :options="expressions",
+          value-attribute='policy_expression_name',
+          text-attribute="policy_expression_name"
+          required
+        )
     .form-item
-      label Function Type
-      v-select(
-        v-model.number="payload.function_type"
-        :data="functionTypes",
-        valueProp='function_type',
-        displayProp="name"
-        required
-      )
+      t-input-group(label='Function Type')
+        t-select(
+          v-model.number="payload.function_type"
+          :options="functionTypes",
+          value-attribute='function_type',
+          text-attribute="name"
+          required
+        )
     .form-item
-      label Function Parameters
-      v-select(
-        v-model="payload.function_parameters"
-        :data="functionParameters",
-        valueProp='function_parameters',
-        displayProp="function_parameters"
-      )
+      t-input-group(label='Function Parameters')
+        t-select(
+          v-model="payload.function_parameters"
+          :options="functionParameters",
+          value-attribute='function_parameters',
+          text-attribute="function_parameters"
+        )
     .form-item
-      label Description
-      textarea(v-model="payload.description" name='description')
+      t-input-group(label='Description')
+        t-textarea(v-model="payload.description" name='description')
     .form-item.mt-5
       .flex.justify-between.items-center
         simple-spinner(v-if="isSpinner")
         .flex.gap-x-3(v-else class="w-1/2")
-          button.btn(tag="button" type="submit" value="submit")
-            span Save
+          t-button(type="submit" value="submit" text="Save")
         .end
-          button.btn(tag="button" @click="onCancel")
-            | Close
+          t-button(@click="onCancel" text="Close" variant="error")
 </template>
 
 <script>
 
 import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
-import { SimpleSpinner } from '@/components/loaders'
-import VSelect from '@/components/Select'
+import SimpleSpinner from '@/components/loaders'
 
 export default {
-  props: ['connectionId', 'id'],
+  props: ['connectionId'],
   components: {
-    SimpleSpinner, VSelect
+    SimpleSpinner
   },
   data () {
     return {
@@ -62,19 +59,18 @@ export default {
       isValid: false,
       payload: {
         name: '',
-        policy_expression_name: undefined,
+        policy_expression_name: '',
         function_type: 1,
-        function_parameters: undefined,
-        description: undefined
+        function_parameters: '',
+        description: ''
       }
     }
   },
   computed: {
-    ...mapGetters('category', ['categories']),
     ...mapGetters('redact', ['expressions', 'functionTypes', 'functionParameters'])
   },
   methods: {
-    ...mapActions('category', ['createCategory', 'getCategories']),
+    ...mapActions('category', ['createCategory']),
     ...mapActions('redact', ['getExpressions', 'getFunctionTypes', 'getFunctionParameters']),
     onCreate (e) {
       e.preventDefault()
@@ -86,17 +82,7 @@ export default {
         this.isSpinner = false
       })
     },
-    onCancel () { window.history.back() },
-    load () {
-      const id = +this.id
-      console.log(this.categories, id)
-      const category = _.find(this.categories, { id })
-      this.payload.name = category.name
-      this.payload.policy_expression_name = category?.policy_expression?.policy_expression_name
-      this.payload.function_type = category.function_type
-      this.payload.function_parameters = category.function_parameters
-      this.payload.description = category.description
-    }
+    onCancel () { window.history.back() }
   },
   mounted () {
     this.isSpinner = true
@@ -110,10 +96,7 @@ export default {
     if (_.isEmpty(this.functionParameters)) {
       promises.push(this.getFunctionParameters())
     }
-    if (_.isEmpty(this.categories)) {
-      promises.push(this.getCategories())
-    }
-    Promise.all(promises).finally(() => { this.load(); this.isSpinner = false })
+    Promise.all(promises).finally(() => { this.isSpinner = false })
   }
 }
 </script>

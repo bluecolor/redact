@@ -2,29 +2,27 @@
 .flex.justify-center.flex-col(class="w-3/4")
   form(autocomplete="off" @submit="onCreate")
     .form-item
-      label Name
-      input(v-model="payload.policy_expression_name" name='policy_expression_name' required autofocus)
+      t-input-group(label='Name', required)
+        t-input(v-model="payload.policy_expression_name" required autofocus)
     .form-item
-      label Expression
-      textarea(v-model="payload.expression" name='expression' required)
+      t-input-group(label='Expression', required)
+        t-textarea(v-model="payload.expression" required)
     .form-item
-      label Description
-      textarea(v-model="payload.policy_expression_description" name='policy_expression_description' required)
+      t-input-group(label='Description', required)
+        t-textarea(v-model="payload.policy_expression_description")
     .form-item.mt-5
       .flex.justify-between.items-center
         simple-spinner(v-if="isSpinner")
         .flex.gap-x-3(v-else class="w-1/2")
-          button.btn(tag="button" type="submit" value="submit")
-            span Save
+          t-button(type="submit" value="submit" text="Save")
         .end
-          button.btn(tag="button" @click="onCancel")
-            | Close
+          t-button(@click="onCancel" text="Close" variant="error")
 </template>
 
 <script>
 
 import { mapActions } from 'vuex'
-import { SimpleSpinner } from '@/components/loaders'
+import SimpleSpinner from '@/components/loaders'
 
 export default {
   props: ['connectionId'],

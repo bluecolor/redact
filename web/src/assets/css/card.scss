@@ -1,0 +1,13 @@
+.card {
+  .actions {
+    .icon-btn { visibility: hidden;}
+  }
+  &:hover {
+    .border {
+      @apply border-blue-600;
+    }
+    .actions {
+      .icon-btn { visibility: visible;}
+    }
+  }
+}

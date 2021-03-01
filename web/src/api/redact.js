@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import request from './request'
+import qs from 'qs'
 
 export default {
 
@@ -11,6 +12,10 @@ export default {
   },
   getPolicies (connectionId) {
     return request.get(`/connections/${connectionId}/redact/policies`)
+  },
+  alterPolicy (params) {
+    const { connId, ...payload } = params
+    return request.put(`/connections/${connId}/redact/policies`, payload)
   },
   getExpressions (connectionId) {
     return request.get(`/connections/${connectionId}/redact/expressions`)
@@ -29,5 +34,13 @@ export default {
       `/connections/${connectionId}/redact/expressions/${encodeURI(policy_expression_name)}`,
       { policy_expression_name, ...paylod }
     )
+  },
+  createPolicy (params) {
+    const { connId, ...paylod } = params
+    return request.post(`/connections/${connId}/redact/policies`, paylod)
+  },
+  getColumns (params) {
+    const { connId, ...query } = params
+    return request.get(`/connections/${connId}/redact/columns?${qs.stringify(query)}`)
   }
 }

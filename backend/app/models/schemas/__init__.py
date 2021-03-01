@@ -5,7 +5,7 @@ from .connection import (
     ConnectionUpdateIn,
     ConnectionTestIn
 )
-from .metadata import Table, Column
+from .metadata import Table, Column, ObjectOwner
 from .redact import (
     PolicyIn,
     Policy,

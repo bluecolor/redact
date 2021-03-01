@@ -1,5 +1,5 @@
 <template lang="pug">
-#app.h-full
+#app
   router-view
 </template>
 
@@ -18,6 +18,7 @@ export default {
 
 <style>
 #app {
-  height: 100%;
+  /* height: 100%; */
+  /* height:calc(100vh + 100px); */
 }
 </style>

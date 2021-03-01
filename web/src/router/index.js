@@ -1,17 +1,22 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import MainLayout from '@/layouts/MainLayout.vue'
-import AuthLayout, { ConnectionLayout } from '@/layouts'
-
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import MainLayout, { ConnectionLayout } from '@/layouts'
 import Home from '@/pages/Home.vue'
-import Login from '@/pages/Login.vue'
 import Connections, { CreateConnection, EditConnection } from '@/pages/settings/connections'
-import Categories, { EditCategory, CreateCategory } from '@/pages/categories'
+import Policies, { CreatePolicy, EditPolicy, AddColumn as AddRedactionColumn, Columns as RedactionColumns } from '@/pages/policies'
 import Expressions, { CreateExpression, EditExpression } from '@/pages/expressions'
+import Categories, { EditCategory, CreateCategory } from '@/pages/categories'
+import Login from '@/pages/auth'
+
+Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/auth/login',
+    component: Login
+  },
+  {
     path: '/',
-    name: 'Home',
     component: MainLayout,
     children: [
       { name: 'home', path: '', component: Home },
@@ -26,7 +31,7 @@ const routes = [
         component: EditConnection,
         props: true
       }, {
-        name: 'editConnection',
+        name: 'connections',
         path: 'settings/connections',
         component: Connections
       }, {
@@ -34,65 +39,82 @@ const routes = [
         path: '/connections/:connectionId',
         props: true,
         component: ConnectionLayout,
-        children: [
-          {
-            name: 'categories',
-            path: '/connections/:connectionId/categories',
-            props: true,
-            component: Categories,
-            meta: { group: 'categories' }
-          }, {
-            name: 'createCategory',
-            path: '/connections/:connectionId/categories/create',
-            props: true,
-            component: CreateCategory,
-            meta: { group: 'categories' }
-          }, {
-            name: 'editCategory',
-            path: '/connections/:connectionId/categories/:id',
-            props: true,
-            component: EditCategory,
-            meta: { group: 'categories' }
-          }, {
-            name: 'expressions',
-            path: '/connections/:connectionId/expressions',
-            props: true,
-            component: Expressions,
-            meta: { group: 'expressions' }
-          }, {
-            name: 'createExpression',
-            path: '/connections/:connectionId/expressions/create',
-            props: true,
-            component: CreateExpression,
-            meta: { group: 'expressions' }
-          }, {
-            name: 'editExpression',
-            path: '/connections/:connectionId/expressions/:policy_expression_name',
-            props: true,
-            component: EditExpression,
-            meta: { group: 'expressions' }
-          }
-        ]
+        children: [{
+          name: 'redactionColumns',
+          path: '/connections/:connectionId/policies/columns',
+          props: true,
+          component: RedactionColumns,
+          meta: { group: 'policies' }
+        }, {
+          name: 'addRedactionColumn',
+          path: '/connections/:connectionId/policies/columns/add',
+          props: true,
+          component: AddRedactionColumn,
+          meta: { group: 'policies' }
+        }, {
+          name: 'policies',
+          path: '/connections/:connectionId/policies',
+          props: true,
+          component: Policies,
+          meta: { group: 'policies' }
+        }, {
+          name: 'editPolicy',
+          path: '/connections/:connectionId/policies/edit',
+          props: true,
+          component: EditPolicy,
+          meta: { group: 'policies' }
+        }, {
+          name: 'createPolicy',
+          path: '/connections/:connectionId/policies/create',
+          props: true,
+          component: CreatePolicy,
+          meta: { group: 'policies' }
+        }, {
+          name: 'expressions',
+          path: '/connections/:connectionId/expressions',
+          props: true,
+          component: Expressions,
+          meta: { group: 'expressions' }
+        }, {
+          name: 'createExpression',
+          path: '/connections/:connectionId/expressions/create',
+          props: true,
+          component: CreateExpression,
+          meta: { group: 'expressions' }
+        }, {
+          name: 'editExpression',
+          path: '/connections/:connectionId/expressions/:policy_expression_name',
+          props: true,
+          component: EditExpression,
+          meta: { group: 'expressions' }
+        }, {
+          name: 'categories',
+          path: '/connections/:connectionId/categories',
+          props: true,
+          component: Categories,
+          meta: { group: 'categories' }
+        }, {
+          name: 'createCategory',
+          path: '/connections/:connectionId/categories/create',
+          props: true,
+          component: CreateCategory,
+          meta: { group: 'categories' }
+        }, {
+          name: 'editCategory',
+          path: '/connections/:connectionId/categories/:id',
+          props: true,
+          component: EditCategory,
+          meta: { group: 'categories' }
+        }]
       }
-    ]
-  }, {
-    path: '/about',
-    name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../pages/About.vue')
-  },
-  {
-    path: '/auth',
-    name: 'Auth',
-    component: AuthLayout,
-    redirect: 'auth/login',
-    children: [
-      { name: 'login', path: 'login', component: Login }
     ]
   }
 ]
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+const router = new VueRouter({
+  mode: 'history',
+  // Vite exposes env variables on the special import.meta.env object
+  base: process.env.BASE_URL,
   routes
 })
 

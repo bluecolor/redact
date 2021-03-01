@@ -1,6 +1,3 @@
-import PageLoader from './PageLoader'
-import SimpleSpinner from './SimpleSpinner'
+import TSimpleSpinner from './TSimpleSpinner.vue'
 
-export default PageLoader
-
-export { SimpleSpinner }
+export default TSimpleSpinner

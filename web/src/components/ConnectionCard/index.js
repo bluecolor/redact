@@ -1,3 +1,3 @@
-import ConnectionCard from './ConnectionCard'
+import ConnectionCard from './ConnectionCard.vue'
 
 export default ConnectionCard

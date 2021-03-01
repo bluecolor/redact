@@ -13,6 +13,13 @@ def get_all_tables(
     return parse_obj_as(List[schemas.Table], queryall(connection, query))
 
 
+def get_object_owners(
+    connection: models.Connection
+) -> List[schemas.Table]:
+    query = q.all_object_owners()
+    return parse_obj_as(List[schemas.ObjectOwner], queryall(connection, query))
+
+
 def get_all_tab_cols(
     connection: models.Connection,
     owner: Optional[str],

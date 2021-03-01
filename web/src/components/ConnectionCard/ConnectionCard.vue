@@ -1,5 +1,5 @@
 <template lang="pug">
-prompt(:params="prompt" v-if="prompt.show" @hide="prompt.show=false")
+//- prompt(:params="prompt" v-if="prompt.show" @hide="prompt.show=false")
 .card.w-full
   .overflow-hidden.border.rounded-md.w-full
     // card header
@@ -9,7 +9,7 @@ prompt(:params="prompt" v-if="prompt.show" @hide="prompt.show=false")
       .actions.flex.justify-end
         // button link
         .btns.gap-x-3.flex(v-if="!isSpinner")
-          router-link.icon-btn.las.la-pen(:to="`/settings/connections/${connection.id}/edit`")
+          router-link.icon-btn.las.la-pen(:to="`/settings/connections/${connection.id}/edit`" v-slot="{ navigate }")
           .icon-btn.las.la-vial(@click="onTest(connection.id)")
           .icon-btn.las.la-trash-alt.danger(@click="onDelete(connection.id)")
         .spinner.lds-dual-ring(v-else)
@@ -20,13 +20,13 @@ prompt(:params="prompt" v-if="prompt.show" @hide="prompt.show=false")
 
 <script>
 import { mapActions } from 'vuex'
-import Prompt from '@/components/Prompt'
+// import Prompt from '@/components/Prompt'
 
 export default {
   props: {
     connection: { type: Object, default: () => {} }
   },
-  components: { Prompt },
+  // components: { Prompt },
   data () {
     return {
       isSpinner: false,
@@ -52,13 +52,13 @@ export default {
       this.isSpinner = true
       this.testConnection(id).then(result => {
         if (result) {
-          this.$toast.success('Success')
+          // this.$toast.success('Success')
         } else {
-          this.$toast.success('Error')
+          // this.$toast.success('Error')
         }
       }).catch(e => {
         console.log(e)
-        this.$toast.error('Error!')
+        // this.$toast.error('Error!')
       }).finally(() => {
         this.isSpinner = false
       })
@@ -82,5 +82,4 @@ export default {
     }
   }
 }
-
 </style>

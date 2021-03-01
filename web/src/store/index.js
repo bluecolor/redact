@@ -1,24 +1,22 @@
-import { createStore } from 'vuex'
-import connection from './modules/connection'
-import redact from './modules/redact'
-import category from './modules/category'
-import app from './modules/app'
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-export default createStore({
+import connection from './modules/connection'
+import category from './modules/category'
+import redact from './modules/redact'
+import app from './modules/app'
+import md from './modules/md'
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
   state: {
-    count: 0
   },
   mutations: {
-    INC (state, val) {
-      state.count = val
-    }
   },
   actions: {
-    inc ({ commit }, payload) {
-      commit('INC', payload)
-    }
   },
   modules: {
-    connection, redact, category, app
+    connection, category, redact, app, md
   }
 })

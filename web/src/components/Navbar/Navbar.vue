@@ -1,55 +1,79 @@
 <template lang="pug">
-nav
+header
   .w-full.mx-auto.px-5
     .relative.flex.items-center.justify-between.h-12
       .flex.items-center
-        svg-icon.cursor-pointer.home(name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-900")
       .flex.items-center.pr-2.gap-x-4(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
         .icon-btn.las.la-search
-        connections-menu.icon-btn.icon
-        nav-menu.icon-btn.icon(to="/settings/projects")
-        profile-menu
+        t-icon-dropdown(
+          :classes="{icon: 'las la-plug'}"
+          :emitValue="true" :items="connections", displayProp="name", valueProp="id" @select="onSelectConnection")
+        t-icon-dropdown(
+          :classes="{icon: 'las la-sliders-h'}"
+          :emitValue="true" :items="settings", valueProp="path" @select="onSelectSetting")
+        t-avatar-menu
 </template>
 
 <script>
-import ProfileMenu from '@/components/ProfileMenu'
-import NavMenu from '@/components/NavMenu'
-import SvgIcon from '@/components/SvgIcon'
-import ConnectionsMenu from '@/components/ConnectionsMenu'
+
+import { mapActions, mapGetters } from 'vuex'
+import TAvatarMenu from '@/components/TAvatarMenu'
+import TIconDropdown from '@/components/TIconDropdown'
 
 export default {
   name: 'Navbar',
   components: {
-    ProfileMenu,
-    NavMenu,
-    SvgIcon,
-    ConnectionsMenu
+    TAvatarMenu, TIconDropdown
   },
   data () {
     return {
+      settings: [{
+        path: '/settings/connections',
+        icon: 'las la-plug',
+        name: 'Connections'
+      }, {
+        path: '/',
+        icon: 'las la-user',
+        name: 'Users'
+      }]
     }
   },
+  computed: {
+    ...mapGetters('connection', ['connections'])
+  },
   methods: {
-    onHome () {
-      this.$router.push('/projects')
+    ...mapActions('connection', ['getConnections']),
+    onSelectConnection (id) {
+      this.$router.push(`/connections/${id}`)
+    },
+    onSelectSetting (path) {
+      this.$router.push(path)
     }
+  },
+  created () {
+    this.getConnections()
   }
 }
 </script>
 
 <style lang="postcss" scoped>
-nav {
-  @apply border-b border-gray-300 relative px-0 bg-white;
+header {
+  @apply fixed border-b border-gray-300 px-0 bg-white;
+  top: 0;
+  margin-top: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
-nav .container {
+header .container {
   @apply px-0 mx-4 flex flex-wrap items-center justify-between;
 }
 
-nav .container .w-full {
+header .container .w-full {
   @apply relative flex justify-between px-0;
 }
 
-nav i.icon {
+header i.icon {
   @apply text-2xl text-gray-800 opacity-75 cursor-pointer;
 }
 </style>

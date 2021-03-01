@@ -20,7 +20,6 @@ const getters = {
 const actions = {
   getCategories ({ commit, rootGetters }, connectionId) {
     const connId = connectionId ?? rootGetters['app/connectionId']
-    console.log(connectionId, rootGetters['app/connectionId'])
     return api.getCategories(connId).then(result => {
       commit(SET_CATEGORIES, result)
       return result

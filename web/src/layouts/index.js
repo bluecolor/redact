@@ -1,7 +1,6 @@
-import ConnectionLayout from './ConnectionLayout'
-import AuthLayout from './AuthLayout'
+import MainLayout from './MainLayout.vue'
+import ConnectionLayout from './ConnectionLayout.vue'
 
-export {
-  AuthLayout,
-  ConnectionLayout
-}
+export default MainLayout
+
+export { ConnectionLayout }

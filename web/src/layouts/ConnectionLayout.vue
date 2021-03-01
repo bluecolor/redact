@@ -1,19 +1,19 @@
 <template lang="pug">
 .flex.justify-center
-  .settings-layout(class="w-10/12")
-    left-nav.left-nav(:connectionId="connectionId")
+  .connection-layout(class="w-10/12")
+    conn-side-nav.left-nav(:connectionId="connectionId")
     .content
       router-view
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import LeftNav from '@/components/LeftNav'
+import ConnSideNav from '@/components/ConnSideNav'
 
 export default {
   props: ['connectionId'],
   components: {
-    LeftNav
+    ConnSideNav
   },
   methods: {
     ...mapActions('app', ['setConnection'])
@@ -31,13 +31,13 @@ export default {
 </script>
 
 <style lang="postcss">
-.settings-layout {
-  @apply flex justify-center pt-10 content-center space-x-10;
+.connection-layout {
+  @apply flex justify-center content-center space-x-10 pt-10;
 }
-.settings-layout .left-nav {
+.connection-layout .left-nav {
   @apply w-2/12;
 }
-.settings-layout .content {
+.connection-layout .content {
   @apply w-6/12;
 }
 </style>

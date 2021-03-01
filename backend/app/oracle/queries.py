@@ -14,6 +14,10 @@ ALL_TABLES = """
     select owner, table_name from all_tables
 """
 
+ALL_OBJECT_OWNERS = """
+    select username as name from all_users
+"""
+
 ALL_TAB_COLS = """
     select owner, table_name, column_name, data_type from all_tab_cols
 """
@@ -79,3 +83,7 @@ def all_tab_cols(owner: str = None, table_name: str = None):
         return ALL_TAB_COLS
 
     return f"{ALL_TAB_COLS} where {' and '.join(filters)}"
+
+
+def all_object_owners() -> str:
+    return ALL_OBJECT_OWNERS

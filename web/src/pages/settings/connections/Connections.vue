@@ -1,6 +1,6 @@
 <template lang="pug">
 .page
-  page-loader(v-if="isSpinner")
+  //- page-loader(v-if="isSpinner")
   .connections-container.flex.justify-center.max-w-2xl(class="w-2/4 sm:px-6 lg:px-8")
     .body.w-full.flex.items-center.flex-col.py-10
       .empty(v-if="isConnectionsEmpty")
@@ -12,19 +12,20 @@
             | Create New Connection
       .connections.gap-y-3.flex.flex-col.w-full(v-if="!isConnectionsEmpty")
         connection-card(v-for="c in connections" :connection="c")
-      router-link.btn.create-btn.mt-10.w-full(tag="button" to="/settings/connections/create")
-        | Create New Connection
+      //- router-link.btn.create-btn.mt-10.w-full(tag="button" to="/settings/connections/create")
+      //-   | Create New Connection
+      t-button.mt-10.w-full.text-center(tagName="a" href="/settings/connections/create" text="Create New Connection")
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
-import PageLoader from '@/components/loaders'
+// import PageLoader from '@/components/loaders'
 import ConnectionCard from '@/components/ConnectionCard'
 
 export default {
   components: {
-    SvgIcon, PageLoader, ConnectionCard
+    SvgIcon, ConnectionCard
   },
   data () {
     return {

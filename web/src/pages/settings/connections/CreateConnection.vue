@@ -3,33 +3,33 @@
   .flex.justify-center.flex-col(class="w-1/3")
     form.mt-10(autocomplete="off" @submit="onCreate")
       .form-item
-        label Name
-        input(v-model="payload.name" name='name' required autofocus)
+        t-input-group(label='Name', required)
+          t-input(v-model="payload.name")
       .form-item
-        label Host
-        input(v-model="payload.host" name='host' required)
+        t-input-group(label='Host', required)
+          t-input(v-model="payload.host" placeholder="host name or ip address" required)
       .form-item
-        label Port
-        input(v-model.number="payload.port" name='port' required type='number')
+        t-input-group(label='Port', required)
+          t-input(v-model.number="payload.port" required type="number")
       .form-item
-        label Service
-        input(v-model="payload.service" name='service' required)
+        t-input-group(label='Service', required)
+          t-input(v-model="payload.service" required)
       .form-item
-        label Username
-        input(v-model="payload.username" name='username' required)
+        t-input-group(label='Username', required)
+          t-input(v-model="payload.username" required)
       .form-item
-        label Password
-        input(v-model="payload.password" name='password' type="password" required)
+        t-input-group(label='Password', required)
+          t-input(v-model="payload.password" required type="password")
       .form-item.mt-5
         .flex.justify-between.items-center
           simple-spinner(v-if="isSpinner")
           .flex.gap-x-3(v-else class="w-1/2")
-            button.btn(tag="button" type="submit" value="submit")
+            t-button(type="submit" value="submit" variant="secondary")
               span Save
-            button.btn(tag="button" @click="onTest")
+            t-button(@click="onTest" variant="secondary")
               span Test
           .end
-            button.btn(tag="button" @click="onCancel")
+            t-button(@click="onCancel" variant="error")
               | Close
 </template>
 

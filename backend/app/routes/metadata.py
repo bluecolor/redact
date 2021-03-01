@@ -19,6 +19,17 @@ def get_tables(
     conn = db.query(models.Connection).get(conn_id)
     return md.get_all_tables(connection=conn, owner=owner)
 
+@router.get(
+    "/connections/{conn_id}/metadata/object_owners",
+    response_model=List[schemas.ObjectOwner],
+)
+def get_object_owners(
+    conn_id: int, db: Session = Depends(get_db)
+):
+    conn = db.query(models.Connection).get(conn_id)
+    return md.get_object_owners(connection=conn)
+
+
 
 @router.get(
     "/connections/{conn_id}/metadata/columns",
