@@ -1,5 +1,5 @@
 <template lang="pug">
-.flex.flex-col(class="w-3/4")
+.flex.flex-col.pb-5(class="w-3/4")
   form.flex.flex-col(autocomplete="off" @submit="onAddColumn")
     .form-item
       t-input-group(label='Policy Name')
@@ -66,7 +66,7 @@
         .flex.gap-x-3(v-else class="w-1/2")
           t-button(type="submit" value="submit" text="Save")
         .end
-          t-button(@click="onCancel" text="Canlcel" variant="error")
+          t-button(@click="onBack" text="Back" variant="secondary")
 </template>
 
 <script>
@@ -130,7 +130,6 @@ export default {
     onAddColumn (e) {
       e.preventDefault()
       this.isSpinner = true
-      console.log(this.payload_)
       this.alterPolicy(this.payload_).then(() => {
         this.$toast.success('Success. Column added')
       }).catch(error => {
@@ -140,7 +139,7 @@ export default {
         this.isSpinner = false
       })
     },
-    onCancel () { window.history.back() },
+    onBack () { window.history.back() },
     loadColumns () {
       const { object_schema, object_name } = this.payload
       this.getColumns({ object_schema, object_name })

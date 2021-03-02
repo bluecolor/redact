@@ -9,7 +9,7 @@
       .space-y-4
         t-input(v-model="payload.usernanme" required autofocus placeholder="Username")
         t-input(v-model="payload.password" required placeholder="Password" type="password")
-      t-button(text="Sign In")
+      t-button(text="Sign In" @click="onLogin")
 </template>
 
 <script>
@@ -19,8 +19,12 @@ export default {
       payload: {}
     }
   },
+  methods: {
+    onLogin () {
+      this.$router.push({ path: '/' })
+    }
+  },
   mounted () {
-    console.log('login')
   }
 }
 </script>

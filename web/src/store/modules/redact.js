@@ -14,6 +14,7 @@ const CREATE_POLICY = 'CREATE_POLICY'
 const SET_COLUMNS = 'SET_COLUMNS'
 const DROP_COLUMN = 'DROP_COLUMN'
 const ADD_COLUMN = 'ADD_COLUMN'
+const MODIFY_EXPRESSION = 'MODIFY_EXPRESSION'
 
 const state = {
   policies: [],
@@ -97,6 +98,9 @@ const actions = {
         case PolicyActions.ADD_COLUMN:
           commit(ADD_COLUMN, params)
           break
+        case PolicyActions.MODIFY_EXPRESSION:
+          commit(MODIFY_EXPRESSION, params)
+          break
       }
       return result
     })
@@ -134,12 +138,19 @@ const mutations = {
   },
   [DROP_COLUMN]: (state, { object_name, object_schema, column_name }) => {
     const i = _.findIndex(state.columns, { object_name, object_schema, column_name })
-    if (i >= -1) {
+    if (i > -1) {
       state.columns.splice(i, 1)
     }
   },
   [ADD_COLUMN]: (state, data) => {
     state.columns.push(data)
+  },
+  [MODIFY_EXPRESSION]: (state, { object_name, object_schema, column_name, expression }) => {
+    const i = _.findIndex(state.columns, { object_name, object_schema, column_name })
+    console.log(i)
+    if (i > -1) {
+      state.columns[i].expression = expression
+    }
   }
 }
 

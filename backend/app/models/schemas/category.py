@@ -25,5 +25,6 @@ class CategoryOut(Base):
     name: str
     description: Optional[str]
     function_type: int
+    function_type_name: Optional[str]
     function_parameters: Optional[str]
     policy_expression: Optional[PolicyExpression]

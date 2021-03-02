@@ -9,7 +9,7 @@
   .fixed.inset-0(v-if="isOpen", @click="isOpen = false", tabindex="-1")
   div(v-if="isOpen" :class="classes.menuWrapper")
       template(v-for="i in items")
-        a(v-if="i !== '-'" href="#", :class="classes.menuItem") {{i.title}}
+        .cursor-pointer(v-if="i !== '-'" :class="classes.menuItem" @click="onItemClick(i)") {{i.title}}
         div(v-if="i === '-'" :class="classes.separator")
 </template>
 
@@ -38,10 +38,19 @@ export default {
     return {
       isOpen: false,
       items: [{
+        name: 'profile',
         title: 'Profile'
       }, '-', {
+        name: 'signout',
         title: 'Sign out'
       }]
+    }
+  },
+  methods: {
+    onItemClick (i) {
+      switch (i.name) {
+        case 'signout': this.$router.push({ path: '/auth/login' })
+      }
     }
   }
 }

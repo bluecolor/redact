@@ -28,6 +28,7 @@
               td(:class='props.tdClass')
                 | {{ props.row.function_type }}
               td.flex.gap-x-5(:class='props.tdClass')
+                .icon-btn.las.la-code(@click="onModifyExpression(props.row)")
                 .icon-btn.las.la-pen
                 .icon-btn.danger.las.la-trash-alt(@click="onDropColumn(props.row)")
 
@@ -81,6 +82,10 @@ export default {
         console.log(error)
         this.$toast.error('Error. Failed to remove column')
       })
+    },
+    onModifyExpression ({ column_name }) {
+      const params = { ...this.$route.query, column_name }
+      this.$router.push({ path: `columns/modify-expression?${qs.stringify(params)}` })
     }
   },
   mounted () {

@@ -2,8 +2,9 @@ import Policies from './Policies.vue'
 import CreatePolicy from './CreatePolicy.vue'
 import EditPolicy from './EditPolicy.vue'
 import Columns from './Columns.vue'
-import AddColumn from './AddColumn.vue'
+import AlterPolicyAddColumn from './AlterPolicyAddColumn.vue'
+import AlterPolicyModifyExpression from './AlterPolicyModifyExpression.vue'
 
 export default Policies
 
-export { CreatePolicy, EditPolicy, Columns, AddColumn }
+export { CreatePolicy, EditPolicy, Columns, AlterPolicyAddColumn, AlterPolicyModifyExpression }

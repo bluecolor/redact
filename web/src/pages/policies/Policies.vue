@@ -10,7 +10,7 @@
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .connections.gap-y-3.flex.flex-col.w-full
-        t-card(v-for="p in policies" :header='p.policy_name')
+        t-card.card(v-for="p in policies" :header='p.policy_name')
           template(v-slot:header)
             .flex.justify-between
               .title

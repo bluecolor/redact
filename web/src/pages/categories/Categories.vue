@@ -10,8 +10,24 @@ div
   .connections-container.flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .connections.gap-y-3.flex.flex-col.w-full
-        t-card(v-for="c in categories" :header='c.name')
-          | Content of the card.
+        t-card.card(v-for="c in categories" :header='c.name')
+          template(v-slot:header)
+            .flex.justify-between
+              .title
+                | {{c.name}}
+              .actions.flex.justify-end
+                .btns.gap-x-3.flex(v-if="!isSpinner")
+                  router-link.icon-btn.las.la-pen(
+                    :to="`categories/${c.id}`")
+                  .icon-btn.las.la-trash-alt.danger(@click="onDelete(c)")
+                .spinner.lds-dual-ring(v-else)
+          template(v-slot:default)
+            .flex.justify-between
+              .start
+                .description {{c.description}}
+              .end.flex.flex-col.justify-between
+                .function-type {{c.function_type_name}}
+                .date.text-sm.text-gray-400 {{fromNow(c.updated_on)}}
 
       t-button.mt-10.w-full.text-center(tagName="a"
         :href="`/connections/${connectionId}/categories/create`" text="Create New Category")
@@ -19,8 +35,12 @@ div
 </template>
 
 <script>
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import { mapActions, mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
+
+dayjs.extend(relativeTime)
 
 export default {
   props: ['connectionId'],
@@ -41,6 +61,9 @@ export default {
     load () {
       this.isSpinner = true
       this.getCategories(this.connectionId).finally(() => { this.isSpinner = false })
+    },
+    fromNow (d) {
+      return dayjs(d).fromNow()
     }
   },
   mounted () {

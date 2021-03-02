@@ -3,7 +3,13 @@ import VueRouter from 'vue-router'
 import MainLayout, { ConnectionLayout } from '@/layouts'
 import Home from '@/pages/Home.vue'
 import Connections, { CreateConnection, EditConnection } from '@/pages/settings/connections'
-import Policies, { CreatePolicy, EditPolicy, AddColumn as AddRedactionColumn, Columns as RedactionColumns } from '@/pages/policies'
+import Policies, {
+  CreatePolicy,
+  EditPolicy,
+  AlterPolicyAddColumn,
+  AlterPolicyModifyExpression,
+  Columns as RedactionColumns
+} from '@/pages/policies'
 import Expressions, { CreateExpression, EditExpression } from '@/pages/expressions'
 import Categories, { EditCategory, CreateCategory } from '@/pages/categories'
 import Login from '@/pages/auth'
@@ -46,10 +52,16 @@ const routes = [
           component: RedactionColumns,
           meta: { group: 'policies' }
         }, {
-          name: 'addRedactionColumn',
+          name: 'alterPolicyAddColumn',
           path: '/connections/:connectionId/policies/columns/add',
           props: true,
-          component: AddRedactionColumn,
+          component: AlterPolicyAddColumn,
+          meta: { group: 'policies' }
+        }, {
+          name: 'alterPolicyModifyExpression',
+          path: '/connections/:connectionId/policies/columns/modify-expression',
+          props: true,
+          component: AlterPolicyModifyExpression,
           meta: { group: 'policies' }
         }, {
           name: 'policies',

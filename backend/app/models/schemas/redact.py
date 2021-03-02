@@ -24,6 +24,7 @@ class AlterPolicyIn(BaseModel):
     policy_name: str
     action: int
     column_name: str
+    expression: Optional[str]
     function_type: Optional[int]
     function_parameters: Optional[str]
 

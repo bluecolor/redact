@@ -9,9 +9,11 @@ from sqlalchemy import (
     String,
     DateTime,
 )
+from sqlalchemy.orm.base import attribute_str
 
 from .base import Base
 from app.models import schemas
+from app.oracle import redact
 
 class Category(Base):
     __tablename__ = "categories"
@@ -24,6 +26,14 @@ class Category(Base):
     function_parameters = Column(String(4000))
 
     policy_expression: schemas.PolicyExpression
+
+
+    @property
+    def function_type_name(self):
+        for ft in redact.get_function_types():
+            if ft.function_type == self.function_type:
+                return ft.name
+
 
     def __init__(self, **kw):
         super().__init__(**kw)
