@@ -3,6 +3,7 @@ header
   .w-full.mx-auto.px-5
     .relative.flex.items-center.justify-between.h-12
       .flex.items-center
+        svg-icon.cursor-pointer.home(name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-900")
       .flex.items-center.pr-2.gap-x-4(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
         .icon-btn.las.la-search
         t-icon-dropdown(
@@ -19,11 +20,12 @@ header
 import { mapActions, mapGetters } from 'vuex'
 import TAvatarMenu from '@/components/TAvatarMenu'
 import TIconDropdown from '@/components/TIconDropdown'
+import SvgIcon from '@/components/SvgIcon'
 
 export default {
   name: 'Navbar',
   components: {
-    TAvatarMenu, TIconDropdown
+    TAvatarMenu, TIconDropdown, SvgIcon
   },
   data () {
     return {

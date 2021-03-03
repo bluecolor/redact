@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MainLayout, { ConnectionLayout } from '@/layouts'
+import MainLayout, { ConnectionLayout, SettingsLayout } from '@/layouts'
 import Home from '@/pages/Home.vue'
 import Connections, { CreateConnection, EditConnection } from '@/pages/settings/connections'
 import Policies, {
@@ -27,19 +27,25 @@ const routes = [
     children: [
       { name: 'home', path: '', component: Home },
       {
-        name: 'createConnection',
-        path: 'settings/connections/create',
-        component: CreateConnection
-      },
-      {
-        name: 'editConnection',
-        path: 'settings/connections/:id/edit',
-        component: EditConnection,
-        props: true
-      }, {
-        name: 'connections',
-        path: 'settings/connections',
-        component: Connections
+        path: '/settings',
+        component: SettingsLayout,
+        children: [
+          {
+            name: 'createConnection',
+            path: 'connections/create',
+            component: CreateConnection
+          },
+          {
+            name: 'editConnection',
+            path: 'connections/:id/edit',
+            component: EditConnection,
+            props: true
+          }, {
+            name: 'connections',
+            path: 'connections',
+            component: Connections
+          }
+        ]
       }, {
         name: 'connectionsLayout',
         path: '/connections/:connectionId',
