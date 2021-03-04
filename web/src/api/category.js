@@ -9,9 +9,8 @@ export default {
     const { connectionId, ...payload } = params
     return request.post(`/connections/${connectionId}/categories`, payload)
   },
-  delete (params) {
-    const { connectionId, id } = params
-    return request.delete(`/connections/${connectionId}/categories/${id}`)
+  delete ({ connId, id }) {
+    return request.delete(`/connections/${connId}/categories/${id}`)
   },
   update (params) {
     const { connectionId, id, ...payload } = params

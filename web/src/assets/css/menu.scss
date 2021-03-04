@@ -1,8 +1,14 @@
 .menu {
-  @apply  p-2 ring-1 ring-black ring-opacity-5 shadow-lg w-64
-    rounded-md mt-3 absolute right-0 origin-top-right text-left;
+  @apply ring-1 ring-black ring-opacity-5 shadow-md w-64
+    rounded-md mt-3 absolute right-0 origin-top-right text-left text-gray-900;
 
   .item {
-    @apply rounded-md hover:bg-blue-200 cursor-pointer;
+    @apply p-1 hover:bg-gray-200 cursor-pointer px-2;
+    &:first-child {
+      @apply rounded-t-md;
+    }
+    &:last-child {
+      @apply rounded-b-md;
+    }
   }
 }

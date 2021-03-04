@@ -15,6 +15,7 @@ const SET_COLUMNS = 'SET_COLUMNS'
 const DROP_COLUMN = 'DROP_COLUMN'
 const ADD_COLUMN = 'ADD_COLUMN'
 const MODIFY_EXPRESSION = 'MODIFY_EXPRESSION'
+const DROP_EXPRESSION = 'DROP_EXPRESSION'
 
 const state = {
   policies: [],
@@ -62,6 +63,13 @@ const actions = {
   createExpression ({ commit }, params) {
     return api.createExpression(params).then(result => {
       commit(CREATE_EXPRESSION, result)
+      return result
+    })
+  },
+  dropExpression ({ commit, rootGetters }, { connectionId, ...params }) {
+    const connId = connectionId ?? rootGetters['app/connectionId']
+    return api.dropExpression({ connId, ...params }).then(result => {
+      commit(DROP_EXPRESSION, params)
       return result
     })
   },
@@ -150,6 +158,12 @@ const mutations = {
     console.log(i)
     if (i > -1) {
       state.columns[i].expression = expression
+    }
+  },
+  [DROP_EXPRESSION]: (state, { policy_expression_name }) => {
+    const i = _.findIndex(state.expressions, { policy_expression_name })
+    if (i > -1) {
+      state.expressions.splice(i, 1)
     }
   }
 }

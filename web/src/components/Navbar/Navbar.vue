@@ -2,8 +2,15 @@
 header
   .w-full.mx-auto.px-5
     .relative.flex.items-center.justify-between.h-12
-      .flex.items-center
-        svg-icon.cursor-pointer.home(name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-900")
+      .flex.items-center.gap-x-10
+        svg-icon.cursor-pointer.home(@click="onHome" name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-900")
+        .connection-title.flex.gap-x-3
+          router-link.connection.cursor-pointer.text-gray-700(
+            :to="`/connections/${connectionId}`"
+            class="hover:text-gray-900 hover:font-black"
+          ) {{connectionName}}
+          .sep(v-if="title") /
+          .title.text-gray-500 {{title}}
       .flex.items-center.pr-2.gap-x-4(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
         .icon-btn.las.la-search
         t-icon-dropdown(
@@ -41,7 +48,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('connection', ['connections'])
+    ...mapGetters('connection', ['connections']),
+    ...mapGetters('app', ['connection']),
+    connectionName () {
+      return this.connection?.name
+    },
+    connectionId () {
+      return this.connection?.id
+    },
+    title () {
+      return this.$route?.meta?.title
+    }
   },
   methods: {
     ...mapActions('connection', ['getConnections']),
@@ -50,6 +67,9 @@ export default {
     },
     onSelectSetting (path) {
       this.$router.push(path)
+    },
+    onHome () {
+      this.$router.push({ path: '/' })
     }
   },
   created () {

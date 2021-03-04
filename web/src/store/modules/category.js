@@ -31,9 +31,9 @@ const actions = {
       return result
     })
   },
-  deleteCategory ({ commit, rootGetters }, params) {
-    const connectionId = rootGetters['app/connectionId']
-    return api.delete({ connectionId, ...params }).then(result => {
+  deleteCategory ({ commit, rootGetters }, { connectionId, id }) {
+    const connId = connectionId ?? rootGetters['app/connectionId']
+    return api.delete({ connId, id }).then(result => {
       commit(DELETE, result)
       return result
     })

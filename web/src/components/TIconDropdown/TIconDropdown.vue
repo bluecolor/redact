@@ -6,7 +6,7 @@
   )
     .h-full.w-full.object-cover(:class="cls.icon")
   .fixed.inset-0(v-if="isOpen", @click="isOpen = false", tabindex="-1")
-  div(v-if="isOpen" :class="cls.menu")
+  div.bg-white(v-if="isOpen" :class="cls.menu")
     template(v-if="!loading && items.length > 0" v-for="i in items")
       div(:class="cls.menuItem" @click="onItemClick(i)")
         div(v-if="i.icon" :class="`${cls.itemIcon} ${i.icon}`")
@@ -44,13 +44,14 @@ export default {
         icon: 'las la-ellipsis-v',
         empty: 'empty p-2 text-base',
         menu: 'menu',
-        menuItem: 'item flex px-2 content-center items-center',
+        menuItem: 'item flex px-4 content-center items-center',
         itemIcon: 'icon'
       }
     }
   },
   methods: {
     onItemClick (item) {
+      this.isOpen = false
       if (this.emitValue) {
         this.$emit('select', item[this.valueProp])
       } else {

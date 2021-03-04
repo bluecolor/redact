@@ -1,5 +1,7 @@
 /* eslint-disable camelcase */
 
+import _ from 'lodash'
+
 const SET_CONNECTION = 'SET_CONNECTION'
 
 const state = {
@@ -7,7 +9,10 @@ const state = {
 }
 
 const getters = {
-  connectionId: state => state.connectionId
+  connectionId: state => state.connectionId,
+  connection: (state, getters, rootState, rootGetters) => {
+    return _.find(rootGetters['connection/connections'], { id: getters.connectionId })
+  }
 }
 
 const actions = {

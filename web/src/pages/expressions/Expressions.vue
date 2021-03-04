@@ -18,16 +18,21 @@ div
               .actions.flex.justify-end
                 .btns.gap-x-3.flex(v-if="!isSpinner")
                   router-link.icon-btn.las.la-pen(:to="`expressions/${encodeURI(e.policy_expression_name)}`")
-                  .icon-btn.las.la-trash-alt.danger(@click="onDelete()")
+                  .icon-btn.las.la-trash-alt.danger(@click="onDelete(e)")
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
-            | Content of the card.
+            .flex.justify-between
+              .start
+                .description {{e.policy_expression_description}}
+              .end.flex.flex-col.justify-between
+                .function-type {{e.object_owner}}.{{e.object_name}}.{{e.column_name}}
 
       t-button.mt-10.w-full.text-center(tagName="a"
         :href="`/connections/${connectionId}/expressions/create`" text="Create New Expression")
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import { mapActions, mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 
@@ -46,10 +51,18 @@ export default {
     ...mapGetters('redact', ['expressions', 'isExpressionsEmpty'])
   },
   methods: {
-    ...mapActions('redact', ['getExpressions']),
+    ...mapActions('redact', ['getExpressions', 'dropExpression']),
     load () {
       this.isSpinner = true
       this.getExpressions(this.connectionId).finally(() => { this.isSpinner = false })
+    },
+    onDelete ({ policy_expression_name }) {
+      this.dropExpression({ policy_expression_name }).then(() => {
+        this.$toast.success('Success. Dropped expression')
+      }).catch(error => {
+        console.log(error)
+        this.$toast.error('Error. Failed to drop expression')
+      })
     }
   },
   mounted () {

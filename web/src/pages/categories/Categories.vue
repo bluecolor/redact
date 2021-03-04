@@ -57,13 +57,22 @@ export default {
     ...mapGetters('category', ['categories', 'isCategoriesEmpty'])
   },
   methods: {
-    ...mapActions('category', ['getCategories']),
+    ...mapActions('category', ['getCategories', 'deleteCategory']),
     load () {
       this.isSpinner = true
       this.getCategories(this.connectionId).finally(() => { this.isSpinner = false })
     },
     fromNow (d) {
       return dayjs(d).fromNow()
+    },
+    onDelete ({ id }) {
+      this.isSpinner = true
+      this.deleteCategory({ id }).then(() => {
+        this.$toast.success('Success. Deleted category')
+      }).catch(error => {
+        console.log(error)
+        this.$toast.error('Error. Failed to delete category')
+      }).finally(() => { this.isSpinner = false })
     }
   },
   mounted () {

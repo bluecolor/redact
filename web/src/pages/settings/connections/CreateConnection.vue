@@ -1,5 +1,4 @@
 <template lang="pug">
-
 .flex.justify-center.flex-col
   form.mt-10(autocomplete="off" @submit="onCreate")
     .form-item

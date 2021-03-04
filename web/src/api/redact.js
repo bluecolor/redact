@@ -24,9 +24,11 @@ export default {
     const { connectionId, policy_expression_name } = payload
     return request.get(`/connections/${connectionId}/redact/expressions/${encodeURI(policy_expression_name)}`)
   },
-  createExpression (params) {
-    const { connectionId, ...paylod } = params
+  createExpression ({ connectionId, ...paylod }) {
     return request.post(`/connections/${connectionId}/redact/expressions`, paylod)
+  },
+  dropExpression ({ connId, policy_expression_name }) {
+    return request.delete(`/connections/${connId}/redact/expressions?${qs.stringify({ name: policy_expression_name })}`)
   },
   updateExpression (params) {
     const { connectionId, policy_expression_name, ...paylod } = params

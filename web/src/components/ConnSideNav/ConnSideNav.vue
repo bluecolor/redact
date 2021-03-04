@@ -1,10 +1,13 @@
 <template lang="pug">
-.left-nav.flex.w-full
-  nav.nav-menu
-    router-link.nav-item(
-      v-for="i in items"
-      :to="i.path"
-      :class="{'selected': i.group && routeGroup && routeGroup === i.group}") {{i.title}}
+.left-nav.flex.w-full.fit
+  nav.nav-menu.flex
+    template(v-for="i in items")
+      .nav-item.bg-white.flex.items-center.gap-x-2.cursor-pointer(
+        @click="onNav(i.path)"
+        :class="{'selected': i.group && routeGroup && routeGroup === i.group}"
+      )
+        .icon-btn(:class="i.icon")
+        .title {{i.title}}
 </template>
 
 <script>
@@ -15,15 +18,18 @@ export default {
       items: [{
         path: `/connections/${this.connectionId}/expressions`,
         title: 'Expressions',
-        group: 'expressions'
+        group: 'expressions',
+        icon: 'las la-code'
       }, {
         path: `/connections/${this.connectionId}/categories`,
         title: 'Categories',
-        group: 'categories'
+        group: 'categories',
+        icon: 'las la-tag'
       }, {
         path: `/connections/${this.connectionId}/policies`,
         title: 'Policies',
-        group: 'policies'
+        group: 'policies',
+        icon: 'las la-certificate'
       }]
     }
   },
@@ -33,6 +39,11 @@ export default {
     },
     routeGroup () {
       return this.$route.meta.group
+    }
+  },
+  methods: {
+    onNav (path) {
+      this.$router.push({ path })
     }
   }
 }

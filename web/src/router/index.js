@@ -51,78 +51,79 @@ const routes = [
         path: '/connections/:connectionId',
         props: true,
         component: ConnectionLayout,
+        redirect: '/connections/:connectionId/expressions',
         children: [{
           name: 'redactionColumns',
           path: '/connections/:connectionId/policies/columns',
           props: true,
           component: RedactionColumns,
-          meta: { group: 'policies' }
+          meta: { group: 'policies', title: 'Redaction Columns' }
         }, {
           name: 'alterPolicyAddColumn',
           path: '/connections/:connectionId/policies/columns/add',
           props: true,
           component: AlterPolicyAddColumn,
-          meta: { group: 'policies' }
+          meta: { group: 'policies', title: 'Add Column' }
         }, {
           name: 'alterPolicyModifyExpression',
           path: '/connections/:connectionId/policies/columns/modify-expression',
           props: true,
           component: AlterPolicyModifyExpression,
-          meta: { group: 'policies' }
+          meta: { group: 'policies', title: 'Modify Expression' }
         }, {
           name: 'policies',
           path: '/connections/:connectionId/policies',
           props: true,
           component: Policies,
-          meta: { group: 'policies' }
+          meta: { group: 'policies', title: 'Policies' }
         }, {
           name: 'editPolicy',
           path: '/connections/:connectionId/policies/edit',
           props: true,
           component: EditPolicy,
-          meta: { group: 'policies' }
+          meta: { group: 'policies', title: 'Edit Policy' }
         }, {
           name: 'createPolicy',
           path: '/connections/:connectionId/policies/create',
           props: true,
           component: CreatePolicy,
-          meta: { group: 'policies' }
+          meta: { group: 'policies', title: 'Create Policy' }
         }, {
           name: 'expressions',
           path: '/connections/:connectionId/expressions',
           props: true,
           component: Expressions,
-          meta: { group: 'expressions' }
+          meta: { group: 'expressions', title: 'Expressions' }
         }, {
           name: 'createExpression',
           path: '/connections/:connectionId/expressions/create',
           props: true,
           component: CreateExpression,
-          meta: { group: 'expressions' }
+          meta: { group: 'expressions', title: 'Create Expression' }
         }, {
           name: 'editExpression',
           path: '/connections/:connectionId/expressions/:policy_expression_name',
           props: true,
           component: EditExpression,
-          meta: { group: 'expressions' }
+          meta: { group: 'expressions', title: 'Edit Expression' }
         }, {
           name: 'categories',
           path: '/connections/:connectionId/categories',
           props: true,
           component: Categories,
-          meta: { group: 'categories' }
+          meta: { group: 'categories', title: 'Categories' }
         }, {
           name: 'createCategory',
           path: '/connections/:connectionId/categories/create',
           props: true,
           component: CreateCategory,
-          meta: { group: 'categories' }
+          meta: { group: 'categories', title: 'Create Category' }
         }, {
           name: 'editCategory',
           path: '/connections/:connectionId/categories/:id',
           props: true,
           component: EditCategory,
-          meta: { group: 'categories' }
+          meta: { group: 'categories', title: 'Edit Category' }
         }]
       }
     ]
