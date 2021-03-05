@@ -1,45 +1,47 @@
 <template lang="pug">
 .flex.justify-center.flex-col(class="w-3/4")
-  form(autocomplete="off" @submit="onCreate")
-    .form-item
-      t-input-group(label='Name', required)
-        t-input(v-model="payload.name" required autofocus)
-    .form-item
-      t-input-group(label='Expression')
-        t-select(
-          v-model="payload.policy_expression_name"
-          :options="expressions",
-          value-attribute='policy_expression_name',
-          text-attribute="policy_expression_name"
-          required
-        )
-    .form-item
-      t-input-group(label='Function Type')
-        t-select(
-          v-model.number="payload.function_type"
-          :options="functionTypes",
-          value-attribute='function_type',
-          text-attribute="name"
-          required
-        )
-    .form-item
-      t-input-group(label='Function Parameters')
-        t-select(
-          v-model="payload.function_parameters"
-          :options="functionParameters",
-          value-attribute='function_parameters',
-          text-attribute="function_parameters"
-        )
-    .form-item
-      t-input-group(label='Description')
-        t-textarea(v-model="payload.description" name='description')
-    .form-item.mt-5
-      .flex.justify-between.items-center
-        simple-spinner(v-if="isSpinner")
-        .flex.gap-x-3(v-else class="w-1/2")
-          t-button(type="submit" value="submit" text="Save")
-        .end
-          t-button(@click="onCancel" text="Close" variant="error")
+  t-card
+    template(v-slot:default)
+      form(autocomplete="off" @submit="onCreate")
+        .form-item
+          t-input-group(label='Name', required)
+            t-input(v-model="payload.name" required autofocus)
+        .form-item
+          t-input-group(label='Expression')
+            t-select(
+              v-model="payload.policy_expression_name"
+              :options="expressions",
+              value-attribute='policy_expression_name',
+              text-attribute="policy_expression_name"
+              required
+            )
+        .form-item
+          t-input-group(label='Function Type')
+            t-select(
+              v-model.number="payload.function_type"
+              :options="functionTypes",
+              value-attribute='function_type',
+              text-attribute="name"
+              required
+            )
+        .form-item
+          t-input-group(label='Function Parameters')
+            t-select(
+              v-model="payload.function_parameters"
+              :options="functionParameters",
+              value-attribute='function_parameters',
+              text-attribute="function_parameters"
+            )
+        .form-item
+          t-input-group(label='Description')
+            t-textarea(v-model="payload.description" name='description')
+        .form-item.mt-5
+          .flex.justify-between.items-center
+            simple-spinner(v-if="isSpinner")
+            .flex.gap-x-3(v-else class="w-1/2")
+              t-button(type="submit" value="submit" text="Save")
+            .end
+              t-button(@click="onCancel" text="Close" variant="error")
 </template>
 
 <script>

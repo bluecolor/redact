@@ -5,14 +5,14 @@ from app.models.schemas import PolicyExpression
 
 from .base import Base
 
-class CategoryCreateIn(BaseModel):
+class CategoryCreateIn(Base):
     name: str
     description: Optional[str]
     function_type: int
     function_parameters: Optional[str]
     policy_expression_name: str
 
-class CategoryUpdateIn(BaseModel):
+class CategoryUpdateIn(Base):
     name: str
     description: Optional[str]
     function_type: int

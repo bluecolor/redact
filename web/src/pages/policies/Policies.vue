@@ -18,10 +18,15 @@
               .actions.flex.justify-end
                 .btns.gap-x-3.flex(v-if="!isSpinner")
                   router-link.icon-btn.las.la-columns(
+                    content="Policy columns" v-tippy='{ placement : "top" }'
                     :to="`policies/columns?policy_name=${encodeURI(p.policy_name)}&object_owner=${encodeURI(p.object_owner)}&object_name=${encodeURI(p.object_name)}`")
                   router-link.icon-btn.las.la-pen(
+                    content="Edit policy" v-tippy='{ placement : "top" }'
                     :to="`policies/edit?policy_name=${encodeURI(p.policy_name)}&object_owner=${encodeURI(p.object_owner)}&object_name=${encodeURI(p.object_name)}`")
-                  .icon-btn.las.la-trash-alt.danger(@click="onDelete()")
+                  .icon-btn.las.la-trash-alt.danger(
+                    content="Delete policy" v-tippy='{ placement : "top" }'
+                    @click="onDelete()"
+                  )
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
             | Content of the card.
@@ -60,7 +65,6 @@ export default {
   },
   mounted () {
     this.load()
-    console.log('policies')
   }
 }
 </script>

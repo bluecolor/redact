@@ -25,3 +25,5 @@ from .redact import (
 from .policy import PolicyExpression
 
 from .category import CategoryOut, CategoryCreateIn, CategoryUpdateIn
+
+from .discovery import RuleOut, RuleCreateIn

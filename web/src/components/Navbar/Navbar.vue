@@ -9,7 +9,7 @@ header
             :to="`/connections/${connectionId}`"
             class="hover:text-gray-900 hover:font-black"
           ) {{connectionName}}
-          .sep(v-if="title") /
+          .sep(v-if="title && connectionName") /
           .title.text-gray-500 {{title}}
       .flex.items-center.pr-2.gap-x-4(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
         .icon-btn.las.la-search
@@ -44,6 +44,14 @@ export default {
         path: '/',
         icon: 'las la-user',
         name: 'Users'
+      }, {
+        path: '/settings/discovery/rules',
+        icon: 'las la-compass',
+        name: 'Discovery'
+      }, {
+        path: '/settings/categories',
+        icon: 'las la-code',
+        name: 'Categories'
       }]
     }
   },

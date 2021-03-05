@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import MainLayout, { ConnectionLayout, SettingsLayout } from '@/layouts'
 import Home from '@/pages/Home.vue'
 import Connections, { CreateConnection, EditConnection } from '@/pages/settings/connections'
+import Rules from '@/pages/settings/discovery'
+
 import Policies, {
   CreatePolicy,
   EditPolicy,
@@ -31,19 +33,28 @@ const routes = [
         component: SettingsLayout,
         children: [
           {
+            name: 'rules',
+            path: 'discovery/rules',
+            component: Rules,
+            meta: { title: 'Rules' }
+          },
+          {
             name: 'createConnection',
             path: 'connections/create',
-            component: CreateConnection
+            component: CreateConnection,
+            meta: { title: 'Create Connection' }
           },
           {
             name: 'editConnection',
             path: 'connections/:id/edit',
             component: EditConnection,
-            props: true
+            props: true,
+            meta: { title: 'Edit Connection' }
           }, {
             name: 'connections',
             path: 'connections',
-            component: Connections
+            component: Connections,
+            meta: { title: 'Connections' }
           }
         ]
       }, {

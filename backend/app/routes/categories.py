@@ -14,7 +14,7 @@ from app.oracle import redact
 @router.get(
     "/connections/{conn_id}/categories", tags=["Categories"], response_model=List[schemas.CategoryOut]
 )
-def index(conn_id: int, db: Session = Depends(get_db)):
+def get_categories(conn_id: int, db: Session = Depends(get_db)):
     connection = connection = db.query(models.Connection).get(conn_id)
     expressions= redact.get_expressions(connection)
 
@@ -32,7 +32,7 @@ def index(conn_id: int, db: Session = Depends(get_db)):
 @router.post(
     "/connections/{conn_id}/categories", tags=["Categories"], response_model=schemas.CategoryOut
 )
-def create(conn_id: int, category: schemas.CategoryCreateIn, db: Session = Depends(get_db)):
+def create_category(conn_id: int, category: schemas.CategoryCreateIn, db: Session = Depends(get_db)):
     payload = {**category.dict(), "connection_id": conn_id}
     new_category: models.Category = models.Category(**payload)
     db.add(new_category)
@@ -47,7 +47,7 @@ def create(conn_id: int, category: schemas.CategoryCreateIn, db: Session = Depen
 @router.post(
     "/connections/{conn_id}/categories/{id}", tags=["Categories"], response_model=schemas.CategoryOut
 )
-def update(conn_id: int, id: int, category: schemas.CategoryUpdateIn, db: Session = Depends(get_db)):
+def update_category(conn_id: int, id: int, category: schemas.CategoryUpdateIn, db: Session = Depends(get_db)):
     cat = db.query(models.Category).get(id)
     if cat is None:
         return None
@@ -63,7 +63,7 @@ def update(conn_id: int, id: int, category: schemas.CategoryUpdateIn, db: Sessio
 
 
 @router.delete("/connections/{conn_id}/categories/{id}", response_model=schemas.CategoryOut)
-def destroy(
+def delete_category(
     conn_id: int, # reserved
     id: int, db: Session = Depends(get_db)):
     category = db.query(models.Category).get(id)

@@ -17,7 +17,10 @@
             .actions.flex.justify-end
               .btns.gap-x-3.flex(v-if="!isSpinner")
                 router-link.icon-btn.las.la-pen(:to="`connections/${c.id}/edit`" v-slot="{ navigate }")
-                .icon-btn.las.la-vial(@click="onTest(c.id)")
+                .icon-btn.las.la-vial(
+                  content="Test connection" v-tippy='{ placement : "top" }'
+                  @click="onTest(c.id)"
+                )
                 .icon-btn.las.la-trash-alt.danger(@click="onDelete(c.id)")
               .spinner.lds-dual-ring(v-else)
         template(v-slot:default)

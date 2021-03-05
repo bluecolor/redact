@@ -21,6 +21,12 @@ import {
   TRadio,
   TTable
 } from 'vue-tailwind/dist/components'
+import VueTippy, { TippyComponent } from 'vue-tippy'
+
+import 'tippy.js/themes/light.css'
+import 'tippy.js/themes/light-border.css'
+import 'tippy.js/themes/google.css'
+import 'tippy.js/themes/translucent.css'
 
 Vue.config.productionTip = false
 
@@ -76,6 +82,20 @@ Vue.use(Toast, {
   position: 'bottom-right',
   duration: 5000
 })
+
+Vue.use(VueTippy, {
+  directive: 'tippy', // => v-tippy
+  flipDuration: 0,
+  popperOptions: {
+    // modifiers: {
+    //   preventOverflow: {
+    //     enabled: false
+    //   }
+    // }
+  }
+})
+
+Vue.component('tippy', TippyComponent)
 
 new Vue({
   router,

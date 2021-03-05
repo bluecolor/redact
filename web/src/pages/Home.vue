@@ -24,7 +24,7 @@
           .flex.justify-center
             svg-icon(name="telescope", addClass="fill-current text-gray-300 w-24 h-24")
         template(v-slot:footer)
-          t-button.w-full(text="Define & Find Seinsitve Data")
+          t-button.w-full(text="Define & Find Sensitve Data")
       t-card.text-center(header="Search" :classes="card.classes")
         template(v-slot:default)
           .flex.justify-center
@@ -72,6 +72,9 @@ export default {
       }, {
         title: 'Customize',
         icon: 'las la-pencil-ruler'
+      }, {
+        title: 'Discovery',
+        icon: 'las la-compass'
       }]
     }
   },

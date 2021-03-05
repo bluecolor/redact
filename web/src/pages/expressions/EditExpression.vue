@@ -1,22 +1,24 @@
 <template lang="pug">
 .flex.justify-center.flex-col(class="w-3/4")
-  form(autocomplete="off" @submit="onUpdate")
-    .form-item
-      t-input-group(label='Name', required)
-        t-input(v-model="payload.policy_expression_name" required autofocus)
-    .form-item
-      t-input-group(label='Expression', required)
-        t-textarea(v-model="payload.expression" required)
-    .form-item
-      t-input-group(label='Description', required)
-        t-textarea(v-model="payload.policy_expression_description")
-    .form-item.mt-5
-      .flex.justify-between.items-center
-        simple-spinner(v-if="isSpinner")
-        .flex.gap-x-3(v-else class="w-1/2")
-          t-button(type="submit" value="submit" text="Save")
-        .end
-          t-button(@click="onCancel" text="Close" variant="error")
+  t-card
+    template(v-slot:default)
+      form(autocomplete="off" @submit="onUpdate")
+        .form-item
+          t-input-group(label='Name', required)
+            t-input(v-model="payload.policy_expression_name" required autofocus)
+        .form-item
+          t-input-group(label='Expression', required)
+            t-textarea(v-model="payload.expression" required)
+        .form-item
+          t-input-group(label='Description', required)
+            t-textarea(v-model="payload.policy_expression_description")
+        .form-item.mt-5
+          .flex.justify-between.items-center
+            simple-spinner(v-if="isSpinner")
+            .flex.gap-x-3(v-else class="w-1/2")
+              t-button(type="submit" value="submit" text="Save")
+            .end
+              t-button(@click="onCancel" text="Close" variant="error")
 </template>
 
 <script>

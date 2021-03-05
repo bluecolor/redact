@@ -23,14 +23,14 @@ class Connection(Base):
     __tablename__ = "connections"
     __table_args__ = {"extend_existing": True}
 
-    name = Column(String(255))
+    name = Column(String(255), unique=True)
     host = Column(String(255))
     port = Column(Integer)
     service = Column(String(100))
     username = Column(String(255))
     encrypted_password = Column(String)
 
-    categories = relationship("Category", back_populates="connection")
+    # categories = relationship("Category", back_populates="connection")
 
     def __init__(self, **kw):
         super().__init__(**kw)
