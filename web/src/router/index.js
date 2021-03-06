@@ -3,7 +3,8 @@ import VueRouter from 'vue-router'
 import MainLayout, { ConnectionLayout, SettingsLayout } from '@/layouts'
 import Home from '@/pages/Home.vue'
 import Connections, { CreateConnection, EditConnection } from '@/pages/settings/connections'
-import Rules from '@/pages/settings/discovery'
+import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
+import Plans, { CreatePlan } from '@/pages/discovery/plans'
 
 import Policies, {
   CreatePolicy,
@@ -33,12 +34,6 @@ const routes = [
         component: SettingsLayout,
         children: [
           {
-            name: 'rules',
-            path: 'discovery/rules',
-            component: Rules,
-            meta: { title: 'Rules' }
-          },
-          {
             name: 'createConnection',
             path: 'connections/create',
             component: CreateConnection,
@@ -46,7 +41,7 @@ const routes = [
           },
           {
             name: 'editConnection',
-            path: 'connections/:id/edit',
+            path: 'connections/:id',
             component: EditConnection,
             props: true,
             meta: { title: 'Edit Connection' }
@@ -135,6 +130,36 @@ const routes = [
           props: true,
           component: EditCategory,
           meta: { group: 'categories', title: 'Edit Category' }
+        }, {
+          name: 'rules',
+          path: 'discovery/rules',
+          component: Rules,
+          props: true,
+          meta: { title: 'Rules', group: 'rules' }
+        }, {
+          name: 'createRule',
+          path: '/connections/:connectionId/discovery/rules/create',
+          component: CreateRule,
+          props: true,
+          meta: { title: 'CreateRule', group: 'rules' }
+        }, {
+          name: 'editRule',
+          path: '/connections/:connectionId/discovery/rules/:id',
+          component: EditRule,
+          props: true,
+          meta: { title: 'EditRule', group: 'rules' }
+        }, {
+          name: 'plans',
+          path: '/connections/:connectionId/discovery/plans',
+          component: Plans,
+          props: true,
+          meta: { title: 'Plans', group: 'plans' }
+        }, {
+          name: 'createPlan',
+          path: '/connections/:connectionId/discovery/plans/create',
+          component: CreatePlan,
+          props: true,
+          meta: { title: 'Create Plan', group: 'plans' }
         }]
       }
     ]

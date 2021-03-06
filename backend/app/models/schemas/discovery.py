@@ -1,22 +1,44 @@
 from typing import List, Optional, Any
+
+from app.models.schemas import connection
 from .base import Base
 from sqlalchemy.orm import column_property
 from . import Connection
 
-class PlanOut(Base):
+class Plan(Base):
     name: str
+    connection_id: Optional[int]
+    connection: Optional[Connection]
+    schemas: str
+    description: Optional[str]
 
-class RuleOut(Base):
+class Rule(Base):
     name: str
-    schemas: Optional[str]
     type: str
     severity: Optional[str]
     expression: str
-    plans: Optional[List[PlanOut]]
+    description: Optional[str]
+    connection_id: int
+    connection: Optional[Connection]
+
+
+class PlanOut(Plan):
+    rules: Optional[List[Rule]]
+
+class RuleOut(Rule):
+    plans: Optional[List[Plan]]
+
 
 class RuleCreateIn(Base):
     name: str
-    schemas: Optional[str]
     type: str
     severity: Optional[str]
     expression: str
+    description: Optional[str]
+
+
+class PlanCreateIn(Base):
+    name: str
+    schemas: str
+    rules: List[int]
+    description: Optional[str]

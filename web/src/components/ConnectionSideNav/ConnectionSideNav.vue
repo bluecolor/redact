@@ -30,6 +30,21 @@ export default {
         title: 'Policies',
         group: 'policies',
         icon: 'las la-certificate'
+      }, {
+        path: `/connections/${this.connectionId}/discovery/rules`,
+        title: 'Rules',
+        group: 'rules',
+        icon: 'las la-ruler'
+      }, {
+        path: `/connections/${this.connectionId}/discovery/plans`,
+        title: 'Plans',
+        group: 'plans',
+        icon: 'las la-box'
+      }, {
+        path: `/connections/${this.connectionId}/discovery/runs`,
+        title: 'Plan Runs',
+        group: 'planruns',
+        icon: 'las la-shipping-fast'
       }]
     }
   },

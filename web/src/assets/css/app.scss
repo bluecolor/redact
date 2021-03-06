@@ -9,5 +9,5 @@ html, body {
   height: 100%;
   font-weight: 300;
   font-family: 'Roboto', sans-serif;
-  @apply bg-gray-100;
+  @apply bg-gray-100 flex flex-col;
 }

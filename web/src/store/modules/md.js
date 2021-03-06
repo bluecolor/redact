@@ -14,12 +14,20 @@ const state = {
 
 const getters = {
   objectSchemas: state => state.objectSchemas,
+  schemas: state => state.objectSchemas,
   tables: state => state.tables,
   columns: state => state.columns
 }
 
 const actions = {
   getObjectSchemas ({ commit, rootGetters }, connectionId) {
+    const connId = connectionId ?? rootGetters['app/connectionId']
+    return api.getObjectSchemas(connId).then(result => {
+      commit(SET_OBJECT_SCHEMAS, result)
+      return result
+    })
+  },
+  getSchemas ({ commit, rootGetters }, connectionId) {
     const connId = connectionId ?? rootGetters['app/connectionId']
     return api.getObjectSchemas(connId).then(result => {
       commit(SET_OBJECT_SCHEMAS, result)

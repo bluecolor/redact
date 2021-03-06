@@ -1,19 +1,19 @@
 <template lang="pug">
 .flex.justify-center
   .connection-layout(class="w-10/12")
-    conn-side-nav.left-nav(:connectionId="connectionId")
+    connection-side-nav.left-nav(:connectionId="connectionId")
     .content.pb-10
       router-view
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import ConnSideNav from '@/components/ConnSideNav'
+import ConnectionSideNav from '@/components/ConnectionSideNav'
 
 export default {
   props: ['connectionId'],
   components: {
-    ConnSideNav
+    ConnectionSideNav
   },
   methods: {
     ...mapActions('app', ['setConnection'])

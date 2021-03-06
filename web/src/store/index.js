@@ -6,6 +6,7 @@ import category from './modules/category'
 import redact from './modules/redact'
 import app from './modules/app'
 import md from './modules/md'
+import discovery from './modules/discovery'
 
 Vue.use(Vuex)
 
@@ -17,6 +18,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    connection, category, redact, app, md
+    connection, category, redact, app, md, discovery
   }
 })

@@ -16,8 +16,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang="postcss">
 #app {
+  @apply flex-grow
   /* height: 100%; */
   /* height:calc(100vh + 100px); */
 }

@@ -1,6 +1,5 @@
 <template lang="pug">
-.rules
-  | Rules
+
 </template>
 
 <script>

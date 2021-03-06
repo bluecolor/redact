@@ -7,7 +7,8 @@ from sqlalchemy import (
     Integer,
     String,
     DateTime,
-    Table
+    Table,
+    PrimaryKeyConstraint
 )
 from datetime import datetime
 
@@ -33,5 +34,6 @@ class Base(DeclarativeBase):
 
 plan_rules = Table('plan_rules', Base.metadata,
     Column('plan_id', Integer, ForeignKey('plans.id')),
-    Column('rule_id', Integer, ForeignKey('rules.id'))
+    Column('rule_id', Integer, ForeignKey('rules.id')),
+    PrimaryKeyConstraint('plan_id', 'rule_id'),
 )

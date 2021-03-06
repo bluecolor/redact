@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  .empty.w-full(v-if="isCategoriesEmpty")
+  .bg-white.empty.w-full(v-if="isCategoriesEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
     .project-logo.flex.justify-center.mt-10.w-full()
       svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")

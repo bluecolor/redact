@@ -1,13 +1,13 @@
 <template lang="pug">
 div
-  .empty.w-full(v-if="isExpressionsEmpty")
+  .bg-white.empty.w-full(v-if="isExpressionsEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
     .project-logo.flex.justify-center.mt-10.w-full()
       svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")
     .flex.justify-center.mt-10
       t-button.mt-10.w-full.text-center(tagName="a"
         :href="`/connections/${connectionId}/expressions/create`" text="Create New Expression")
-  .connections-container.flex.justify-center.w-full(v-else)
+  .container.flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .gap-y-3.flex.flex-col.w-full
         t-card.card(v-for="e in expressions")

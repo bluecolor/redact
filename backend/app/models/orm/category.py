@@ -39,6 +39,6 @@ class Category(Base):
         super().__init__(**kw)
 
     # created_by_id = Column(Integer, ForeignKey("users.id"))
-    # connection_id = Column(Integer, ForeignKey("connections.id"))
-    # connection= relationship("Connection", back_populates="categories")
+    connection_id = Column(Integer, ForeignKey("connections.id"))
+    connection= relationship("Connection", back_populates="categories")
 

@@ -1,28 +1,30 @@
 <template lang="pug">
-.flex.flex-col.pb-5(class="w-3/4")
-  form.flex.flex-col(autocomplete="off" @submit="onAddColumn")
-    .form-item
-      t-input-group(label='Policy Name')
-        t-input(v-model="payload.policy_name" disabled)
-    .form-item
-      t-input-group(label='Object Schema')
-        t-input(v-model="payload.object_schema" disabled)
-    .form-item
-      t-input-group(label='Object Name')
-        t-input(v-model="payload.object_name" disabled)
-    .form-item
-      t-input-group(label='Column Name')
-        t-input(v-model="payload.column_name" disabled)
-    .form-item
-      t-input-group(label='Expression')
-        t-textarea(v-model="payload.expression" required autofocus)
-    .form-item.mt-5
-      .flex.justify-between.items-center
-        t-simple-spinner(v-if="isSpinner")
-        .flex.gap-x-3(v-else class="w-1/2")
-          t-button(type="submit" value="submit" text="Save")
-        .end
-          t-button(@click="onBack" text="Back" variant="secondary")
+.flex.flex-col(class="w-3/4")
+  t-card
+    template(v-slot:default)
+      form.flex.flex-col(autocomplete="off" @submit="onAddColumn")
+        .form-item
+          t-input-group(label='Policy Name')
+            t-input(v-model="payload.policy_name" disabled)
+        .form-item
+          t-input-group(label='Object Schema')
+            t-input(v-model="payload.object_schema" disabled)
+        .form-item
+          t-input-group(label='Object Name')
+            t-input(v-model="payload.object_name" disabled)
+        .form-item
+          t-input-group(label='Column Name')
+            t-input(v-model="payload.column_name" disabled)
+        .form-item
+          t-input-group(label='Expression')
+            t-textarea(v-model="payload.expression" required autofocus)
+        .form-item.mt-5
+          .flex.justify-between.items-center
+            t-simple-spinner(v-if="isSpinner")
+            .flex.gap-x-3(v-else class="w-1/2")
+              t-button(type="submit" value="submit" text="Save")
+            .end
+              t-button(@click="onBack" text="Back" variant="secondary")
 </template>
 
 <script>

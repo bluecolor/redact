@@ -30,7 +30,10 @@ class Connection(Base):
     username = Column(String(255))
     encrypted_password = Column(String)
 
-    # categories = relationship("Category", back_populates="connection")
+    categories = relationship("Category", back_populates="connection")
+    plans = relationship("Plan", back_populates="connection")
+    rules = relationship("Rule", back_populates="connection")
+
 
     def __init__(self, **kw):
         super().__init__(**kw)

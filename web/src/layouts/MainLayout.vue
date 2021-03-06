@@ -24,6 +24,9 @@ export default {
 </script>
 
 <style>
+.main-layout {
+  height: 100%;
+}
 .navbar {
     position: fixed;
     right:0;

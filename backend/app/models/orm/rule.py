@@ -20,12 +20,18 @@ class Rule(Base):
     __table_args__ = {"extend_existing": True}
 
     name = Column(String(255), unique=True)
-    schemas = Column(Text)
     type = Column(String(50))
     severity = Column(String(100))
     expression = Column(Text)
+    description = Column(Text, nullable=True)
 
     plans = relationship("Plan",secondary=plan_rules,back_populates="rules")
+
+
+    connection_id = Column(Integer, ForeignKey("connections.id"), nullable=True)
+    connection= relationship("Connection", back_populates="rules")
+
+
 
     def __init__(self, **kw):
         super().__init__(**kw)
