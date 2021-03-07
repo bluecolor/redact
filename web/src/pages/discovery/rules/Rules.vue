@@ -21,7 +21,7 @@
                     :to="`rules/${r.id}`")
                   .icon-btn.las.la-trash-alt.danger(
                     content="Delete rule" v-tippy='{ placement : "top" }'
-                    @click="onDelete()"
+                    @click="onDelete(r)"
                   )
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
@@ -52,8 +52,18 @@ export default {
     }
   },
   methods: {
-    ...mapActions('discovery', ['getRules']),
-    onDelete () {}
+    ...mapActions('discovery', ['getRules', 'deleteRule']),
+    onDelete ({ id }) {
+      this.isSpinner = true
+      this.deleteRule(id).then(() => {
+        this.$toasted.success('Success. Deleted rule')
+      }).catch(error => {
+        console.log(error)
+        this.$toasted.error('Error. Failed to delete rule')
+      }).finally(() => {
+        this.isSpinner = false
+      })
+    }
   },
   created () {
     this.getRules()

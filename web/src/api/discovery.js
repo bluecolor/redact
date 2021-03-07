@@ -8,10 +8,16 @@ export default {
   createRule (connectionId, payload) {
     return request.post(`/connections/${connectionId}/discovery/rules`, payload)
   },
+  deleteRule (connectionId, id) {
+    return request.delete(`/connections/${connectionId}/discovery/rules/${id}`)
+  },
   getPlans (connectionId) {
     return request.get(`/connections/${connectionId}/discovery/plans`)
   },
   createPlan (connectionId, payload) {
     return request.post(`/connections/${connectionId}/discovery/plans`, payload)
+  },
+  deletePlan (connectionId, id) {
+    return request.delete(`/connections/${connectionId}/discovery/plans/${id}`)
   }
 }

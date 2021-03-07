@@ -36,9 +36,15 @@ class RuleCreateIn(Base):
     expression: str
     description: Optional[str]
 
+class RuleDeleteOut(Base):
+    name: str
+
 
 class PlanCreateIn(Base):
     name: str
     schemas: str
     rules: List[int]
     description: Optional[str]
+
+class PlanDeleteOut(Base):
+    name: str

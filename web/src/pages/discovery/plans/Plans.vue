@@ -25,7 +25,7 @@
                     :to="`plans/${p.id}`")
                   .icon-btn.las.la-trash-alt.danger(
                     content="Delete plan" v-tippy='{ placement : "top" }'
-                    @click="onDelete()"
+                    @click="onDelete(p)"
                   )
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
@@ -57,8 +57,18 @@ export default {
     }
   },
   methods: {
-    ...mapActions('discovery', ['getPlans']),
-    onDelete () {},
+    ...mapActions('discovery', ['getPlans', 'deletePlan']),
+    onDelete ({ id }) {
+      this.isSpinner = true
+      this.deletePlan(id).then(() => {
+        this.$toast.success('Success. Plan deleted')
+      }).catch(error => {
+        console.log(error)
+        this.$toast.error('Error. Failed to delete plan')
+      }).finally(() => {
+        this.isSpinner = false
+      })
+    },
     onRun (p) {}
   },
   created () {

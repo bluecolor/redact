@@ -21,7 +21,7 @@ fileConfig(config.config_file_name)
 
 
 from app.models.orm.base import Base
-from app.models.orm import User, Connection, Category, Rule, Plan
+from app.models.orm import User, Connection, Category, Rule, Plan, PlanRun
 
 target_metadata = Base.metadata
 

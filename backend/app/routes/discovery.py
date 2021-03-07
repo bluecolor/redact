@@ -1,4 +1,5 @@
 from typing import List, Optional
+from arq.connections import ArqRedis
 from fastapi import Depends
 from sqlalchemy.orm import Session
 import app.models.orm as models
@@ -7,7 +8,7 @@ from .base import router
 from app.database import get_db
 from app.oracle import redact
 from pydantic import parse_obj_as
-
+from app import get_redis_pool
 
 @router.get(
     "/connections/{conn_id}/discovery/rules",
@@ -30,6 +31,14 @@ def create_rule(conn_id: int, rule: schemas.RuleCreateIn, db: Session = Depends(
     return schemas.RuleOut.from_orm(new_rule)
 
 
+@router.delete("/connections/{conn_id}/discovery/rules/{id}", response_model=schemas.RuleDeleteOut)
+def delete_rule(conn_id: int,id: int, db: Session = Depends(get_db)):
+    rule = db.query(models.Rule).get(id)
+    db.delete(rule)
+    db.commit()
+    return schemas.RuleDeleteOut.from_orm(rule)
+
+
 @router.get(
     "/connections/{conn_id}/discovery/plans",
     response_model=List[schemas.PlanOut],
@@ -37,7 +46,6 @@ def create_rule(conn_id: int, rule: schemas.RuleCreateIn, db: Session = Depends(
 def get_plans(conn_id: int, db: Session = Depends(get_db)) -> List[schemas.PlanOut]:
     rules = db.query(models.Plan).filter(models.Plan.connection_id == conn_id).all()
     return parse_obj_as(List[schemas.PlanOut], rules)
-
 
 
 @router.post(
@@ -52,4 +60,25 @@ def create_plan(conn_id: int, plan: schemas.PlanCreateIn, db: Session = Depends(
 
     return schemas.PlanOut.from_orm(new_plan)
 
+@router.delete("/connections/{conn_id}/discovery/plans/{id}", response_model=schemas.PlanDeleteOut)
+def delete_plan(conn_id: int,id: int, db: Session = Depends(get_db)):
+    plan = db.query(models.Plan).get(id)
+    db.delete(plan)
+    db.commit()
+    return schemas.PlanDeleteOut.from_orm(plan)
+
+
+@router.post(
+    "/connections/{conn_id}/discovery/plans/{id}/run", tags=["Plans"]
+)
+async def run_plan(conn_id: int, id: int, db: Session = Depends(get_db), redis: ArqRedis = Depends(get_redis_pool)):
+    await redis.enqueue_job(
+        "run_plan"
+    )
+    return {"hello": "there"}
+    # await redis.enqueue_job(
+    #     "send_message",
+    #     new_user.id,
+    #     "Congratulations! Your account has been created!",
+    # )
 

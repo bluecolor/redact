@@ -26,4 +26,11 @@ from .policy import PolicyExpression
 
 from .category import CategoryOut, CategoryCreateIn, CategoryUpdateIn
 
-from .discovery import RuleOut, RuleCreateIn, PlanOut, PlanCreateIn
+from .discovery import (
+    RuleOut,
+    RuleCreateIn,
+    RuleDeleteOut,
+    PlanOut,
+    PlanCreateIn,
+    PlanDeleteOut
+)

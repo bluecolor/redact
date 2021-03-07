@@ -27,6 +27,8 @@ class Plan(Base):
     sample_size = Column(Integer, default=5000)
     worker_count = Column(Integer, default=1)
 
+    description = Column(Text)
+
     connection_id = Column(Integer, ForeignKey("connections.id"))
     connection= relationship("Connection", back_populates="plans")
 
