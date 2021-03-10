@@ -27,6 +27,9 @@ export default {
   getPlanInstances (connectionId) {
     return request.get(`/connections/${connectionId}/discovery/plans/instances`)
   },
+  getPlanInstance (connectionId, id) {
+    return request.get(`/connections/${connectionId}/discovery/plans/instances/${id}`)
+  },
   getDiscoveries (connectionId, planInstanceId, query) {
     return request.get(`/connections/${connectionId}/discovery/plans/instances/${planInstanceId}/discoveries?${qs.stringify(query)}`)
   }

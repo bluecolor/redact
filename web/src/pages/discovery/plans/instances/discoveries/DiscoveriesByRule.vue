@@ -11,7 +11,7 @@
           template(v-slot:header)
             .flex.justify-between
               .title
-                | {{d.rule_id}}
+                | {{d.rule.name}}
               .actions.flex.justify-end
                 .btns.gap-x-3.flex(v-if="!isSpinner")
                   .icon-btn.las.la-info-circle(
@@ -20,13 +20,13 @@
                   )
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
-            | {{d.count}}
+            | {{d.count}} findings
 
-      t-button.mt-10.w-full.text-center(tagName="a" :href="`/connections/${connectionId}/policies/create`")
-        | Create New Policy
 </template>
 
 <script>
+/* eslint-disable camelcase */
+import _ from 'lodash'
 import { mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 import { dateMixin } from '@/mixins'
@@ -41,7 +41,8 @@ export default {
     return {
       isSpinner: false,
       title: 'Discoveries',
-      discoveries: []
+      discoveries: [],
+      planInstance: {}
     }
   },
   computed: {
@@ -50,16 +51,21 @@ export default {
     }
   },
   methods: {
-    ...mapActions('discovery', ['getDiscoveries']),
+    ...mapActions('discovery', ['getDiscoveries', 'getPlanInstance']),
     load () {
       this.isSpinner = true
       const planInstanceId = +this.planInstanceId
       const query = { by_rule: true }
-      this.getDiscoveries({ planInstanceId, query })
-        .then(result => {
-          this.discoveries = result
+      return Promise.all([
+        this.getDiscoveries({ planInstanceId, query }),
+        this.getPlanInstance(planInstanceId)
+      ]).then(([discoveries, planInstance]) => {
+        this.discoveries = _.map(discoveries, ({ rule_id, count }) => {
+          const rule = _.find(planInstance?.plan?.rules, { id: rule_id })
+          return { rule, count }
         })
-        .finally(() => { this.isSpinner = false })
+        this.planInstance = planInstance
+      }).finally(() => { this.isSpinner = false })
     }
   },
   mounted () {

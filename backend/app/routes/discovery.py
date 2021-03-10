@@ -96,6 +96,16 @@ async def get_plan_instances(conn_id: int, db: Session = Depends(get_db)):
 
 
 @router.get(
+    "/connections/{conn_id}/discovery/plans/instances/{id}",
+    tags=["PlanInstances"],
+    response_model=schemas.PlanInstanceOut
+)
+async def get_plan_instance(conn_id: int, id: int, db: Session = Depends(get_db)):
+    plan_instance = db.query(models.PlanInstance).get(id)
+    return schemas.PlanInstanceOut.from_orm(plan_instance)
+
+
+@router.get(
     "/connections/{conn_id}/discovery/plans/instances/{plan_instance_id}/discoveries",
     tags=["Discoveries"],
     response_model= Union[List[schemas.DiscoveryOut], List[schemas.DiscoveryByRuleOut]]
@@ -119,12 +129,13 @@ async def get_discoveries(conn_id: int, plan_instance_id: int, by_rule: Optional
 
 @router.websocket("/ws/plans/instances")
 async def plan_runs(websocket: WebSocket):
-    await websocket.accept()
-    redis: ArqRedis = await create_pool(redis_settings)
-    res = await redis.subscribe('plan:run')
-    ch = res[0]
+    ...
+    # await websocket.accept()
+    # redis: ArqRedis = await create_pool(redis_settings)
+    # res = await redis.subscribe('plan:run')
+    # ch = res[0]
 
-    while (await ch.wait_message()):
-        msg = await ch.get_json()
-        print("Got Message:", msg)
-        await websocket.send_json(msg)
+    # while (await ch.wait_message()):
+    #     msg = await ch.get_json()
+    #     print("Got Message:", msg)
+    #     await websocket.send_json(msg)

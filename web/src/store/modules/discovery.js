@@ -67,13 +67,16 @@ const actions = {
       return result
     })
   },
-  getPlanInstances ({ commit, rootGetters }, id) {
-    return api.getPlanInstances(rootGetters['app/connectionId'], id).then(result => {
+  getPlanInstances ({ commit, rootGetters }) {
+    return api.getPlanInstances(rootGetters['app/connectionId']).then(result => {
       commit(SET_PLAN_INSTANCES, result)
       return result
     })
   },
-  getDiscoveries ({ commit, rootGetters }, { planInstanceId, query }) {
+  getPlanInstance ({ rootGetters }, id) {
+    return api.getPlanInstance(rootGetters['app/connectionId'], id)
+  },
+  getDiscoveries ({ rootGetters }, { planInstanceId, query }) {
     return api.getDiscoveries(rootGetters['app/connectionId'], planInstanceId, query)
   }
 }
