@@ -21,6 +21,10 @@ form {
   @apply  text-red-600 hover:text-red-900;
 }
 
+.warn {
+  @apply  text-yellow-600 hover:text-yellow-900;
+}
+
 
 .btn {
   @apply flex justify-center rounded-md border

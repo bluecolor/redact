@@ -32,5 +32,8 @@ from .discovery import (
     RuleDeleteOut,
     PlanOut,
     PlanCreateIn,
-    PlanDeleteOut
+    PlanDeleteOut,
+    PlanInstanceOut,
+    DiscoveryOut,
+    DiscoveryByRuleOut
 )

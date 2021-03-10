@@ -1,4 +1,5 @@
-
+import json
+from typing import List
 from datetime import datetime
 from sqlalchemy.orm import relationship
 from sqlalchemy import (
@@ -14,18 +15,22 @@ from sqlalchemy import (
     Table
 )
 
-from .base import Base, plan_rules
+from .base import Base, plan_instance_rules
 
 
-class PlanRun(Base):
-    __tablename__ = "plan_runs"
+class PlanInstance(Base):
+    __tablename__ = "plan_instances"
     __table_args__ = {"extend_existing": True}
 
     sample_size = Column(Integer, default=5000)
     worker_count = Column(Integer, default=1)
 
     plan_id = Column(Integer, ForeignKey("plans.id"))
-    plan = relationship("Plan", back_populates="plan_runs")
+    plan = relationship("Plan", back_populates="plan_instances")
+
+    schemas = Column(Text)
+    discoveries = relationship("Discovery", back_populates="plan_instance")
+
 
     status = Column(String(50))
     results = Column(Text)
@@ -34,6 +39,11 @@ class PlanRun(Base):
         DateTime, default=datetime.utcnow, server_default=func.now()
     )
     ended_on = Column(DateTime, nullable=True)
+
+
+    @property
+    def schema_list(self) -> List[str]:
+        return json.loads(self.schemas)
 
     def __init__(self, **kw):
         super().__init__(**kw)

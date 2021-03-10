@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import request from './request'
+import qs from 'qs'
 
 export default {
   getRules (connectionId) {
@@ -19,5 +20,14 @@ export default {
   },
   deletePlan (connectionId, id) {
     return request.delete(`/connections/${connectionId}/discovery/plans/${id}`)
+  },
+  runPlan (connectionId, id) {
+    return request.get(`/connections/${connectionId}/discovery/plans/${id}/run`)
+  },
+  getPlanInstances (connectionId) {
+    return request.get(`/connections/${connectionId}/discovery/plans/instances`)
+  },
+  getDiscoveries (connectionId, planInstanceId, query) {
+    return request.get(`/connections/${connectionId}/discovery/plans/instances/${planInstanceId}/discoveries?${qs.stringify(query)}`)
   }
 }

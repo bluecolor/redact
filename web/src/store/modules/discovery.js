@@ -9,15 +9,19 @@ const SET_PLANS = 'SET_PLANS'
 const CREATE_PLAN = 'CREATE_PLAN'
 const DELETE_PLAN = 'DELETE_PLAN'
 const DELETE_RULE = 'DELETE_RULE'
+const SET_PLAN_STATUS = 'SET_PLAN_STATUS'
+const SET_PLAN_INSTANCES = 'SET_PLAN_INSTANCES'
 
 const state = {
   rules: [],
-  plans: []
+  plans: [],
+  planInstances: []
 }
 
 const getters = {
   rules: state => state.rules,
-  plans: state => state.plans
+  plans: state => state.plans,
+  planInstances: state => state.planInstances
 }
 
 const actions = {
@@ -45,11 +49,32 @@ const actions = {
       return result
     })
   },
+  createPlan ({ commit, rootGetters }, payload) {
+    return api.createPlan(rootGetters['app/connectionId'], payload).then(result => {
+      commit(CREATE_PLAN, result)
+      return result
+    })
+  },
   deletePlan ({ commit, rootGetters }, id) {
     return api.deletePlan(rootGetters['app/connectionId'], id).then(result => {
       commit(DELETE_PLAN, id)
       return result
     })
+  },
+  runPlan ({ commit, rootGetters }, id) {
+    return api.runPlan(rootGetters['app/connectionId'], id).then(result => {
+      commit(SET_PLAN_STATUS, result)
+      return result
+    })
+  },
+  getPlanInstances ({ commit, rootGetters }, id) {
+    return api.getPlanInstances(rootGetters['app/connectionId'], id).then(result => {
+      commit(SET_PLAN_INSTANCES, result)
+      return result
+    })
+  },
+  getDiscoveries ({ commit, rootGetters }, { planInstanceId, query }) {
+    return api.getDiscoveries(rootGetters['app/connectionId'], planInstanceId, query)
   }
 }
 
@@ -77,6 +102,13 @@ const mutations = {
     if (i > -1) {
       state.rules.splice(i, 1)
     }
+  },
+  [SET_PLAN_STATUS]: (state, { id, status }) => {
+    const plan = _.find(this.plans, { id })
+    plan.status = status
+  },
+  [SET_PLAN_INSTANCES]: (state, data) => {
+    state.planInstances = data
   }
 }
 

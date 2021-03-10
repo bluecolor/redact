@@ -28,6 +28,9 @@
         .form-item
           t-input-group(label='Number of Workers')
             t-input(v-model="payload.worker_count")
+        .form-item
+          t-input-group(label='Description', required)
+            t-textarea(v-model="payload.description")
         .form-item.mt-5
           .flex.justify-between.items-center
             simple-spinner(v-if="isSpinner")
@@ -56,7 +59,8 @@ export default {
         rules: [],
         schemas: [],
         sample_size: 5000,
-        worker_count: 4
+        worker_count: 4,
+        description: ''
       }
     }
   },
@@ -65,11 +69,18 @@ export default {
     ...mapGetters('md', ['schemas'])
   },
   methods: {
-    ...mapActions('discovery', ['createRule', 'getRules']),
+    ...mapActions('discovery', ['createPlan', 'getRules']),
     ...mapActions('md', ['getSchemas']),
     onCreate (e) {
       e.preventDefault()
       this.isSpinner = true
+      const schemas = JSON.stringify(this.payload.schemas)
+      this.createPlan({ ...this.payload, schemas }).then(() => {
+        this.$toasted.success('Success. Created plan')
+      }).catch(error => {
+        console.log(error)
+        this.$toasted.error('Error. Failed to create plan')
+      }).finally(() => { this.isSpinner = false })
     },
     onCancel () { window.history.back() }
   },

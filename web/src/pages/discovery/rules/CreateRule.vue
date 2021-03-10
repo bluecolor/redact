@@ -52,7 +52,7 @@ export default {
       isSpinner: false,
       isValid: false,
       types: [
-        { value: 'naming', text: 'Naming' },
+        { value: 'metadata', text: 'Naming' },
         { value: 'data', text: 'Data' }
       ],
       severities: [
@@ -61,8 +61,8 @@ export default {
         { value: 'high', text: 'High' }],
       payload: {
         name: '',
-        type: '',
-        severity: '',
+        type: 'metadata',
+        severity: 'low',
         expression: '',
         description: ''
       }

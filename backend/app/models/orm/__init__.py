@@ -3,4 +3,5 @@ from .connection import Connection
 from .category import Category
 from .rule import Rule
 from .plan import Plan
-from .plan_run import PlanRun
+from .plan_instance import PlanInstance
+from .discovery import Discovery

@@ -37,3 +37,9 @@ plan_rules = Table('plan_rules', Base.metadata,
     Column('rule_id', Integer, ForeignKey('rules.id')),
     PrimaryKeyConstraint('plan_id', 'rule_id'),
 )
+
+plan_instance_rules = Table('plan_instance_rules', Base.metadata,
+    Column('plan_instance_id', Integer, ForeignKey('plan_instances.id')),
+    Column('rule_id', Integer, ForeignKey('rules.id')),
+    PrimaryKeyConstraint('plan_instance_id', 'rule_id'),
+)

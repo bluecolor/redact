@@ -14,7 +14,7 @@ from sqlalchemy import (
 )
 
 from .base import Base, plan_rules
-
+from .plan_instance import PlanInstance
 
 class Plan(Base):
     __tablename__ = "plans"
@@ -32,9 +32,19 @@ class Plan(Base):
     connection_id = Column(Integer, ForeignKey("connections.id"))
     connection= relationship("Connection", back_populates="plans")
 
-    plan_runs = relationship("PlanRun", back_populates="plan")
+    plan_instances = relationship("PlanInstance", back_populates="plan")
 
+    status = Column(String(50))
 
+    def get_new_instance(self):
+        return PlanInstance(
+            plan_id=self.id,
+            plan = self,
+            schemas=self.schemas,
+            sample_size=self.sample_size,
+            worker_count = self.worker_count,
+            status= 'running',
+        )
 
     def __init__(self, **kw):
         super().__init__(**kw)

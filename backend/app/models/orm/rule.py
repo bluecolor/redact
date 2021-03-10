@@ -12,7 +12,7 @@ from sqlalchemy import (
     Text
 )
 
-from .base import Base, plan_rules
+from .base import Base, plan_rules, plan_instance_rules
 
 
 class Rule(Base):
@@ -26,11 +26,10 @@ class Rule(Base):
     description = Column(Text, nullable=True)
 
     plans = relationship("Plan",secondary=plan_rules,back_populates="rules")
+    discoveries = relationship("Discovery", back_populates="rule")
 
-
-    connection_id = Column(Integer, ForeignKey("connections.id"), nullable=True)
+    connection_id = Column(Integer, ForeignKey("connections.id"))
     connection= relationship("Connection", back_populates="rules")
-
 
 
     def __init__(self, **kw):

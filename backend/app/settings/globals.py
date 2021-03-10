@@ -8,7 +8,7 @@ p: Path = Path(__file__).parents[2] / ".env"
 config: Config = Config(p if p.exists() else None)
 
 SQLALCHEMY_DATABASE_URI = os.getenv(
-    "SQLALCHEMY_DATABASE_URI", "sqlite:///./db/duck.db"
+    "SQLALCHEMY_DATABASE_URI", "postgresql://duck:duck@localhost:5432/duck"
 )
 SQLALCHEMY_TRACK_MODIFICATIONS = (
     os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS", "False").lower() == "true"

@@ -43,12 +43,12 @@ class Connection(Base):
         return self.encrypted_password
 
     @property
-    def password_plain(self):
-        return fernet.decrypt(self.encrypted_password).decode()
+    def password_plain(self) -> str:
+        return fernet.decrypt(self.encrypted_password.encode()).decode()
 
     @password.setter
     def password(self, password):
-        self.encrypted_password = fernet.encrypt(str.encode(password))
+        self.encrypted_password = fernet.encrypt(str.encode(password)).decode()
 
     @property
     def dsn(self):

@@ -1,4 +1,5 @@
 from typing import List, Optional, Any
+from app.models.orm import plan_instance
 
 from app.models.schemas import connection
 from .base import Base
@@ -10,6 +11,7 @@ class Plan(Base):
     connection_id: Optional[int]
     connection: Optional[Connection]
     schemas: str
+    status: Optional[str]
     description: Optional[str]
 
 class Rule(Base):
@@ -18,8 +20,6 @@ class Rule(Base):
     severity: Optional[str]
     expression: str
     description: Optional[str]
-    connection_id: int
-    connection: Optional[Connection]
 
 
 class PlanOut(Plan):
@@ -48,3 +48,20 @@ class PlanCreateIn(Base):
 
 class PlanDeleteOut(Base):
     name: str
+
+class PlanInstanceOut(Base):
+    plan: PlanOut
+    status: Optional[str]
+    worker_count: Optional[int]
+    sample_size: Optional[int]
+
+
+class DiscoveryOut(Base):
+    schema_name: str
+    table_name: str
+    column_name: Optional[str]
+    rule: Rule
+
+class DiscoveryByRuleOut(Base):
+    rule_id: int
+    count: int

@@ -1,7 +1,9 @@
-from typing import List, Optional
+from sqlalchemy import func
+from typing import List, Optional, Union
 from arq.connections import ArqRedis
-from fastapi import Depends
+from fastapi import Depends, WebSocket
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.functions import func, mode
 import app.models.orm as models
 import app.models.schemas as schemas
 from .base import router
@@ -9,6 +11,8 @@ from app.database import get_db
 from app.oracle import redact
 from pydantic import parse_obj_as
 from app import get_redis_pool
+from app.settings.arq import settings as redis_settings
+from arq.connections import ArqRedis, create_pool
 
 @router.get(
     "/connections/{conn_id}/discovery/rules",
@@ -69,16 +73,58 @@ def delete_plan(conn_id: int,id: int, db: Session = Depends(get_db)):
 
 
 @router.post(
-    "/connections/{conn_id}/discovery/plans/{id}/run", tags=["Plans"]
+    "/connections/{conn_id}/discovery/plans/{plan_id}/run", tags=["Plans"]
 )
-async def run_plan(conn_id: int, id: int, db: Session = Depends(get_db), redis: ArqRedis = Depends(get_redis_pool)):
-    await redis.enqueue_job(
-        "run_plan"
+async def run_plan(conn_id: int, plan_id: int, db: Session = Depends(get_db), redis: ArqRedis = Depends(get_redis_pool)):
+    job = await redis.enqueue_job(
+        "run_plan", conn_id, plan_id
     )
-    return {"hello": "there"}
-    # await redis.enqueue_job(
-    #     "send_message",
-    #     new_user.id,
-    #     "Congratulations! Your account has been created!",
-    # )
+    return job.job_id
 
+
+@router.get(
+    "/connections/{conn_id}/discovery/plans/instances",
+    tags=["PlanInstances"],
+    response_model=List[schemas.PlanInstanceOut]
+)
+async def get_plan_instances(conn_id: int, db: Session = Depends(get_db)):
+    plan_instances = db.query(models.PlanInstance)\
+        .outerjoin(models.Plan)\
+        .filter(models.Plan.connection_id == conn_id)\
+        .all()
+    return parse_obj_as(List[schemas.PlanInstanceOut],plan_instances)
+
+
+@router.get(
+    "/connections/{conn_id}/discovery/plans/instances/{plan_instance_id}/discoveries",
+    tags=["Discoveries"],
+    response_model= Union[List[schemas.DiscoveryOut], List[schemas.DiscoveryByRuleOut]]
+)
+async def get_discoveries(conn_id: int, plan_instance_id: int, by_rule: Optional[bool] = False,  db: Session = Depends(get_db)):
+    if by_rule:
+        disvcoveries = db.query(models.Discovery.rule_id, func.count())\
+            .outerjoin(models.PlanInstance)\
+            .filter(models.PlanInstance.id == plan_instance_id)\
+            .group_by(models.Discovery.rule_id)\
+            .all()
+        _disvcoveries = [schemas.DiscoveryByRuleOut(rule_id=d[0], count=d[1]) for d in disvcoveries]
+        return parse_obj_as(List[schemas.DiscoveryByRuleOut], _disvcoveries)
+    else:
+        disvcoveries = db.query(models.Discovery)\
+            .outerjoin(models.PlanInstance)\
+            .filter(models.PlanInstance.id == plan_instance_id)\
+            .all()
+        return parse_obj_as(List[schemas.DiscoveryOut], disvcoveries)
+
+
+@router.websocket("/ws/plans/instances")
+async def plan_runs(websocket: WebSocket):
+    await websocket.accept()
+    redis: ArqRedis = await create_pool(redis_settings)
+    res = await redis.subscribe('plan:run')
+    ch = res[0]
+
+    while (await ch.wait_message()):
+        msg = await ch.get_json()
+        print("Got Message:", msg)
+        await websocket.send_json(msg)

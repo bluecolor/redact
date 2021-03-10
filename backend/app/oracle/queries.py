@@ -87,3 +87,10 @@ def all_tab_cols(owner: str = None, table_name: str = None):
 
 def all_object_owners() -> str:
     return ALL_OBJECT_OWNERS
+
+
+def columns_like(schema, expression) -> str:
+    return f"""
+        select table_name, column_name from all_tab_cols where
+        owner = '{schema}' and regexp_like(column_name, '{expression}', 'i')
+    """

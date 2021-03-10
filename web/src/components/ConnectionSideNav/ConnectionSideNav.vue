@@ -41,9 +41,9 @@ export default {
         group: 'plans',
         icon: 'las la-box'
       }, {
-        path: `/connections/${this.connectionId}/discovery/runs`,
+        path: `/connections/${this.connectionId}/discovery/plans/instances`,
         title: 'Plan Runs',
-        group: 'planruns',
+        group: 'planInstances',
         icon: 'las la-shipping-fast'
       }]
     }
