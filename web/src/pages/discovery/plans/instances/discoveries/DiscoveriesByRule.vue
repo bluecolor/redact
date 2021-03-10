@@ -14,13 +14,16 @@
                 | {{d.rule.name}}
               .actions.flex.justify-end
                 .btns.gap-x-3.flex(v-if="!isSpinner")
-                  .icon-btn.las.la-info-circle(
-                    content="Delete" v-tippy='{ placement : "top" }'
-                    @click="onDelete()"
+                  router-link.icon-btn.las.la-info-circle(
+                    content="Details" v-tippy='{ placement : "top" }'
+                    :to="`/`"
                   )
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
-            | {{d.count}} findings
+            .flex.gap-x-3
+              t-tag(tag-name="span" variant="badge") {{d.rule.type}}
+              .result
+                | {{d.count}} findings
 
 </template>
 
