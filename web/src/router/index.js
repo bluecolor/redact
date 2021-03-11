@@ -5,7 +5,7 @@ import Home from '@/pages/Home.vue'
 import Connections, { CreateConnection, EditConnection } from '@/pages/settings/connections'
 import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
 import Plans, { CreatePlan } from '@/pages/discovery/plans'
-import PlanInstances from '@/pages/discovery/plans/instances'
+import PlanInstances, { AllPlanInstances } from '@/pages/discovery/plans/instances'
 import Discoveries, { DiscoveriesByRule, DiscoveriesForRule } from '@/pages/discovery/plans/instances/discoveries'
 
 import Policies, {
@@ -168,6 +168,12 @@ const routes = [
           component: PlanInstances,
           props: true,
           meta: { title: 'Plan Runs', group: 'planInstances' }
+        }, {
+          name: 'allPlanInstances',
+          path: '/connections/:connectionId/discovery/plans/instances',
+          component: AllPlanInstances,
+          props: true,
+          meta: { title: 'All Plan Runs', group: 'planInstances' }
         }, {
           name: 'discoveries',
           path: '/connections/:connectionId/discovery/plans/instances/:planInstanceId/discoveries',

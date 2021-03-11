@@ -109,6 +109,19 @@ async def get_plan_instances(conn_id: int, plan_id: int, db: Session = Depends(g
 
 
 @router.get(
+    "/connections/{conn_id}/discovery/plans/instances",
+    tags=["PlanInstances"],
+    response_model=List[schemas.PlanInstanceOut]
+)
+async def get_all_plan_instances(conn_id: int, db: Session = Depends(get_db)):
+    plan_instances = db.query(models.PlanInstance)\
+        .outerjoin(models.Plan)\
+        .filter(models.Plan.connection_id == conn_id)\
+        .all()
+    return parse_obj_as(List[schemas.PlanInstanceOut],plan_instances)
+
+
+@router.get(
     "/connections/{conn_id}/discovery/plans/instances/{id}",
     tags=["PlanInstances"],
     response_model=schemas.PlanInstanceOut

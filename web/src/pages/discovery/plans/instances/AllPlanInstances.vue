@@ -6,7 +6,10 @@
       svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
-      .connections.gap-y-3.flex.flex-col.w-full
+      .plan-runs.gap-y-3.flex.flex-col.w-full
+        .toolbar.p-5.w-full.bg-gray-50.rounded-md
+          t-datepicker(v-model="date" placeholder="Pick a date")
+
         t-card.card(v-for="p in planInstances")
           template(v-slot:header)
             .flex.justify-between
@@ -36,7 +39,7 @@ import { dateMixin } from '@/mixins'
 
 export default {
   mixins: [dateMixin],
-  props: ['connectionId', 'planId'],
+  props: ['connectionId'],
   components: {
     SvgIcon
   },
@@ -44,7 +47,8 @@ export default {
     return {
       isSpinner: false,
       title: 'Plan Runs',
-      planInstances: []
+      planInstances: [],
+      data: undefined
     }
   },
   computed: {
@@ -53,11 +57,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions('discovery', ['getPlanInstances']),
+    ...mapActions('discovery', ['getAllPlanInstances']),
     load () {
       this.isSpinner = true
-      const planId = +this.planId
-      return this.getPlanInstances({ planId }).then(result => {
+      return this.getAllPlanInstances().then(result => {
         this.planInstances = result
       }).finally(() => { this.isSpinner = false })
     }
@@ -78,5 +81,4 @@ export default {
 }
 .page {
 }
-
 </style>

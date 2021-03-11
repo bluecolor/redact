@@ -10,10 +10,12 @@ const CREATE_PLAN = 'CREATE_PLAN'
 const DELETE_PLAN = 'DELETE_PLAN'
 const DELETE_RULE = 'DELETE_RULE'
 const SET_PLAN_STATUS = 'SET_PLAN_STATUS'
+const SET_PLAN_INSTANCES = 'SET_PLAN_INSTANCES'
 
 const state = {
   rules: [],
-  plans: []
+  plans: [],
+  planInstances: []
 }
 
 const getters = {
@@ -68,8 +70,14 @@ const actions = {
       return result
     })
   },
-  getPlanInstances ({ commit, rootGetters }, { planId }) {
+  getPlanInstances ({ rootGetters }, { planId }) {
     return api.getPlanInstances(rootGetters['app/connectionId'], planId)
+  },
+  getAllPlanInstances ({ commit, rootGetters }) {
+    return api.getAllPlanInstances(rootGetters['app/connectionId']).then(result => {
+      commit(SET_PLAN_INSTANCES, result)
+      return result
+    })
   },
   getPlanInstance ({ rootGetters }, id) {
     return api.getPlanInstance(rootGetters['app/connectionId'], id)
@@ -110,6 +118,9 @@ const mutations = {
   [SET_PLAN_STATUS]: (state, { id, status }) => {
     const plan = _.find(this.plans, { id })
     plan.status = status
+  },
+  [SET_PLAN_INSTANCES]: (state, data) => {
+    state.planInstances = data
   }
 }
 
