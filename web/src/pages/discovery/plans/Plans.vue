@@ -21,8 +21,8 @@
                     content="Run plan" v-tippy='{ placement : "top" }'
                     @click="onRun(p)"
                   )
-                  router-link.icon-btn.las.la-pen(
-                    :to="`plans/${p.id}`")
+                  router-link.icon-btn.las.la-shipping-fast(:to="`plans/${p.id}/instances`")
+                  router-link.icon-btn.las.la-pen(:to="`plans/${p.id}`")
                   .icon-btn.las.la-trash-alt.danger(
                     content="Delete plan" v-tippy='{ placement : "top" }'
                     @click="onDelete(p)"

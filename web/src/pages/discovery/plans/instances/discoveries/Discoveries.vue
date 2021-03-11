@@ -21,12 +21,13 @@
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
             | {{d.schema_name}}.{{d.table_name}}.{{d.column_name}}
+      .loading.p-10.w-full.flex.bg-white(v-if="isLoading && this.items.length > 0")
+        | Loading....
 
-      t-button.mt-10.w-full.text-center(tagName="a" :href="`/connections/${connectionId}/policies/create`")
-        | Create New Policy
 </template>
 
 <script>
+import _ from 'lodash'
 import { mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 import { dateMixin } from '@/mixins'
@@ -67,6 +68,9 @@ export default {
     ws.onmessage = (message) => {
       console.log(message)
     }
+  },
+  created () {
+    this.load = _.debounce(this.load, 300)
   }
 }
 </script>

@@ -9,8 +9,8 @@ header
             :to="`/connections/${connectionId}`"
             class="hover:text-gray-900 hover:font-black"
           ) {{connectionName}}
-          .sep(v-if="title && connectionName") /
-          .title.text-gray-500 {{title}}
+          .sep(v-if="_title && connectionName") /
+          .title.text-gray-500 {{_title}}
       .flex.items-center.pr-2.gap-x-4(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
         .icon-btn.las.la-search
         t-icon-dropdown(
@@ -57,15 +57,15 @@ export default {
   },
   computed: {
     ...mapGetters('connection', ['connections']),
-    ...mapGetters('app', ['connection']),
+    ...mapGetters('app', ['connection', 'title']),
     connectionName () {
       return this.connection?.name
     },
     connectionId () {
       return this.connection?.id
     },
-    title () {
-      return this.$route?.meta?.title
+    _title () {
+      return this.title?.text ?? this.$route?.meta?.title
     }
   },
   methods: {

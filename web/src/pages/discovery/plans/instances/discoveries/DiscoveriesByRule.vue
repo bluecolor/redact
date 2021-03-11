@@ -20,10 +20,14 @@
                   )
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
-            .flex.gap-x-3
-              t-tag(tag-name="span" variant="badge") {{d.rule.type}}
+            .flex.justify-between
+              .flex.gap-x-3
+                t-tag(tag-name="span" variant="badge") Rule type: {{d.rule.type}}
+                t-tag(tag-name="span" variant="badge") Severity: {{d.rule.severity}}
               .result
-                | {{d.count}} findings
+                router-link(
+                  :to="`/connections/${connectionId}/discovery/plans/${planId}/instances/${planInstanceId}/rules/${d.rule.id}/discoveries`"
+                ) {{d.count}} findings
 
 </template>
 
@@ -36,7 +40,7 @@ import { dateMixin } from '@/mixins'
 
 export default {
   mixins: [dateMixin],
-  props: ['connectionId', 'planInstanceId'],
+  props: ['connectionId', 'planInstanceId', 'planId'],
   components: {
     SvgIcon
   },
@@ -73,10 +77,10 @@ export default {
   },
   mounted () {
     this.load()
-    const ws = new WebSocket('ws://localhost:8000/api/v1/ws/plans/instances')
-    ws.onmessage = (message) => {
-      console.log(message)
-    }
+    // const ws = new WebSocket('ws://localhost:8000/api/v1/ws/plans/instances')
+    // ws.onmessage = (message) => {
+    //   console.log(message)
+    // }
   }
 }
 </script>

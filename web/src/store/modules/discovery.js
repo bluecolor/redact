@@ -10,12 +10,10 @@ const CREATE_PLAN = 'CREATE_PLAN'
 const DELETE_PLAN = 'DELETE_PLAN'
 const DELETE_RULE = 'DELETE_RULE'
 const SET_PLAN_STATUS = 'SET_PLAN_STATUS'
-const SET_PLAN_INSTANCES = 'SET_PLAN_INSTANCES'
 
 const state = {
   rules: [],
-  plans: [],
-  planInstances: []
+  plans: []
 }
 
 const getters = {
@@ -25,6 +23,9 @@ const getters = {
 }
 
 const actions = {
+  getRule ({ rootGetters }, id) {
+    return api.getRule(rootGetters['app/connectionId'], id)
+  },
   getRules ({ commit, rootGetters }) {
     return api.getRules(rootGetters['app/connectionId']).then(result => {
       commit(SET_RULES, result)
@@ -67,17 +68,17 @@ const actions = {
       return result
     })
   },
-  getPlanInstances ({ commit, rootGetters }) {
-    return api.getPlanInstances(rootGetters['app/connectionId']).then(result => {
-      commit(SET_PLAN_INSTANCES, result)
-      return result
-    })
+  getPlanInstances ({ commit, rootGetters }, { planId }) {
+    return api.getPlanInstances(rootGetters['app/connectionId'], planId)
   },
   getPlanInstance ({ rootGetters }, id) {
     return api.getPlanInstance(rootGetters['app/connectionId'], id)
   },
   getDiscoveries ({ rootGetters }, { planInstanceId, query }) {
     return api.getDiscoveries(rootGetters['app/connectionId'], planInstanceId, query)
+  },
+  getDiscoveriesForRule ({ rootGetters }, { planId, planInstanceId, ruleId, query }) {
+    return api.getDiscoveriesForRule(rootGetters['app/connectionId'], planId, planInstanceId, ruleId, query)
   }
 }
 
@@ -109,9 +110,6 @@ const mutations = {
   [SET_PLAN_STATUS]: (state, { id, status }) => {
     const plan = _.find(this.plans, { id })
     plan.status = status
-  },
-  [SET_PLAN_INSTANCES]: (state, data) => {
-    state.planInstances = data
   }
 }
 

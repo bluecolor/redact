@@ -6,7 +6,7 @@ import Connections, { CreateConnection, EditConnection } from '@/pages/settings/
 import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
 import Plans, { CreatePlan } from '@/pages/discovery/plans'
 import PlanInstances from '@/pages/discovery/plans/instances'
-import Discoveries, { DiscoveriesByRule } from '@/pages/discovery/plans/instances/discoveries'
+import Discoveries, { DiscoveriesByRule, DiscoveriesForRule } from '@/pages/discovery/plans/instances/discoveries'
 
 import Policies, {
   CreatePolicy,
@@ -164,7 +164,7 @@ const routes = [
           meta: { title: 'Create Plan', group: 'plans' }
         }, {
           name: 'planInstances',
-          path: '/connections/:connectionId/discovery/plans/instances',
+          path: '/connections/:connectionId/discovery/plans/:planId/instances',
           component: PlanInstances,
           props: true,
           meta: { title: 'Plan Runs', group: 'planInstances' }
@@ -176,10 +176,16 @@ const routes = [
           meta: { title: 'Discoveries', group: 'planInstances' }
         }, {
           name: 'discoveriesByRule',
-          path: '/connections/:connectionId/discovery/plans/instances/:planInstanceId/discoveries/byrule',
+          path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/discoveries-by-rule',
           component: DiscoveriesByRule,
           props: true,
-          meta: { title: 'Discoveries', group: 'planInstances' }
+          meta: { title: 'Discoveries by Rule', group: 'planInstances' }
+        }, {
+          name: 'discoveriesForRule',
+          path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/rules/:ruleId/discoveries',
+          component: DiscoveriesForRule,
+          props: true,
+          meta: { title: 'Discoveries for Rule', group: 'discoveries' }
         }]
       }
     ]

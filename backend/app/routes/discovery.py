@@ -3,6 +3,7 @@ from typing import List, Optional, Union
 from arq.connections import ArqRedis
 from fastapi import Depends, WebSocket
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.expression import outerjoin
 from sqlalchemy.sql.functions import func, mode
 import app.models.orm as models
 import app.models.schemas as schemas
@@ -13,6 +14,18 @@ from pydantic import parse_obj_as
 from app import get_redis_pool
 from app.settings.arq import settings as redis_settings
 from arq.connections import ArqRedis, create_pool
+from fastapi_pagination.ext.sqlalchemy import paginate
+from fastapi_pagination import Page, Params
+
+@router.get(
+    "/connections/{conn_id}/discovery/rules/{id}",
+    response_model=schemas.RuleOut,
+)
+def get_rule( conn_id: int, id: int, db: Session = Depends(get_db)) -> schemas.RuleOut:
+    rule = db.query(models.Rule).outerjoin(models.Connection)\
+        .filter(models.Connection.id == conn_id and models.Rule.id == id).one()
+    return schemas.RuleOut.from_orm(rule)
+
 
 @router.get(
     "/connections/{conn_id}/discovery/rules",
@@ -83,14 +96,14 @@ async def run_plan(conn_id: int, plan_id: int, db: Session = Depends(get_db), re
 
 
 @router.get(
-    "/connections/{conn_id}/discovery/plans/instances",
+    "/connections/{conn_id}/discovery/plans/{plan_id}/instances",
     tags=["PlanInstances"],
     response_model=List[schemas.PlanInstanceOut]
 )
-async def get_plan_instances(conn_id: int, db: Session = Depends(get_db)):
+async def get_plan_instances(conn_id: int, plan_id: int, db: Session = Depends(get_db)):
     plan_instances = db.query(models.PlanInstance)\
         .outerjoin(models.Plan)\
-        .filter(models.Plan.connection_id == conn_id)\
+        .filter(models.Plan.connection_id == conn_id and models.Plan.id == plan_id)\
         .all()
     return parse_obj_as(List[schemas.PlanInstanceOut],plan_instances)
 
@@ -125,6 +138,27 @@ async def get_discoveries(conn_id: int, plan_instance_id: int, by_rule: Optional
             .filter(models.PlanInstance.id == plan_instance_id)\
             .all()
         return parse_obj_as(List[schemas.DiscoveryOut], disvcoveries)
+
+
+@router.get(
+    "/connections/{conn_id}/discovery/plans/{plan_id}/instances/{plan_instance_id}/rules/{rule_id}",
+    tags=["Discoveries"],
+    response_model= Page[schemas.DiscoveryOut]
+)
+async def get_discoveries_for_rule(
+    conn_id: int, plan_id, plan_instance_id: int, rule_id: int,
+    db: Session = Depends(get_db),
+    params: Params = Depends()
+):
+    disvcoveries = db.query(models.Discovery)\
+            .outerjoin(models.PlanInstance)\
+            .outerjoin(models.Plan)\
+            .outerjoin(models.Rule)\
+            .filter(
+                    models.Plan.id == plan_id
+                and models.PlanInstance.id == plan_instance_id
+                and models.Rule.id == rule_id)
+    return paginate(disvcoveries, params)
 
 
 @router.websocket("/ws/plans/instances")

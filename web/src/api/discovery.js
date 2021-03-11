@@ -3,6 +3,9 @@ import request from './request'
 import qs from 'qs'
 
 export default {
+  getRule (connectionId, id) {
+    return request.get(`/connections/${connectionId}/discovery/rules/${id}`)
+  },
   getRules (connectionId) {
     return request.get(`/connections/${connectionId}/discovery/rules`)
   },
@@ -24,13 +27,16 @@ export default {
   runPlan (connectionId, id) {
     return request.get(`/connections/${connectionId}/discovery/plans/${id}/run`)
   },
-  getPlanInstances (connectionId) {
-    return request.get(`/connections/${connectionId}/discovery/plans/instances`)
+  getPlanInstances (connectionId, planId) {
+    return request.get(`/connections/${connectionId}/discovery/plans/${planId}/instances`)
   },
   getPlanInstance (connectionId, id) {
     return request.get(`/connections/${connectionId}/discovery/plans/instances/${id}`)
   },
   getDiscoveries (connectionId, planInstanceId, query) {
     return request.get(`/connections/${connectionId}/discovery/plans/instances/${planInstanceId}/discoveries?${qs.stringify(query)}`)
+  },
+  getDiscoveriesForRule (connectionId, planId, planInstanceId, ruleId, query) {
+    return request.get(`/connections/${connectionId}/discovery/plans/${planId}/instances/${planInstanceId}/rules/${ruleId}?${qs.stringify(query)}`)
   }
 }

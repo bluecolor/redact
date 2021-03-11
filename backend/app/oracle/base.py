@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, List
 import app.models.orm as models
 import cx_Oracle
 
@@ -15,7 +15,7 @@ def fetchall(cursor):
     return rows
 
 
-def queryall(connection: models.Connection, query: str) -> Any:
+def queryall(connection: models.Connection, query: str) -> List[dict]:
     with connect(connection=connection) as conn:
         cursor = conn.cursor()
         cursor.execute(query)

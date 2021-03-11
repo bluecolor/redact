@@ -7,6 +7,7 @@ sys.path.extend(["./"])
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from starlette.datastructures import Secret
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_pagination import add_pagination
 
 from app.app import app
 from app.routes import router
@@ -26,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+add_pagination(app)
 
 if __name__ == "__main__":
     import uvicorn

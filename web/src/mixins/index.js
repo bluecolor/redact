@@ -1,3 +1,4 @@
 import dateMixin from './dateMixin'
+import paginationMixin from './paginationMixin'
 
-export { dateMixin }
+export { dateMixin, paginationMixin }

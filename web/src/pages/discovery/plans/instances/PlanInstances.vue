@@ -16,7 +16,7 @@
                 .btns.gap-x-3.flex(v-if="!isSpinner")
                   router-link.icon-btn.las.la-info-circle(
                     content="Discoveries" v-tippy='{ placement : "top" }'
-                    :to="`instances/${p.id}/discoveries/byrule`")
+                    :to="`instances/${p.id}/discoveries-by-rule`")
                   router-link.icon-btn.las.la-stop-circle(
                     content="Stop" v-tippy='{ placement : "top" }'
                     :to="`policies/edit?policy_name=${encodeURI(p.policy_name)}&object_owner=${encodeURI(p.object_owner)}&object_name=${encodeURI(p.object_name)}`")
@@ -33,24 +33,24 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 import { dateMixin } from '@/mixins'
 
 export default {
   mixins: [dateMixin],
-  props: ['connectionId'],
+  props: ['connectionId', 'planId'],
   components: {
     SvgIcon
   },
   data () {
     return {
       isSpinner: false,
-      title: 'Plan Runs'
+      title: 'Plan Runs',
+      planInstances: []
     }
   },
   computed: {
-    ...mapGetters('discovery', ['planInstances']),
     isPlanInstancesEmpty () {
       return this.planInstances.length === 0
     }
@@ -59,14 +59,18 @@ export default {
     ...mapActions('discovery', ['getPlanInstances']),
     load () {
       this.isSpinner = true
-      this.getPlanInstances().finally(() => { this.isSpinner = false })
+      const planId = +this.planId
+      return this.getPlanInstances({ planId }).then(result => {
+        this.planInstances = result
+      }).finally(() => { this.isSpinner = false })
     }
   },
   mounted () {
-    const ws = new WebSocket('ws://localhost:8000/api/v1/ws/plans/instances')
-    ws.onmessage = (message) => {
-      console.log(message)
-    }
+    this.load()
+    // const ws = new WebSocket('ws://localhost:8000/api/v1/ws/plans/instances')
+    // ws.onmessage = (message) => {
+    //   console.log(message)
+    // }
   }
 }
 </script>
