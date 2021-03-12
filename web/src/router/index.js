@@ -4,9 +4,9 @@ import MainLayout, { ConnectionLayout, SettingsLayout } from '@/layouts'
 import Home from '@/pages/Home.vue'
 import Connections, { CreateConnection, EditConnection } from '@/pages/settings/connections'
 import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
-import Plans, { CreatePlan } from '@/pages/discovery/plans'
-import PlanInstances, { AllPlanInstances } from '@/pages/discovery/plans/instances'
-import Discoveries, { DiscoveriesByRule, DiscoveriesForRule } from '@/pages/discovery/plans/instances/discoveries'
+import Plans, { CreatePlan, EditPlan } from '@/pages/discovery/plans'
+import PlanInstances, { AllPlanInstances } from '@/pages/discovery/plan-instances'
+import Discoveries, { DiscoveriesByRule, DiscoveriesForRule } from '@/pages/discovery/discoveries'
 
 import Policies, {
   CreatePolicy,
@@ -163,6 +163,12 @@ const routes = [
           props: true,
           meta: { title: 'Create Plan', group: 'plans' }
         }, {
+          name: 'editPlan',
+          path: '/connections/:connectionId/discovery/plans/:id',
+          component: EditPlan,
+          props: true,
+          meta: { title: 'Edit Plan', group: 'plans' }
+        }, {
           name: 'planInstances',
           path: '/connections/:connectionId/discovery/plans/:planId/instances',
           component: PlanInstances,
@@ -204,5 +210,14 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+// const __proto__ = Object.getPrototypeOf(router)
+// const _push = __proto__.push
+// __proto__.push = function push (...args) {
+//   return _push.call(this, ...args)
+//     .catch(error => {
+//       if (error.name !== 'NavigationDuplicated') throw error
+//     })
+// }
 
 export default router

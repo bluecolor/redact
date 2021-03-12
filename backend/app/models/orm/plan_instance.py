@@ -31,6 +31,7 @@ class PlanInstance(Base):
     schemas = Column(Text)
     discoveries = relationship("Discovery", back_populates="plan_instance")
 
+    job_id = Column(String(255))
 
     status = Column(String(50))
     results = Column(Text)

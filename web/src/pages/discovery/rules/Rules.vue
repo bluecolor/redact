@@ -17,8 +17,7 @@
                 | {{r.name}}
               .actions.flex.justify-end
                 .btns.gap-x-3.flex(v-if="!isSpinner")
-                  router-link.icon-btn.las.la-pen(
-                    :to="`rules/${r.id}`")
+                  router-link.icon-btn.las.la-pen(:to="`rules/${r.id}`")
                   .icon-btn.las.la-trash-alt.danger(
                     content="Delete rule" v-tippy='{ placement : "top" }'
                     @click="onDelete(r)"
@@ -46,13 +45,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('discovery', ['rules']),
+    ...mapGetters('rule', ['rules']),
     isRulesEmpty () {
       return this.rules.length === 0
     }
   },
   methods: {
-    ...mapActions('discovery', ['getRules', 'deleteRule']),
+    ...mapActions('rule', ['getRules', 'deleteRule']),
     onDelete ({ id }) {
       this.isSpinner = true
       this.deleteRule(id).then(() => {

@@ -15,18 +15,6 @@ export default {
   deleteRule (connectionId, id) {
     return request.delete(`/connections/${connectionId}/discovery/rules/${id}`)
   },
-  getPlans (connectionId) {
-    return request.get(`/connections/${connectionId}/discovery/plans`)
-  },
-  createPlan (connectionId, payload) {
-    return request.post(`/connections/${connectionId}/discovery/plans`, payload)
-  },
-  deletePlan (connectionId, id) {
-    return request.delete(`/connections/${connectionId}/discovery/plans/${id}`)
-  },
-  runPlan (connectionId, id) {
-    return request.get(`/connections/${connectionId}/discovery/plans/${id}/run`)
-  },
   getPlanInstances (connectionId, planId) {
     return request.get(`/connections/${connectionId}/discovery/plans/${planId}/instances`)
   },

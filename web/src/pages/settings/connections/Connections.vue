@@ -20,7 +20,10 @@
                 content="Test connection" v-tippy='{ placement : "top" }'
                 @click="onTest(c.id)"
               )
-              .icon-btn.las.la-trash-alt.danger(@click="onDelete(c.id)")
+              .icon-btn.las.la-trash-alt.danger.text-center.items-center(@click="onDelete(c.id)")
+              t-icon-dropdown(
+                :classes="{icon: 'las la-ellipsis-v'}"
+                :emitValue="true" :items="menu", valueProp="path")
             .spinner.lds-dual-ring(v-else)
       template(v-slot:default)
         |{{c.host}}:{{c.port}}/{{c.service}}
@@ -30,14 +33,17 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
-// import PageLoader from '@/components/loaders'
+import TIconDropdown from '@/components/TIconDropdown'
 
 export default {
   components: {
-    SvgIcon
+    SvgIcon, TIconDropdown
   },
   data () {
     return {
+      menu: [
+        { name: 'Export', value: 'export', icon: 'las la-download' },
+        { name: 'Import', value: 'import', icon: 'las la-upload' }],
       isSpinner: false,
       title: 'Connections'
     }

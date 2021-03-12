@@ -11,7 +11,17 @@ from fastapi_pagination import add_pagination
 
 from app.app import app
 from app.routes import router
-from app.routes import connections, users, metadata, redact, categories, discovery
+from app.routes import (
+    connections,
+    users,
+    metadata,
+    redact,
+    categories,
+    discovery,
+    plan_instances,
+    plans,
+    rules,
+)
 
 app.include_router(router, prefix="/api/v1")
 

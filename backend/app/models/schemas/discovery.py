@@ -6,6 +6,7 @@ from .base import Base
 from sqlalchemy.orm import column_property
 from . import Connection
 
+
 class Plan(Base):
     name: str
     connection_id: Optional[int]
@@ -13,6 +14,7 @@ class Plan(Base):
     schemas: str
     status: Optional[str]
     description: Optional[str]
+
 
 class Rule(Base):
     name: str
@@ -25,6 +27,7 @@ class Rule(Base):
 class PlanOut(Plan):
     rules: Optional[List[Rule]]
 
+
 class RuleOut(Rule):
     plans: Optional[List[Plan]]
 
@@ -36,6 +39,15 @@ class RuleCreateIn(Base):
     expression: str
     description: Optional[str]
 
+
+class RuleUpdateIn(Base):
+    name: str
+    type: str
+    severity: Optional[str]
+    expression: str
+    description: Optional[str]
+
+
 class RuleDeleteOut(Base):
     name: str
 
@@ -46,8 +58,17 @@ class PlanCreateIn(Base):
     rules: List[int]
     description: Optional[str]
 
+
+class PlanUpdateIn(Base):
+    name: str
+    schemas: str
+    rules: List[int]
+    description: Optional[str]
+
+
 class PlanDeleteOut(Base):
     name: str
+
 
 class PlanInstanceOut(Base):
     plan: PlanOut
@@ -61,6 +82,7 @@ class DiscoveryOut(Base):
     table_name: str
     column_name: Optional[str]
     rule: Rule
+
 
 class DiscoveryByRuleOut(Base):
     rule_id: int

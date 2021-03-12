@@ -2,8 +2,8 @@
 .left-nav.flex.w-full.fit
   nav.nav-menu.flex
     template(v-for="i in items")
-      .nav-item.bg-white.flex.items-center.gap-x-2.cursor-pointer(
-        @click="onNav(i.path)"
+      router-link.nav-item.bg-white.flex.items-center.gap-x-2.cursor-pointer(
+        :to="i.path"
         :class="{'selected': i.group && routeGroup && routeGroup === i.group}"
       )
         .icon-btn(:class="i.icon")
@@ -54,11 +54,6 @@ export default {
     },
     routeGroup () {
       return this.$route.meta.group
-    }
-  },
-  methods: {
-    onNav (path) {
-      this.$router.push({ path })
     }
   }
 }

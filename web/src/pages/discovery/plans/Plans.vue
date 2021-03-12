@@ -51,13 +51,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('discovery', ['plans']),
+    ...mapGetters('plan', ['plans']),
     isPlansEmpty () {
       return this.plans.length === 0
     }
   },
   methods: {
-    ...mapActions('discovery', ['getPlans', 'deletePlan']),
+    ...mapActions('plan', ['getPlans', 'deletePlan']),
     onDelete ({ id }) {
       this.isSpinner = true
       this.deletePlan(id).then(() => {

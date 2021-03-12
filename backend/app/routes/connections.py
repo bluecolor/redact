@@ -55,7 +55,7 @@ def update(
 @router.delete("/connections/{id}", response_model=schemas.Connection)
 def destroy(id: int, db: Session = Depends(get_db)):
     connection = (
-        db.query(models.Connection).filter(models.Connection.id == id).first()
+        db.query(models.Connection).filter(models.Connection.id == id).one()
     )
     db.delete(connection)
     db.commit()

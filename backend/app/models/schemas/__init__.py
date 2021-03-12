@@ -3,7 +3,7 @@ from .connection import (
     Connection,
     ConnectionCreateIn,
     ConnectionUpdateIn,
-    ConnectionTestIn
+    ConnectionTestIn,
 )
 from .metadata import Table, Column, ObjectOwner
 from .redact import (
@@ -19,7 +19,7 @@ from .redact import (
     RedactionColumnOut,
     RedactFunctionTypeOut,
     RedactActionOut,
-    RedactFunctionParametersOut
+    RedactFunctionParametersOut,
 )
 
 from .policy import PolicyExpression
@@ -30,10 +30,12 @@ from .discovery import (
     RuleOut,
     RuleCreateIn,
     RuleDeleteOut,
+    RuleUpdateIn,
     PlanOut,
     PlanCreateIn,
+    PlanUpdateIn,
     PlanDeleteOut,
     PlanInstanceOut,
     DiscoveryOut,
-    DiscoveryByRuleOut
+    DiscoveryByRuleOut,
 )

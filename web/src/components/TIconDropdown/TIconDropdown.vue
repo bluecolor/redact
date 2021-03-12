@@ -2,9 +2,9 @@
 .t-icon-menu(:class="cls.wrapper")
   button(
     @click="isOpen = true",
-    :class="cls.button"
+    :class="`${cls.button} ${cls.icon}`"
   )
-    .h-full.w-full.object-cover(:class="cls.icon")
+    //- .h-full.w-full.object-cover(:class="cls.icon")
   .fixed.inset-0(v-if="isOpen", @click="isOpen = false", tabindex="-1")
   div.bg-white(v-if="isOpen" :class="cls.menu")
     template(v-if="!loading && items.length > 0" v-for="i in items")
@@ -40,7 +40,7 @@ export default {
       isOpen: false,
       defaultClasses: {
         wrapper: 'relative inline-block icon-btn icon',
-        button: 'block h-8 w-8 rounded-full overflow-hidden focus:outline-none',
+        button: 'block rounded-full overflow-hidden focus:outline-none',
         icon: 'las la-ellipsis-v',
         empty: 'empty p-2 text-base',
         menu: 'menu',

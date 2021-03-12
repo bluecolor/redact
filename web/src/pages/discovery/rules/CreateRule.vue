@@ -2,7 +2,7 @@
 .flex.justify-center.flex-col(class="w-3/4")
   t-card
     template(v-slot:default)
-      form(autocomplete="off" @submit="onCreate")
+      form(autocomplete="off" @submit="onSubmit")
         .form-item
           t-input-group(label='Name', required)
             t-input(v-model="payload.name" required autofocus)
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     ...mapActions('discovery', ['createRule']),
-    onCreate (e) {
+    onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
       this.createRule(this.payload).then(() => {
