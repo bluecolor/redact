@@ -10,18 +10,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 
 from app.app import app
-from app.routes import router
-from app.routes import (
-    connections,
-    users,
-    metadata,
-    redact,
-    categories,
-    discovery,
-    plan_instances,
-    plans,
-    rules,
-)
+
+from app.routes import router, connections, users, metadata
+from app.routes.discovery import plan_instances, plans, rules
+from app.routes.redact import expressions, policies, functions, columns
 
 app.include_router(router, prefix="/api/v1")
 

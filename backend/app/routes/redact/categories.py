@@ -4,50 +4,71 @@ from pydantic.types import SecretBytes
 from sqlalchemy.orm import Session
 import app.models.orm as models
 from app.models.orm.connection import Connection
-import app.models.schemas as schemas
+import app.models.schemas.redact as s
 from .base import router
 from app.database import get_db
 from app.oracle import ping
 from pydantic import parse_obj_as
 from app.oracle import redact
 
+
 @router.get(
-    "/connections/{conn_id}/categories", tags=["Categories"], response_model=List[schemas.CategoryOut]
+    "/connections/{conn_id}/categories",
+    tags=["Categories"],
+    response_model=List[s.CategoryOut],
 )
-def get_categories(conn_id: int, db: Session = Depends(get_db)):
+def get_all(conn_id: int, db: Session = Depends(get_db)):
     connection = connection = db.query(models.Connection).get(conn_id)
-    expressions= redact.get_expressions(connection)
+    expressions = redact.get_expressions(connection)
 
     def get_expression(policy_expression_name):
         for e in expressions:
             if e.policy_expression_name == policy_expression_name:
                 return e
 
-    categories = db.query(models.Category).filter(models.Category.connection_id == conn_id).all()
+    categories = (
+        db.query(models.Category)
+        .filter(models.Category.connection_id == conn_id)
+        .all()
+    )
     for c in categories:
         c.policy_expression = get_expression(c.policy_expression_name)
 
-    return parse_obj_as(List[schemas.CategoryOut],categories)
+    return parse_obj_as(List[s.CategoryOut], categories)
+
 
 @router.post(
-    "/connections/{conn_id}/categories", tags=["Categories"], response_model=schemas.CategoryOut
+    "/connections/{conn_id}/categories",
+    tags=["Categories"],
+    response_model=s.CategoryOut,
 )
-def create_category(conn_id: int, category: schemas.CategoryCreateIn, db: Session = Depends(get_db)):
+def create(
+    conn_id: int, category: s.CategoryCreateIn, db: Session = Depends(get_db),
+):
     payload = {**category.dict(), "connection_id": conn_id}
     new_category: models.Category = models.Category(**payload)
     db.add(new_category)
     db.commit()
     db.refresh(new_category)
 
-    policy_expression = redact.get_expression(new_category.connection, new_category.policy_expression_name)
+    policy_expression = redact.get_expression(
+        new_category.connection, new_category.policy_expression_name
+    )
     new_category.policy_expression = policy_expression
-    return schemas.CategoryOut.from_orm(new_category)
+    return s.CategoryOut.from_orm(new_category)
 
 
 @router.post(
-    "/connections/{conn_id}/categories/{id}", tags=["Categories"], response_model=schemas.CategoryOut
+    "/connections/{conn_id}/categories/{id}",
+    tags=["Categories"],
+    response_model=s.CategoryOut,
 )
-def update_category(conn_id: int, id: int, category: schemas.CategoryUpdateIn, db: Session = Depends(get_db)):
+def update(
+    conn_id: int,
+    id: int,
+    category: s.CategoryUpdateIn,
+    db: Session = Depends(get_db),
+):
     cat = db.query(models.Category).get(id)
     if cat is None:
         return None
@@ -58,15 +79,14 @@ def update_category(conn_id: int, id: int, category: schemas.CategoryUpdateIn, d
     db.add(cat)
     db.commit()
     db.refresh(cat)
-    return schemas.CategoryOut.from_orm(cat)
+    return s.CategoryOut.from_orm(cat)
 
 
-
-@router.delete("/connections/{conn_id}/categories/{id}", response_model=schemas.CategoryOut)
-def delete_category(
-    conn_id: int, # reserved
-    id: int, db: Session = Depends(get_db)):
+@router.delete(
+    "/connections/{conn_id}/categories/{id}", response_model=s.CategoryOut,
+)
+def delete(conn_id: int, id: int, db: Session = Depends(get_db)):  # reserved
     category = db.query(models.Category).get(id)
     db.delete(category)
     db.commit()
-    return schemas.CategoryOut.from_orm(category)
+    return s.CategoryOut.from_orm(category)

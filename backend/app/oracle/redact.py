@@ -3,7 +3,7 @@ from typing import Any, List, Optional
 from pydantic import parse_obj_as
 from .base import connect
 import app.models.orm as models
-import app.models.schemas as schemas
+import app.models.schemas.redact as s
 from . import queries as q
 from .base import callproc, queryall
 
@@ -75,9 +75,9 @@ DBMS_REDACT = dict(
 )
 
 
-def get_function_parameters() -> List[schemas.RedactFunctionParametersOut]:
+def get_function_parameters() -> List[s.FunctionParametersOut]:
     return parse_obj_as(
-        List[schemas.RedactFunctionParametersOut],
+        List[s.FunctionParametersOut],
         [
             dict(function_parameters=DBMS_REDACT["REDACT_US_SSN_F5"]),
             dict(function_parameters=DBMS_REDACT["REDACT_US_SSN_L4"]),
@@ -136,9 +136,9 @@ def get_function_parameters() -> List[schemas.RedactFunctionParametersOut]:
     )
 
 
-def get_function_types() -> List[schemas.RedactFunctionTypeOut]:
+def get_function_types() -> List[s.FunctionTypeOut]:
     return parse_obj_as(
-        List[schemas.RedactFunctionTypeOut],
+        List[s.FunctionTypeOut],
         [
             dict(function_type=DBMS_REDACT["NONE"], name="NONE"),
             dict(function_type=DBMS_REDACT["FULL"], name="FULL"),
@@ -157,9 +157,9 @@ def get_function_types() -> List[schemas.RedactFunctionTypeOut]:
     )
 
 
-def get_actions() -> List[schemas.RedactActionOut]:
+def get_actions() -> List[s.ActionOut]:
     return parse_obj_as(
-        List[schemas.RedactActionOut],
+        List[s.ActionOut],
         [
             dict(action=DBMS_REDACT["ADD_COLUMN"], name="ADD_COLUMN"),
             dict(action=DBMS_REDACT["DROP_COLUMN"], name="DROP_COLUMN"),
@@ -184,31 +184,27 @@ def get_policies(
     connection: models.Connection,
     owner: Optional[str] = None,
     table_name: Optional[str] = None,
-) -> List[schemas.RedactionPolicyOut]:
+) -> List[s.PolicyOut]:
     query = q.redaction_policies(owner=owner, table_name=table_name)
-    return parse_obj_as(
-        List[schemas.RedactionPolicyOut], queryall(connection, query)
-    )
+    return parse_obj_as(List[s.PolicyOut], queryall(connection, query))
 
 
 def get_expressions(
     connection: models.Connection,
     object_owner: Optional[str] = None,
     object_name: Optional[str] = None,
-) -> List[schemas.RedactionExpressionOut]:
+) -> List[s.ExpressionOut]:
     query = q.redaction_expressions(object_owner, object_name)
-    return parse_obj_as(
-        List[schemas.RedactionExpressionOut], queryall(connection, query)
-    )
+    return parse_obj_as(List[s.ExpressionOut], queryall(connection, query))
 
 
 def get_expression(
     connection: models.Connection, policy_expression_name: str
-) -> schemas.RedactionExpressionOut:
+) -> s.ExpressionOut:
     query = q.redaction_expression(policy_expression_name)
     result = queryall(connection, query)
     if len(result) > 0:
-        return parse_obj_as(schemas.RedactionExpressionOut, result[0])
+        return parse_obj_as(s.ExpressionOut, result[0])
     return None
 
 
@@ -216,11 +212,9 @@ def get_columns(
     connection: models.Connection,
     object_owner: Optional[str] = None,
     object_name: Optional[str] = None,
-) -> List[schemas.RedactionColumnOut]:
+) -> List[s.ColumnOut]:
     query = q.redaction_columns(object_owner, object_name)
-    return parse_obj_as(
-        List[schemas.RedactionColumnOut], queryall(connection, query)
-    )
+    return parse_obj_as(List[s.ColumnOut], queryall(connection, query))
 
 
 def add_policy(connection: models.Connection, policy: dict):
