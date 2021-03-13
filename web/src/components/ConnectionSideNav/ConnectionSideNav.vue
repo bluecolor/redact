@@ -2,7 +2,11 @@
 .left-nav.flex.w-full.fit
   nav.nav-menu.flex
     template(v-for="i in items")
+      .nav-category.bg-white.flex.items-center.gap-x-2(
+        v-if="i.category"
+      ) {{i.title}}
       router-link.nav-item.bg-white.flex.items-center.gap-x-2.cursor-pointer(
+        v-else
         :to="i.path"
         :class="{'selected': i.group && routeGroup && routeGroup === i.group}"
       )
@@ -15,7 +19,7 @@ export default {
   props: ['connectionId'],
   data () {
     return {
-      items: [{
+      items: [{ category: true, title: 'Redaction' }, {
         path: `/connections/${this.connectionId}/expressions`,
         title: 'Expressions',
         group: 'expressions',
@@ -30,7 +34,7 @@ export default {
         title: 'Policies',
         group: 'policies',
         icon: 'las la-certificate'
-      }, {
+      }, { category: true, title: 'Discovery' }, {
         path: `/connections/${this.connectionId}/discovery/rules`,
         title: 'Rules',
         group: 'rules',
@@ -60,6 +64,12 @@ export default {
 </script>
 
 <style lang="postcss">
+.left-nav .nav-category:first-child {
+  @apply border-t rounded-t-md;
+}
+.left-nav .nav-category{
+  @apply font-medium bg-gray-50 w-full border-b p-3 border-r text-gray-400 text-sm border-l;
+}
 .left-nav nav.nav-menu {
   @apply flex flex-col w-full;
   /* align-self: baseline; */

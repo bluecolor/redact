@@ -2,7 +2,7 @@
 .flex.justify-center.flex-col(class="w-3/4")
   t-card
     template(v-slot:default)
-      form(autocomplete="off" @submit="onCreate")
+      form(autocomplete="off" @submit="onSubmit")
         .form-item
           t-input-group(label='Name', required)
             t-input(v-model="payload.name" required autofocus)
@@ -41,17 +41,17 @@
             .flex.gap-x-3(v-else class="w-1/2")
               t-button(type="submit" value="submit" text="Save")
             .end
-              t-button(@click="onCancel" text="Close" variant="error")
+              t-button(@click="onCancel" type="button" text="Close" variant="error")
 </template>
 
 <script>
-
+/* eslint-disable camelcase */
 import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 import SimpleSpinner from '@/components/loaders'
 
 export default {
-  props: ['connectionId'],
+  props: ['connectionId', 'id'],
   components: {
     SimpleSpinner
   },
@@ -60,6 +60,7 @@ export default {
       isSpinner: false,
       isValid: false,
       payload: {
+        id: +this.id,
         name: '',
         policy_expression_name: '',
         function_type: 1,
@@ -69,17 +70,18 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('redact', ['expressions', 'functionTypes', 'functionParameters'])
+    ...mapGetters('expression', ['expressions']),
+    ...mapGetters('func', ['functionTypes', 'functionParameters'])
   },
   methods: {
-    ...mapActions('category', ['createCategory']),
-    ...mapActions('redact', ['getExpressions', 'getFunctionTypes', 'getFunctionParameters']),
-    onCreate (e) {
+    ...mapActions('category', ['updateCategory', 'getCategory']),
+    ...mapActions('expression', ['getExpressions']),
+    ...mapActions('func', ['getFunctionTypes', 'getFunctionParameters']),
+    onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
-      const { connectionId } = this
-      this.createCategory({ connectionId, ...this.payload }).then(() => {
-        this.$toast.success('Success Category created')
+      this.updateCategory(this.payload).then(() => {
+        this.$toast.success('Success. Category created')
       }).finally(() => {
         this.isSpinner = false
       })
@@ -89,16 +91,16 @@ export default {
   mounted () {
     this.isSpinner = true
     const promises = []
-    if (_.isEmpty(this.expressions)) {
-      promises.push(this.getExpressions(this.connectionId))
-    }
-    if (_.isEmpty(this.functionTypes)) {
-      promises.push(this.getFunctionTypes())
-    }
-    if (_.isEmpty(this.functionParameters)) {
-      promises.push(this.getFunctionParameters())
-    }
-    Promise.all(promises).finally(() => { this.isSpinner = false })
+    _.isEmpty(this.expressions) && promises.push(this.getExpressions(this.connectionId))
+    _.isEmpty(this.functionTypes) && promises.push(this.getFunctionTypes())
+    _.isEmpty(this.functionParameters) && promises.push(this.getFunctionParameters())
+    Promise.all([this.getCategory(+this.id), ...promises]).then(([category]) => {
+      const {
+        name, policy_expression: { policy_expression_name }, description,
+        function_type
+      } = category
+      this.payload = { ...this.payload, name, policy_expression_name, description, function_type }
+    }).finally(() => { this.isSpinner = false })
   }
 }
 </script>

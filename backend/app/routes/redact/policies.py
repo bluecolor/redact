@@ -12,7 +12,7 @@ from app.oracle import redact
     "/connections/{conn_id}/redact/policies", response_model=bool,
 )
 def create(
-    policy: s.PolicyIn, conn_id: int, db: Session = Depends(get_db),
+    policy: s.PolicyCreateIn, conn_id: int, db: Session = Depends(get_db),
 ):
     connection = db.query(models.Connection).get(conn_id)
     redact.add_policy(connection, policy.dict())
@@ -32,8 +32,8 @@ def get_all(
     return redact.get_policies(connection, owner=owner, table_name=table_name)
 
 
-@router.delete(
-    "/connections/{conn_id}/redact/policies", response_model=bool,
+@router.put(
+    "/connections/{conn_id}/redact/policies/delete", response_model=bool,
 )
 def delete(
     policy: s.PolicyDeleteIn, conn_id: int, db: Session = Depends(get_db),

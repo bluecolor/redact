@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 
 import _ from 'lodash'
-import api from '@/api/plan'
+import api from '@/api/discovery/plan'
 
 const SET_PLANS = 'SET_PLANS'
 const CREATE = 'CREATE'

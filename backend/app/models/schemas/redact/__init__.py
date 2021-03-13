@@ -6,5 +6,5 @@ from .expression import (
     ExpressionCreateIn,
 )
 from .function import FunctionParametersOut, FunctionTypeOut, ActionOut
-from .policy import PolicyOut, PolicyDeleteIn, PolicyUpdateIn
+from .policy import PolicyOut, PolicyDeleteIn, PolicyUpdateIn, PolicyCreateIn
 from .column import ColumnOut

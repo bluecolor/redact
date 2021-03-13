@@ -2,10 +2,10 @@
 .flex.justify-center.flex-col(class="w-3/4")
   t-card
     template(v-slot:default)
-      form(autocomplete="off" @submit="onUpdate")
+      form(autocomplete="off" @submit="onSubmit")
         .form-item
           t-input-group(label='Name', required)
-            t-input(v-model="payload.policy_expression_name" required autofocus)
+            t-input(disabled v-model="payload.policy_expression_name" required autofocus)
         .form-item
           t-input-group(label='Expression', required)
             t-textarea(v-model="payload.expression" required)
@@ -18,7 +18,7 @@
             .flex.gap-x-3(v-else class="w-1/2")
               t-button(type="submit" value="submit" text="Save")
             .end
-              t-button(@click="onCancel" text="Close" variant="error")
+              t-button(@click="onCancel" type="button" text="Close" variant="error")
 </template>
 
 <script>
@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     ...mapActions('redact', ['updateExpression', 'getExpression']),
-    onUpdate (e) {
+    onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
       const { connectionId } = this
@@ -58,7 +58,9 @@ export default {
         this.isSpinner = false
       })
     },
-    onCancel () { window.history.back() }
+    onCancel () {
+      window.history.back()
+    }
   },
   mounted () {
     /* eslint-disable camelcase */

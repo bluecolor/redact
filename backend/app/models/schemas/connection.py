@@ -1,5 +1,4 @@
 from typing import Optional
-
 from pydantic import BaseModel
 
 from .base import Base
@@ -29,6 +28,7 @@ class ConnectionUpdateIn(BaseModel):
     service: Optional[str]
     username: Optional[str]
     password: Optional[str]
+
 
 class ConnectionTestIn(BaseModel):
     name: Optional[str]

@@ -37,6 +37,34 @@ def get_all(conn_id: int, db: Session = Depends(get_db)):
     return parse_obj_as(List[s.CategoryOut], categories)
 
 
+@router.get(
+    "/connections/{conn_id}/categories/{id}",
+    tags=["Categories"],
+    response_model=s.CategoryOut,
+)
+def get_one(conn_id: int, id: int, db: Session = Depends(get_db)):
+    connection = connection = db.query(models.Connection).get(conn_id)
+    expressions = redact.get_expressions(connection)
+
+    def get_expression(policy_expression_name):
+        for e in expressions:
+            if e.policy_expression_name == policy_expression_name:
+                return e
+
+    category = (
+        db.query(models.Category)
+        .filter(
+            models.Category.connection_id == conn_id, models.Category.id == id
+        )
+        .one()
+    )
+    category.policy_expression = get_expression(
+        category.policy_expression_name
+    )
+
+    return s.CategoryOut.from_orm(category)
+
+
 @router.post(
     "/connections/{conn_id}/categories",
     tags=["Categories"],
@@ -58,7 +86,7 @@ def create(
     return s.CategoryOut.from_orm(new_category)
 
 
-@router.post(
+@router.put(
     "/connections/{conn_id}/categories/{id}",
     tags=["Categories"],
     response_model=s.CategoryOut,

@@ -2,7 +2,7 @@
 .flex.justify-center.flex-col(class="w-3/4")
   t-card
     template(v-slot:default)
-      form(autocomplete="off" @submit="onCreate")
+      form(autocomplete="off" @submit="onSubmit")
         .form-item
           t-input-group(label='Name', required)
             t-input(v-model="payload.name" required autofocus)
@@ -11,6 +11,7 @@
             t-select(
               v-model="payload.policy_expression_name"
               :options="expressions",
+              placeholder="Select expression"
               value-attribute='policy_expression_name',
               text-attribute="policy_expression_name"
               required
@@ -27,6 +28,7 @@
         .form-item
           t-input-group(label='Function Parameters')
             t-select(
+              placeholder="Select parameters"
               v-model="payload.function_parameters"
               :options="functionParameters",
               value-attribute='function_parameters',
@@ -41,12 +43,11 @@
             .flex.gap-x-3(v-else class="w-1/2")
               t-button(type="submit" value="submit" text="Save")
             .end
-              t-button(@click="onCancel" text="Close" variant="error")
+              t-button(@click="onCancel" type="button" text="Close" variant="error")
 </template>
 
 <script>
 
-import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 import SimpleSpinner from '@/components/loaders'
 
@@ -69,12 +70,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('redact', ['expressions', 'functionTypes', 'functionParameters'])
+    ...mapGetters('expression', ['expressions']),
+    ...mapGetters('func', ['functionTypes', 'functionParameters'])
   },
   methods: {
     ...mapActions('category', ['createCategory']),
-    ...mapActions('redact', ['getExpressions', 'getFunctionTypes', 'getFunctionParameters']),
-    onCreate (e) {
+    ...mapActions('expression', ['getExpressions']),
+    ...mapActions('func', ['getFunctionTypes', 'getFunctionParameters']),
+    onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
       const { connectionId } = this
@@ -89,15 +92,9 @@ export default {
   mounted () {
     this.isSpinner = true
     const promises = []
-    if (_.isEmpty(this.expressions)) {
-      promises.push(this.getExpressions(this.connectionId))
-    }
-    if (_.isEmpty(this.functionTypes)) {
-      promises.push(this.getFunctionTypes())
-    }
-    if (_.isEmpty(this.functionParameters)) {
-      promises.push(this.getFunctionParameters())
-    }
+    promises.push(this.getExpressions(this.connectionId))
+    promises.push(this.getFunctionTypes())
+    promises.push(this.getFunctionParameters())
     Promise.all(promises).finally(() => { this.isSpinner = false })
   }
 }

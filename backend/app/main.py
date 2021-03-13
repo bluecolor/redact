@@ -13,7 +13,13 @@ from app.app import app
 
 from app.routes import router, connections, users, metadata
 from app.routes.discovery import plan_instances, plans, rules
-from app.routes.redact import expressions, policies, functions, columns
+from app.routes.redact import (
+    expressions,
+    policies,
+    functions,
+    columns,
+    categories,
+)
 
 app.include_router(router, prefix="/api/v1")
 

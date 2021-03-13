@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 
 import _ from 'lodash'
-import api from '@/api/redact'
+import api from '@/api/redact/redact'
 import { PolicyActions } from '@/utils'
 
 const SET_POLICIES = 'SET_POLICIES'

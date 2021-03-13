@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import request from './request'
+import request from '@/api/request'
 
 export default {
   getAllByPlan (connectionId, planId) {

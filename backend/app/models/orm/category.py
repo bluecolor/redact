@@ -12,8 +12,9 @@ from sqlalchemy import (
 from sqlalchemy.orm.base import attribute_str
 
 from .base import Base
-from app.models import schemas
+from app.models.schemas.redact.base import Expression
 from app.oracle import redact
+
 
 class Category(Base):
     __tablename__ = "categories"
@@ -25,8 +26,7 @@ class Category(Base):
     function_type = Column(Integer)
     function_parameters = Column(String(4000))
 
-    policy_expression: schemas.PolicyExpression
-
+    policy_expression: Expression
 
     @property
     def function_type_name(self):
@@ -34,11 +34,10 @@ class Category(Base):
             if ft.function_type == self.function_type:
                 return ft.name
 
-
     def __init__(self, **kw):
         super().__init__(**kw)
 
     # created_by_id = Column(Integer, ForeignKey("users.id"))
     connection_id = Column(Integer, ForeignKey("connections.id"))
-    connection= relationship("Connection", back_populates="categories")
+    connection = relationship("Connection", back_populates="categories")
 

@@ -2,14 +2,14 @@
 div
   .bg-white.empty.w-full(v-if="isCategoriesEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
-    .project-logo.flex.justify-center.mt-10.w-full()
-      svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")
+    .flex.justify-center.mt-10.w-full()
+      svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
     .flex.justify-center.mt-10
       t-button.mt-10.w-full.text-center(tagName="a"
-        :href="`/connections/${connectionId}/categories/create`" text="Create New Category")
-  .connections-container.flex.justify-center.w-full(v-else)
+        :href="`categories/create`" text="Create New Category")
+  .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
-      .connections.gap-y-3.flex.flex-col.w-full
+      .gap-y-3.flex.flex-col.w-full
         t-card.card(v-for="c in categories" :header='c.name')
           template(v-slot:header)
             .flex.justify-between
@@ -23,14 +23,15 @@ div
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
             .flex.justify-between
-              .start
-                .description {{c.description}}
+              .start.flex.flex-col.gap-y-2
+                .expression-name.overflow-ellipsis {{c.policy_expression.policy_expression_name}}
+                .description.text-gray-400.overflow-ellipsis {{c.description}}
               .end.flex.flex-col.justify-between
                 .function-type {{c.function_type_name}}
                 .date.text-sm.text-gray-400 {{fromNow(c.updated_on)}}
 
       t-button.mt-10.w-full.text-center(tagName="a"
-        :href="`/connections/${connectionId}/categories/create`" text="Create New Category")
+        :href="`categories/create`" text="Create New Category")
 
 </template>
 
@@ -50,11 +51,14 @@ export default {
   data () {
     return {
       isSpinner: false,
-      title: 'Connections'
+      title: 'Categories'
     }
   },
   computed: {
-    ...mapGetters('category', ['categories', 'isCategoriesEmpty'])
+    ...mapGetters('category', ['categories']),
+    isCategoriesEmpty () {
+      return this.categories.length === 0
+    }
   },
   methods: {
     ...mapActions('category', ['getCategories', 'deleteCategory']),
@@ -67,7 +71,7 @@ export default {
     },
     onDelete ({ id }) {
       this.isSpinner = true
-      this.deleteCategory({ id }).then(() => {
+      this.deleteCategory(id).then(() => {
         this.$toast.success('Success. Deleted category')
       }).catch(error => {
         console.log(error)

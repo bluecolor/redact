@@ -3,7 +3,6 @@ from app.models.orm import plan_instance
 
 from app.models.schemas import connection
 from .base import Base
-from . import Connection
 from .rule import Rule
 from .base import Plan
 

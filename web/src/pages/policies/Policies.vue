@@ -2,14 +2,14 @@
 .policies-container
   .bg-white.empty.w-full(v-if="isPoliciesEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
-    .project-logo.flex.justify-center.mt-10.w-full()
-      svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")
+    .flex.justify-center.mt-10.w-full()
+      svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
     .flex.justify-center.mt-10
       t-button.mt-10.w-full.text-center(tagName="a" :href="`/connections/${connectionId}/policies/create`")
         | Create New Policy
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
-      .connections.gap-y-3.flex.flex-col.w-full
+      .gap-y-3.flex.flex-col.w-full
         t-card.card(v-for="p in policies" :header='p.policy_name')
           template(v-slot:header)
             .flex.justify-between
@@ -25,17 +25,25 @@
                     :to="`policies/edit?policy_name=${encodeURI(p.policy_name)}&object_owner=${encodeURI(p.object_owner)}&object_name=${encodeURI(p.object_name)}`")
                   .icon-btn.las.la-trash-alt.danger(
                     content="Delete policy" v-tippy='{ placement : "top" }'
-                    @click="onDelete()"
+                    @click="onDelete(p)"
                   )
+                  t-toggle(:checked="p.enable==='YES'")
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
-            | Content of the card.
+            .flex.justify-between
+              .start.flex.flex-col.gap-y-2
+                .expression.text-gray-600.overflow-ellipsis {{p.expression}}
+                .description.text-gray-400.overflow-ellipsis {{p.policy_description}}
+              .end.flex.flex-col.justify-end
+                .object-full-name {{getFullName(p)}}
 
       t-button.mt-10.w-full.text-center(tagName="a" :href="`/connections/${connectionId}/policies/create`")
         | Create New Policy
 </template>
 
 <script>
+/* eslint-disable camelcase */
+
 import { mapActions, mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 
@@ -51,13 +59,29 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('redact', ['policies']),
+    ...mapGetters('policy', ['policies']),
     isPoliciesEmpty () {
       return this.policies.length === 0
     }
   },
   methods: {
-    ...mapActions('redact', ['getPolicies']),
+    ...mapActions('policy', ['getPolicies', 'deletePolicy']),
+    getFullName (p) {
+      const names = []
+      p.object_owner && names.push(p.object_owner)
+      p.object_name && names.push(p.object_name)
+      return names.join('.')
+    },
+    onDelete (p) {
+      this.isSpinner = true
+      const { object_owner } = p
+      this.deletePolicy({ ...p, object_schema: object_owner }).then(() => {
+        this.$toasted.success('Success. Deleted policy')
+      }).catch(error => {
+        console.log(error)
+        this.$toasted.error('Error. Failed to delete policy')
+      }).finally(() => { this.isSpinner = false })
+    },
     load () {
       this.isSpinner = true
       this.getPolicies().finally(() => { this.isSpinner = false })

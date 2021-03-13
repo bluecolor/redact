@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 
 import _ from 'lodash'
-import api from '@/api/rule'
+import api from '@/api/discovery/rule'
 
 const SET_ALL = 'SET_ALL'
 const CREATE = 'CREATE'

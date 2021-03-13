@@ -2,7 +2,7 @@
 .flex.flex-col(class="w-3/4")
   t-card
     template(v-slot:default)
-      form.flex.flex-col(autocomplete="off" @submit="onCreate")
+      form.flex.flex-col(autocomplete="off" @submit="onSubmit")
         .form-item
           t-input-group(label='Name')
             t-input(v-model="payload.policy_name" required autofocus)
@@ -45,7 +45,7 @@
           label.flex.items-center.ml-2
             t-radio(name='options' value='category' v-model="method")
             span.ml-2.text-sm From category
-        .category.flex.flex-col.gap-y-5(v-if="method==='category'")
+        .flex.flex-col.gap-y-5(v-if="method==='category'")
           .form-item
             t-input-group(label='Category')
               t-select(
@@ -54,7 +54,7 @@
                 value-attribute='id',
                 text-attribute="name"
               )
-        .custom.flex.flex-col.gap-y-5(v-if="method==='custom'")
+        .flex.flex-col.gap-y-5(v-if="method==='custom'")
           .form-item
             t-input-group(label='Function Type')
               t-select(
@@ -67,6 +67,7 @@
           .form-item
             t-input-group(label='Function Parameters')
               t-select(
+                placeholder="Select parameters"
                 v-model="payload.function_parameters"
                 :options="functionParameters",
                 value-attribute='function_parameters',
@@ -84,7 +85,7 @@
             .flex.gap-x-3(v-else class="w-1/2")
               t-button(type="submit" value="submit" text="Save")
             .end
-              t-button(@click="onCancel" text="Canlcel" variant="error")
+              t-button(@click="onCancel" type="button" text="Close" variant="error")
 </template>
 
 <script>
@@ -119,7 +120,7 @@ export default {
   },
   computed: {
     ...mapGetters('md', ['objectSchemas', 'tables', 'columns']),
-    ...mapGetters('redact', ['functionTypes', 'functionParameters']),
+    ...mapGetters('func', ['functionTypes', 'functionParameters']),
     ...mapGetters('category', ['categories']),
     payload_ () {
       if (this.categoryId) {
@@ -141,9 +142,10 @@ export default {
   },
   methods: {
     ...mapActions('md', ['getObjectSchemas', 'getTables', 'getColumns']),
-    ...mapActions('redact', ['createPolicy', 'getFunctionTypes', 'getFunctionParameters']),
+    ...mapActions('policy', ['createPolicy']),
+    ...mapActions('func', ['getFunctionTypes', 'getFunctionParameters']),
     ...mapActions('category', ['getCategories']),
-    onCreate (e) {
+    onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
       this.createPolicy(this.payload_).then(() => {
@@ -168,10 +170,12 @@ export default {
     }
   },
   created () {
-    this.getObjectSchemas()
-    this.getFunctionTypes()
-    this.getFunctionParameters()
-    this.getCategories()
+    this.isSpinner = true
+    Promise.all([
+      this.getObjectSchemas(),
+      this.getFunctionTypes(),
+      this.getFunctionParameters(),
+      this.getCategories()]).finally(() => { this.isSpinner = false })
   }
 }
 </script>

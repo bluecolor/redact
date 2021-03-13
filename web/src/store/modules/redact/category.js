@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 
 import _ from 'lodash'
-import api from '@/api/category'
+import api from '@/api/redact/category'
 
-const SET_CATEGORIES = 'SET_CATEGORIES'
+const SET_ALL = 'SET_ALL'
 const CREATE = 'CREATE'
 const DELETE = 'DELETE'
 const UPDATE = 'UPDATE'
@@ -13,34 +13,33 @@ const state = {
 }
 
 const getters = {
-  categories: state => state.categories,
-  isCategoriesEmpty: state => state.categories.length === 0
+  categories: state => state.categories
 }
 
 const actions = {
   getCategories ({ commit, rootGetters }, connectionId) {
-    const connId = connectionId ?? rootGetters['app/connectionId']
-    return api.getCategories(connId).then(result => {
-      commit(SET_CATEGORIES, result)
+    return api.getAll(rootGetters['app/connectionId']).then(result => {
+      commit(SET_ALL, result)
       return result
     })
   },
-  createCategory ({ commit }, params) {
-    return api.create(params).then(result => {
+  getCategory ({ rootGetters }, id) {
+    return api.getOne(rootGetters['app/connectionId'], id)
+  },
+  createCategory ({ commit, rootGetters }, payload) {
+    return api.create(rootGetters['app/connectionId'], payload).then(result => {
       commit(CREATE, result)
       return result
     })
   },
-  deleteCategory ({ commit, rootGetters }, { connectionId, id }) {
-    const connId = connectionId ?? rootGetters['app/connectionId']
-    return api.delete({ connId, id }).then(result => {
+  deleteCategory ({ commit, rootGetters }, id) {
+    return api.delete(rootGetters['app/connectionId'], id).then(result => {
       commit(DELETE, result)
       return result
     })
   },
-  updateCategory ({ commit, rootGetters }, params) {
-    const connectionId = rootGetters['app/connectionId']
-    return api.update({ connectionId, ...params }).then(result => {
+  updateCategory ({ commit, rootGetters }, payload) {
+    return api.update(rootGetters['app/connectionId'], payload).then(result => {
       commit(UPDATE, result)
       return result
     })
@@ -48,7 +47,7 @@ const actions = {
 }
 
 const mutations = {
-  [SET_CATEGORIES]: (state, data) => {
+  [SET_ALL]: (state, data) => {
     state.categories = data
   },
   [CREATE]: (state, data) => {

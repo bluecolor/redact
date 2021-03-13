@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 
 import _ from 'lodash'
-import api from '@/api/planInstance'
+import api from '@/api/discovery/planInstance'
 
 const SET_PLAN_INSTANCES = 'SET_PLAN_INSTANCES'
 const DELETE = 'DELETE'

@@ -1,15 +1,20 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import connection from './modules/connection'
-import category from './modules/category'
-import redact from './modules/redact'
 import app from './modules/app'
 import md from './modules/md'
-import discovery from './modules/discovery'
-import planInstance from './modules/planInstance'
-import plan from './modules/plan'
-import rule from './modules/rule'
+import connection from './modules/connection'
+
+import category from './modules/redact/category'
+import redact from './modules/redact/redact'
+import expression from './modules/redact/expression'
+import func from './modules/redact/func'
+import policy from './modules/redact/policy'
+
+import discovery from './modules/discovery/discovery'
+import planInstance from './modules/discovery/planInstance'
+import plan from './modules/discovery/plan'
+import rule from './modules/discovery/rule'
 
 Vue.use(Vuex)
 
@@ -21,6 +26,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    connection, category, redact, app, md, discovery, planInstance, plan, rule
+    connection, category, redact, policy, func, expression, app, md, discovery, planInstance, plan, rule
   }
 })

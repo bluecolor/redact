@@ -2,11 +2,11 @@
 div
   .bg-white.empty.w-full(v-if="isExpressionsEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
-    .project-logo.flex.justify-center.mt-10.w-full()
-      svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")
+    .flex.justify-center.mt-10.w-full()
+      svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
     .flex.justify-center.mt-10
       t-button.mt-10.w-full.text-center(tagName="a"
-        :href="`/connections/${connectionId}/expressions/create`" text="Create New Expression")
+        :href="`expressions/create`" text="Create New Expression")
   .container.flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .gap-y-3.flex.flex-col.w-full
@@ -22,13 +22,14 @@ div
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
             .flex.justify-between
-              .start
-                .description {{e.policy_expression_description}}
-              .end.flex.flex-col.justify-between
-                .function-type {{e.object_owner}}.{{e.object_name}}.{{e.column_name}}
+              .start.flex.flex-col.gap-y-2
+                .expression.text-gray-600.overflow-ellipsis {{e.expression}}
+                .description.text-gray-400.overflow-ellipsis {{e.policy_expression_description}}
+              .end.flex.flex-col.justify-end
+                .object-full-name {{getFullName(e)}}
 
       t-button.mt-10.w-full.text-center(tagName="a"
-        :href="`/connections/${connectionId}/expressions/create`" text="Create New Expression")
+        :href="`expressions/create`" text="Create New Expression")
 </template>
 
 <script>
@@ -48,16 +49,26 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('redact', ['expressions', 'isExpressionsEmpty'])
+    ...mapGetters('expression', ['expressions']),
+    isExpressionsEmpty () {
+      return this.expressions.length === 0
+    }
   },
   methods: {
-    ...mapActions('redact', ['getExpressions', 'dropExpression']),
+    ...mapActions('expression', ['getExpressions', 'deleteExpression']),
+    getFullName (e) {
+      const names = []
+      e.object_owner && names.push(e.object_owner)
+      e.object_name && names.push(e.object_name)
+      e.column_name && names.push(e.column_name)
+      return names.join('.')
+    },
     load () {
       this.isSpinner = true
       this.getExpressions(this.connectionId).finally(() => { this.isSpinner = false })
     },
     onDelete ({ policy_expression_name }) {
-      this.dropExpression({ policy_expression_name }).then(() => {
+      this.deleteExpression({ policy_expression_name }).then(() => {
         this.$toast.success('Success. Dropped expression')
       }).catch(error => {
         console.log(error)
