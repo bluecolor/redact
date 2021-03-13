@@ -135,7 +135,7 @@ const routes = [
           path: '/connections/:connectionId/discovery/rules/:id',
           component: EditRule,
           props: true,
-          meta: { title: 'EditRule', group: 'rules' }
+          meta: { title: 'Edit Rule', group: 'rules' }
         }, {
           name: 'plans',
           path: '/connections/:connectionId/discovery/plans',

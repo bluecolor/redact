@@ -3,7 +3,7 @@
   .empty.w-full.bg-white(v-if="isRulesEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
     .project-logo.flex.justify-center.mt-10.w-full()
-      svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")
+      svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
     .flex.justify-center.mt-10
       t-button.mt-10.w-full.text-center(tagName="a" :href="`rules/create`")
         | Create New Rule
@@ -24,8 +24,27 @@
                   )
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
-            | {{r.description}}
-
+            .flex.justify-between
+              .start.flex.flex-col.gap-y-2
+                .expression.text-gray-600.overflow-ellipsis {{r.expression}}
+                .description.text-gray-400.overflow-ellipsis {{r.description}}
+              .end.flex.flex-col.justify-end.gap-y-3
+                .rule-type.flex.justify-end
+                  .flex.gap-x-2
+                    t-tag.p-1(
+                      content="Rule type" v-tippy='{ placement : "left" }'
+                      :class="{ 'bg-yellow-100': r.type==='metadata',\
+                          'bg-green-100': r.type==='data'}"
+                      tag-name="span" variant="badge"
+                    ) {{r.type}}
+                    t-tag.p-1(
+                      content="Severity" v-tippy='{ placement : "left" }'
+                      :class="{ 'bg-gray-100': r.severity==='low',\
+                          'bg-indigo-100': r.severity==='medium',\
+                          'bg-red-100': r.severity==='high'}"
+                      tag-name="span" variant="badge"
+                    ) {{r.severity}}
+                .text-gray-400.text-sm.flex.justify-end {{formatDate(r.created_on)}}
       t-button.mt-10.w-full.text-center(tagName="a" :href="`rules/create`")
         | Create New Rule
 
@@ -34,8 +53,10 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
+import { dateMixin } from '@/mixins'
 
 export default {
+  mixins: [dateMixin],
   components: {
     SvgIcon
   },

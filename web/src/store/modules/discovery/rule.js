@@ -33,8 +33,8 @@ const actions = {
     })
   },
   updateRule ({ commit, rootGetters }, payload) {
-    return api.create(rootGetters['app/connectionId'], payload).then(result => {
-      commit(CREATE, result)
+    return api.update(rootGetters['app/connectionId'], payload).then(result => {
+      commit(UPDATE, result)
       return result
     })
   },

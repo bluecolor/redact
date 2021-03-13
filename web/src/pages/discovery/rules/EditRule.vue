@@ -1,11 +1,19 @@
 <template lang="pug">
-.flex.justify-center.flex-col(class="w-3/4")
+.flex.justify-center.flex-col
   t-card
     template(v-slot:default)
       form(autocomplete="off" @submit="onSubmit")
         .form-item
           t-input-group(label='Name', required)
             t-input(v-model="payload.name" required autofocus)
+        .form-item
+          t-input-group(label='Type')
+            t-select(
+              v-model="payload.type"
+              :options="types",
+              value-attribute='value',
+              text-attribute="text"
+            )
         .form-item
           t-input-group(label='Severity')
             t-select(
@@ -26,15 +34,17 @@
             .flex.gap-x-3(v-else class="w-1/2")
               t-button(type="submit" value="submit" text="Save")
             .end
-              t-button(@click="onCancel" text="Close" variant="error")
+              t-button(@click="onCancel" type="button" text="Close" variant="error")
 </template>
 
 <script>
 
 import { mapActions } from 'vuex'
 import SimpleSpinner from '@/components/loaders'
+import ruleMixin from './ruleMixin'
 
 export default {
+  mixins: [ruleMixin],
   props: ['id'],
   components: {
     SimpleSpinner
@@ -43,13 +53,11 @@ export default {
     return {
       isSpinner: false,
       isValid: false,
-      severities: [
-        { value: 'low', text: 'Low' },
-        { value: 'medium', text: 'Medium' },
-        { value: 'high', text: 'High' }],
       payload: {
         id: +this.id,
         name: '',
+        type: '',
+        severity: '',
         expression: '',
         description: ''
       }
@@ -73,8 +81,7 @@ export default {
     load () {
       this.isSpinner = true
       this.getRule(+this.id).then(result => {
-        const { id, name, expression, description } = result
-        this.payload = { id, name, expression, description }
+        this.payload = { ...result }
         return this.payload
       }).finally(() => {
         this.isSpinner = false

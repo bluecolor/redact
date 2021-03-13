@@ -11,7 +11,8 @@ export default {
   create (connectionId, payload) {
     return request.post(`/connections/${connectionId}/discovery/rules`, payload)
   },
-  update (connectionId, id, payload) {
+  update (connectionId, payload) {
+    const { id } = payload
     return request.put(`/connections/${connectionId}/discovery/rules/${id}`, payload)
   },
   delete (connectionId, id) {

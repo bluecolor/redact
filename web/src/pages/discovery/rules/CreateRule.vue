@@ -1,5 +1,5 @@
 <template lang="pug">
-.flex.justify-center.flex-col(class="w-3/4")
+.flex.justify-center.flex-col
   t-card
     template(v-slot:default)
       form(autocomplete="off" @submit="onSubmit")
@@ -33,16 +33,19 @@
             simple-spinner(v-if="isSpinner")
             .flex.gap-x-3(v-else class="w-1/2")
               t-button(type="submit" value="submit" text="Save")
-            .end
-              t-button(@click="onCancel" text="Close" variant="error")
+            .end.flex.gap-x-2
+              t-button(@click="onClear" type="button" text="Clear" variant="secondary")
+              t-button(@click="onCancel" type="button" text="Close" variant="error")
 </template>
 
 <script>
 
 import { mapActions } from 'vuex'
 import SimpleSpinner from '@/components/loaders'
+import ruleMixin from './ruleMixin'
 
 export default {
+  mixins: [ruleMixin],
   props: ['connectionId'],
   components: {
     SimpleSpinner
@@ -51,14 +54,13 @@ export default {
     return {
       isSpinner: false,
       isValid: false,
-      types: [
-        { value: 'metadata', text: 'Naming' },
-        { value: 'data', text: 'Data' }
-      ],
-      severities: [
-        { value: 'low', text: 'Low' },
-        { value: 'medium', text: 'Medium' },
-        { value: 'high', text: 'High' }],
+      payload_: {
+        name: '',
+        type: 'metadata',
+        severity: 'low',
+        expression: '',
+        description: ''
+      },
       payload: {
         name: '',
         type: 'metadata',
@@ -69,7 +71,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('discovery', ['createRule']),
+    ...mapActions('rule', ['createRule']),
     onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
@@ -82,7 +84,10 @@ export default {
         this.$toast.error('Error. Failed to create rule')
       })
     },
-    onCancel () { window.history.back() }
+    onCancel () { window.history.back() },
+    onClear () {
+      this.payload = { ...this.payload_ }
+    }
   }
 }
 </script>
