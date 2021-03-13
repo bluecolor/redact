@@ -33,7 +33,7 @@
             .flex.justify-between
               .start.flex.flex-col.gap-y-2
                 .description.text-gray-400.overflow-ellipsis {{p.description}}
-                .text-gray-600(v-if="p.rules.length!==0") {{p.rules.length}} rules
+                .text-gray-600(v-if="p.rules.length!==0") {{p.rules.length}} rule{{p.rules.length>1?'s':''}}
                 .text-red-300(v-if="p.rules.length==0") Does not have rules
               .end.flex.flex-col.justify-end.gap-y-3
                 .flex.justify-end
