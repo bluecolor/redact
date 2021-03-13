@@ -62,7 +62,10 @@ def create(conn_id: int, plan: s.PlanCreateIn, db: Session = Depends(get_db)):
     "/connections/{conn_id}/discovery/plans/{id}", response_model=s.PlanOut,
 )
 async def update(
-    plan: s.PlanUpdateIn, conn_id: int, id: int, db: Session = Depends(get_db),
+    new_plan: s.PlanUpdateIn,
+    conn_id: int,
+    id: int,
+    db: Session = Depends(get_db),
 ):
     plan = (
         db.query(models.Plan)
@@ -73,8 +76,13 @@ async def update(
     if plan is None:
         return None
 
-    for var, value in vars(plan).items():
-        setattr(plan, var, value) if value else None
+    for var, value in vars(new_plan).items():
+        if var != "rules":
+            setattr(plan, var, value) if value else None
+        else:
+            setattr(
+                plan, var, [db.query(models.Rule).get(v) for v in value]
+            ) if value else None
 
     db.add(plan)
     db.commit()

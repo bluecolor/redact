@@ -11,14 +11,6 @@ class PlanOut(Plan):
     rules: Optional[List[Rule]]
 
 
-class RuleUpdateIn(Base):
-    name: str
-    type: str
-    severity: Optional[str]
-    expression: str
-    description: Optional[str]
-
-
 class PlanCreateIn(Base):
     name: str
     schemas: str

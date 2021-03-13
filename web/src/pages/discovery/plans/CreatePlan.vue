@@ -65,11 +65,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('discovery', ['rules']),
+    ...mapGetters('rule', ['rules']),
     ...mapGetters('md', ['schemas'])
   },
   methods: {
-    ...mapActions('discovery', ['createPlan', 'getRules']),
+    ...mapActions('rule', ['getRules']),
+    ...mapActions('plan', ['createPlan']),
     ...mapActions('md', ['getSchemas']),
     onCreate (e) {
       e.preventDefault()
