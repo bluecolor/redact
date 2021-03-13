@@ -23,12 +23,16 @@ ALL_TAB_COLS = """
 """
 
 
-def redaction_policies(owner: str = None, table_name: str = None) -> str:
+def redaction_policies(
+    object_owner: str = None, object_name: str = None, policy_name: str = None
+) -> str:
     filters = []
-    if owner:
-        filters.append(f"owner = '{owner}'")
-    if table_name:
-        filters.append(f"table_name = '{table_name}'")
+    if object_owner:
+        filters.append(f"object_owner = '{object_owner}'")
+    if object_name:
+        filters.append(f"object_name = '{object_name}'")
+    if object_name:
+        filters.append(f"policy_name = '{policy_name}'")
 
     if len(filters) == 0:
         return REDACTION_POLICIES
@@ -50,6 +54,7 @@ def redaction_expressions(object_owner: str = None, object_name: str = None):
 
 def redaction_expression(name: str) -> str:
     return f"{REDACTION_EXPRESSIONS} where policy_expression_name = '{name}'"
+
 
 def redaction_columns(
     object_owner: str = None, object_name: str = None

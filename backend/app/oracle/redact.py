@@ -1,6 +1,8 @@
 from typing import Any, List, Optional
 
 from pydantic import parse_obj_as
+
+from app.models.schemas.redact.base import Expression
 from .base import connect
 import app.models.orm as models
 import app.models.schemas.redact as s
@@ -182,11 +184,27 @@ def get_actions() -> List[s.ActionOut]:
 
 def get_policies(
     connection: models.Connection,
-    owner: Optional[str] = None,
-    table_name: Optional[str] = None,
+    object_owner: Optional[str] = None,
+    object_name: Optional[str] = None,
 ) -> List[s.PolicyOut]:
-    query = q.redaction_policies(owner=owner, table_name=table_name)
+    query = q.redaction_policies(object_owner, object_name)
     return parse_obj_as(List[s.PolicyOut], queryall(connection, query))
+
+
+def get_policy(
+    connection: models.Connection,
+    object_owner: str,
+    object_name: str,
+    policy_name: str,
+):
+    query = q.redaction_policies(object_owner, object_name, policy_name)
+    result = queryall(connection, query)
+    if len(result) == 1:
+        return parse_obj_as(s.PolicyOut, result[0])
+    if len(result) > 1:
+        raise Exception("Multiple results found for policy")
+
+    return None
 
 
 def get_expressions(
@@ -223,6 +241,14 @@ def add_policy(connection: models.Connection, policy: dict):
 
 def drop_policy(connection: models.Connection, policy: dict):
     callproc(connection, "dbms_redact.drop_policy", policy)
+
+
+def enable_policy(connection: models.Connection, policy: dict):
+    callproc(connection, "dbms_redact.enable_policy", policy)
+
+
+def disable_policy(connection: models.Connection, policy: dict):
+    callproc(connection, "dbms_redact.disable_policy", policy)
 
 
 def alter_policy(connection: models.Connection, policy: dict):

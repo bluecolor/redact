@@ -1,10 +1,14 @@
 /* eslint-disable camelcase */
 import request from '@/api/request'
+import qs from 'qs'
 
 export default {
 
-  getAll (connId) {
-    return request.get(`/connections/${connId}/redact/policies`)
+  getAll (connId, q) {
+    return request.get(`/connections/${connId}/redact/policies?${qs.stringify(q)}`)
+  },
+  getOne (connId, q) {
+    return request.get(`/connections/${connId}/redact/policies/one?${qs.stringify(q)}`)
   },
   update (connId, payload) {
     return request.put(`/connections/${connId}/redact/policies`, payload)
@@ -13,6 +17,12 @@ export default {
     return request.post(`/connections/${connId}/redact/policies`, payload)
   },
   delete (connId, payload) {
-    return request.put(`/connections/${connId}/redact/policies/delete`, payload)
+    return request.delete(`/connections/${connId}/redact/policies?${qs.stringify(payload)}`)
+  },
+  enable (connId, payload) {
+    return request.put(`/connections/${connId}/redact/policies/enable`, payload)
+  },
+  disable (connId, payload) {
+    return request.put(`/connections/${connId}/redact/policies/disable`, payload)
   }
 }

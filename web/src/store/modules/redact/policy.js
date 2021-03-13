@@ -2,14 +2,12 @@
 
 import _ from 'lodash'
 import api from '@/api/redact/policy'
-import { PolicyActions } from '@/utils'
 
 const SET_ALL = 'SET_ALL'
 const CREATE = 'CREATE'
 const DELETE = 'DELETE'
-const DROP_COLUMN = 'DROP_COLUMN'
-const ADD_COLUMN = 'ADD_COLUMN'
-const MODIFY_EXPRESSION = 'MODIFY_EXPRESSION'
+const ENABLE = 'ENABLE'
+const DISABLE = 'DISABLE'
 
 const state = {
   policies: []
@@ -26,6 +24,9 @@ const actions = {
       return result
     })
   },
+  getPolicy ({ rootGetters }, q) {
+    return api.getOne(rootGetters['app/connectionId'], q)
+  },
   createPolicy ({ commit, rootGetters }, payload) {
     return api.create(rootGetters['app/connectionId'], payload).then(result => {
       commit(CREATE, result)
@@ -38,21 +39,20 @@ const actions = {
       return result
     })
   },
-  updatePolicy ({ commit, rootGetters }, payload) {
-    return api.update(rootGetters['app/connectionId'], payload).then(result => {
-      switch (payload.action) {
-        case PolicyActions.DROP_COLUMN:
-          commit(DROP_COLUMN, payload)
-          break
-        case PolicyActions.ADD_COLUMN:
-          commit(ADD_COLUMN, payload)
-          break
-        case PolicyActions.MODIFY_EXPRESSION:
-          commit(MODIFY_EXPRESSION, payload)
-          break
-      }
+  disablePolicy ({ commit, rootGetters }, payload) {
+    return api.disable(rootGetters['app/connectionId'], payload).then(result => {
+      commit(DISABLE, payload)
       return result
     })
+  },
+  enablePolicy ({ commit, rootGetters }, payload) {
+    return api.enable(rootGetters['app/connectionId'], payload).then(result => {
+      commit(ENABLE, payload)
+      return result
+    })
+  },
+  updatePolicy ({ commit, rootGetters }, payload) {
+    return api.update(rootGetters['app/connectionId'], payload)
   }
 }
 
@@ -67,21 +67,6 @@ const mutations = {
     const i = _.findIndex(state.policies, { object_owner, object_name, policy_name })
     if (i > -1) {
       state.policies.splice(i, 1)
-    }
-  },
-  [DROP_COLUMN]: (state, { object_name, object_schema, column_name }) => {
-    const i = _.findIndex(state.columns, { object_name, object_schema, column_name })
-    if (i > -1) {
-      state.columns.splice(i, 1)
-    }
-  },
-  [ADD_COLUMN]: (state, data) => {
-    state.columns.push(data)
-  },
-  [MODIFY_EXPRESSION]: (state, { object_name, object_schema, column_name, expression }) => {
-    const i = _.findIndex(state.columns, { object_name, object_schema, column_name })
-    if (i > -1) {
-      state.columns[i].expression = expression
     }
   }
 }

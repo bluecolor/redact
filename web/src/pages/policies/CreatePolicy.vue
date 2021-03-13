@@ -78,7 +78,7 @@
               t-textarea(v-model="payload.expression" required autofocus)
           .form-item
             t-input-group(label='Description')
-              t-textarea(v-model="payload.policy_expression_description" required autofocus)
+              t-textarea(v-model="payload.policy_description" required autofocus)
         .form-item.mt-5
           .flex.justify-between.items-center
             t-simple-spinner(v-if="isSpinner")
@@ -106,6 +106,8 @@ export default {
       isValid: false,
       method: 'custom',
       categoryId: undefined,
+      columns: [],
+      tables: [],
       payload: {
         object_schema: '',
         object_name: '',
@@ -114,19 +116,19 @@ export default {
         function_type: undefined,
         function_parameters: undefined,
         expression: '',
-        policy_expression_description: ''
+        policy_description: ''
       }
     }
   },
   computed: {
-    ...mapGetters('md', ['objectSchemas', 'tables', 'columns']),
+    ...mapGetters('md', ['objectSchemas']),
     ...mapGetters('func', ['functionTypes', 'functionParameters']),
     ...mapGetters('category', ['categories']),
     payload_ () {
       if (this.categoryId) {
         const {
           function_type, function_parameters, policy_expression: {
-            expression, policy_expression_description
+            expression, policy_description
           }
         } = _.find(this.categories, { id: this.categoryId })
         return {
@@ -134,7 +136,7 @@ export default {
           function_type,
           function_parameters,
           expression,
-          policy_expression_description
+          policy_description
         }
       }
       return this.payload
@@ -160,10 +162,10 @@ export default {
     onCancel () { window.history.back() },
     loadColumns () {
       const { object_schema, object_name } = this.payload
-      this.getColumns({ object_schema, object_name })
+      this.getColumns({ object_schema, object_name }).then(result => { this.columns = result })
     },
     onOwnerSelect (owner) {
-      this.getTables({ owner })
+      this.getTables(owner).then(result => { this.tables = result })
     },
     onTableSelect (table) {
       this.loadColumns()

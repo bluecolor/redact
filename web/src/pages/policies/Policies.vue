@@ -27,7 +27,7 @@
                     content="Delete policy" v-tippy='{ placement : "top" }'
                     @click="onDelete(p)"
                   )
-                  t-toggle(:checked="p.enable==='YES'")
+                  t-toggle(:checked="p.enable==='YES'" @change="onToggle(p)")
                 .spinner.lds-dual-ring(v-else)
           template(v-slot:default)
             .flex.justify-between
@@ -65,12 +65,39 @@ export default {
     }
   },
   methods: {
-    ...mapActions('policy', ['getPolicies', 'deletePolicy']),
+    ...mapActions('policy', ['getPolicies', 'deletePolicy', 'disablePolicy', 'enablePolicy']),
     getFullName (p) {
       const names = []
       p.object_owner && names.push(p.object_owner)
       p.object_name && names.push(p.object_name)
       return names.join('.')
+    },
+    onToggle (p) {
+      const { object_owner } = p
+      const policy = { ...p, object_schema: object_owner }
+      if (p.enable === 'YES') { this.onDisable(policy) } else { this.onEnable(policy) }
+    },
+    onDisable (p) {
+      this.isSpinner = true
+      this.disablePolicy(p).then(() => {
+        this.$toasted.success('Success. Disabled policy')
+      }).catch(error => {
+        console.log(error)
+        this.$toasted.error('Error. Failed to disable policy')
+      }).finally(() => {
+        this.isSpinner = false
+      })
+    },
+    onEnable (p) {
+      this.isSpinner = true
+      this.enablePolicy(p).then(() => {
+        this.$toasted.success('Success. Enabled policy')
+      }).catch(error => {
+        console.log(error)
+        this.$toasted.error('Error. Failed to enable policy')
+      }).finally(() => {
+        this.isSpinner = false
+      })
     },
     onDelete (p) {
       this.isSpinner = true

@@ -44,14 +44,6 @@ export default {
         path: '/',
         icon: 'las la-user',
         name: 'Users'
-      }, {
-        path: '/settings/discovery/rules',
-        icon: 'las la-compass',
-        name: 'Discovery'
-      }, {
-        path: '/settings/categories',
-        icon: 'las la-code',
-        name: 'Categories'
       }]
     }
   },

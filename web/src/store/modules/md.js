@@ -3,20 +3,14 @@
 import api from '@/api/md'
 
 const SET_OBJECT_SCHEMAS = 'SET_OBJECT_SCHEMAS'
-const SET_TABLES = 'SET_TABLES'
-const SET_COLUMNS = 'SET_COLUMNS'
 
 const state = {
-  objectSchemas: [],
-  tables: [],
-  columns: []
+  objectSchemas: []
 }
 
 const getters = {
   objectSchemas: state => state.objectSchemas,
-  schemas: state => state.objectSchemas,
-  tables: state => state.tables,
-  columns: state => state.columns
+  schemas: state => state.objectSchemas
 }
 
 const actions = {
@@ -34,33 +28,17 @@ const actions = {
       return result
     })
   },
-  getTables ({ commit, rootGetters }, params = {}) {
-    const { connectionId, owner } = params
-    const connId = connectionId ?? rootGetters['app/connectionId']
-    return api.getTables(connId, owner).then(result => {
-      commit(SET_TABLES, result)
-      return result
-    })
+  getTables ({ rootGetters }, owner) {
+    return api.getTables(rootGetters['app/connectionId'], owner)
   },
-  getColumns ({ commit, rootGetters }, params = {}) {
-    const { connectionId, object_schema, object_name } = params
-    const connId = connectionId ?? rootGetters['app/connectionId']
-    return api.getColumns(connId, object_schema, object_name).then(result => {
-      commit(SET_COLUMNS, result)
-      return result
-    })
+  getColumns ({ rootGetters }, { object_schema, object_name }) {
+    return api.getColumns(rootGetters['app/connectionId'], object_schema, object_name)
   }
 }
 
 const mutations = {
   [SET_OBJECT_SCHEMAS]: (state, data) => {
     state.objectSchemas = data
-  },
-  [SET_TABLES]: (state, data) => {
-    state.tables = data
-  },
-  [SET_COLUMNS]: (state, data) => {
-    state.columns = data
   }
 }
 

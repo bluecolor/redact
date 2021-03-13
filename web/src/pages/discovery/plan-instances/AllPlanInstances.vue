@@ -3,7 +3,7 @@
   .bg-white.empty.w-full(v-if="isPlanInstancesEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
     .project-logo.flex.justify-center.mt-10.w-full()
-      svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")
+      svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .plan-runs.gap-y-3.flex.flex-col.w-full
@@ -130,9 +130,9 @@ export default {
     }
   },
   mounted () {
-    this.onReload()
+    // this.onReload()
     if (this.plans.length === 0) {
-      this.getPlans()
+      ;// this.getPlans()
     }
     // const ws = new WebSocket('ws://localhost:8000/api/v1/ws/plans/instances')
     // ws.onmessage = (message) => {

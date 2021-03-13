@@ -6,7 +6,7 @@ import md from './modules/md'
 import connection from './modules/connection'
 
 import category from './modules/redact/category'
-import redact from './modules/redact/redact'
+import column from './modules/redact/column'
 import expression from './modules/redact/expression'
 import func from './modules/redact/func'
 import policy from './modules/redact/policy'
@@ -26,6 +26,17 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    connection, category, redact, policy, func, expression, app, md, discovery, planInstance, plan, rule
+    connection,
+    category,
+    column,
+    policy,
+    func,
+    expression,
+    app,
+    md,
+    discovery,
+    planInstance,
+    plan,
+    rule
   }
 })

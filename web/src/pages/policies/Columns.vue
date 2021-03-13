@@ -1,15 +1,15 @@
 <template lang="pug">
 .policies-container
-  .empty.w-full(v-if="isColumnsEmpty")
+  .empty.bg-white.w-full(v-if="isColumnsEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
     .project-logo.flex.justify-center.mt-10.w-full()
-      svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")
+      svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
     .flex.justify-center.mt-10
       t-button.mt-10.w-full.text-center(tagName="a" :href="`/connections/${connectionId}/policies/columns/add`")
         | Add New Column
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
-      .connections.gap-y-3.flex.flex-col.w-full
+      .gap-y-3.flex.flex-col.w-full
         .flex.gap-x-5
           t-input(v-model="search" placeholder="Search")
           t-button(
@@ -52,17 +52,19 @@ export default {
       isSpinner: false,
       title: 'Redaction Columns',
       search: '',
-      headers: ['Owner', 'Table', 'Column', 'Function', '']
+      headers: ['Owner', 'Table', 'Column', 'Function', ''],
+      redColumns: []
     }
   },
   computed: {
-    ...mapGetters('redact', ['policies', 'redactionColumns']),
+    ...mapGetters('policy', ['policies']),
     isColumnsEmpty () {
-      return this.redactionColumns.length === 0
+      return this.redColumns.length === 0
     }
   },
   methods: {
-    ...mapActions('redact', ['getPolicies', 'getRedactionColumns', 'alterPolicy']),
+    ...mapActions('policy', ['updatePolicy']),
+    ...mapActions('column', { getRedColumns: 'getColumns' }),
     load () {
       this.isSpinner = true
       this.getRedactionColumns().finally(() => { this.isSpinner = false })
@@ -89,7 +91,8 @@ export default {
     }
   },
   mounted () {
-    this.load()
+    console.log('here')
+    // this.load()
   }
 }
 </script>

@@ -163,12 +163,6 @@ const routes = [
           props: true,
           meta: { title: 'Create Plan', group: 'plans' }
         }, {
-          name: 'editPlan',
-          path: '/connections/:connectionId/discovery/plans/:id',
-          component: EditPlan,
-          props: true,
-          meta: { title: 'Edit Plan', group: 'plans' }
-        }, {
           name: 'planInstances',
           path: '/connections/:connectionId/discovery/plans/:planId/instances',
           component: PlanInstances,
@@ -180,6 +174,12 @@ const routes = [
           component: AllPlanInstances,
           props: true,
           meta: { title: 'All Plan Runs', group: 'planInstances' }
+        }, {
+          name: 'editPlan',
+          path: '/connections/:connectionId/discovery/plans/:id',
+          component: EditPlan,
+          props: true,
+          meta: { title: 'Edit Plan', group: 'plans' }
         }, {
           name: 'discoveries',
           path: '/connections/:connectionId/discovery/plans/instances/:planInstanceId/discoveries',

@@ -1,32 +1,28 @@
 <template lang="pug">
-.flex.flex-col(class="w-3/4")
+.flex.flex-col
   t-card
     template(v-slot:default)
-      form.flex.flex-col(autocomplete="off" @submit="onCreate")
+      form.flex.flex-col(autocomplete="off" @submit="onSubmit")
         .form-item
           t-input-group(label='Name')
-            t-input(v-model="payload.policy_name" required autofocus)
+            t-input(v-model="payload.policy_name" required autofocus disabled)
         .form-item
           t-input-group(label='Object Owners')
             t-select(
+              disabled
               v-model="payload.object_schema"
-              placeholder="Select schema"
-              :options="objectSchemas",
-              value-attribute='name',
-              text-attribute="name"
+              placeholder="Select schema",
+              :options="schemas"
               required
-              @input="onOwnerSelect"
             )
         .form-item
           t-input-group(label='Tables')
             t-select(
+              disabled
+              :options="tables"
               v-model="payload.object_name"
               placeholder="Select table"
-              :options="tables",
-              value-attribute='table_name',
-              text-attribute="table_name"
               required
-              @input="onTableSelect"
             )
         .form-item
           t-input-group(label='Function Type')
@@ -40,24 +36,42 @@
         .form-item
           t-input-group(label='Function Parameters')
             t-select(
+              placeholder="Select parameters"
               v-model="payload.function_parameters"
               :options="functionParameters",
               value-attribute='function_parameters',
               text-attribute="function_parameters"
             )
         .form-item
+          t-input-group(label='Action')
+            t-select(
+              placeholder="Select action"
+              v-model="payload.action"
+              :options="actions",
+              value-attribute='action',
+              text-attribute="name"
+            )
+        .form-item(v-if="payload.action==3")
           t-input-group(label='Expression')
-            t-textarea(v-model="payload.expression" required autofocus)
-        .form-item
+            t-textarea(v-model="payload.expression" autofocus)
+        .form-item(v-if="payload.action==5")
           t-input-group(label='Description')
-            t-textarea(v-model="payload.policy_expression_description" required autofocus)
+            t-textarea(v-model="payload.policy_description" autofocus)
+        .form-item(v-if="[1, 2, 4, 6].indexOf(+payload.action) > -1")
+          t-input-group(label='Column')
+            t-select(
+              placeholder="Select column"
+              v-model="payload.column_name"
+              :options="calculatedColumns",
+              required
+            )
         .form-item.mt-5
           .flex.justify-between.items-center
             t-simple-spinner(v-if="isSpinner")
             .flex.gap-x-3(v-else class="w-1/2")
               t-button(type="submit" value="submit" text="Save")
             .end
-              t-button(@click="onCancel" text="Canlcel" variant="error")
+              t-button(@click="onCancel" type="button" text="Close" variant="error")
 </template>
 
 <script>
@@ -80,62 +94,109 @@ export default {
       isValid: false,
       method: 'custom',
       categoryId: undefined,
+      redColumns: [],
+      columns: [],
+      tables: [],
+      schemas: [],
+      calculatedColumns: [],
       payload: {
         object_schema: '',
         object_name: '',
         column_name: '',
         policy_name: '',
+        action: 3,
         function_type: undefined,
         function_parameters: undefined,
         expression: '',
-        policy_expression_description: ''
+        policy_description: ''
+      }
+    }
+  },
+  watch: {
+    'payload.action' (action) {
+      if ([1, 2, 4, 6].indexOf(+action) !== -1) {
+        const promises = []
+        const {
+          policy_name, object_name, object_owner
+        } = this.$route.query
+        if (this.redColumns.length === 0) {
+          promises.push(this.getRedColumns({ policy_name, object_name, object_owner }))
+        }
+        if (this.columns.length === 0) {
+          promises.push(this.getColumns({ object_schema: object_owner, object_name }))
+        }
+        this.isSpinner = true
+        Promise.all([...promises, Promise.resolve()]).then((result) => {
+          const [redColumns, columns] = _.take(result, 2)
+          this.redColumns = redColumns ?? this.redColumns
+          this.columns = columns ?? this.columns
+          this.calculateColumns()
+        }).finally(() => { this.isSpinner = false })
       }
     }
   },
   computed: {
-    ...mapGetters('md', ['objectSchemas', 'tables', 'columns']),
-    ...mapGetters('redact', ['functionTypes', 'functionParameters', 'policies']),
+    ...mapGetters('func', ['actions', 'functionTypes', 'functionParameters']),
+    ...mapActions('policy', ['policies']),
     ...mapGetters('category', ['categories'])
   },
   methods: {
-    ...mapActions('md', ['getObjectSchemas', 'getTables', 'getColumns']),
-    ...mapActions('redact', ['createPolicy', 'getFunctionTypes', 'getFunctionParameters', 'getPolicies']),
+    ...mapActions('column', { getRedColumns: 'getColumns' }),
+    ...mapActions('md', ['getColumns']),
+    ...mapActions('func', ['getActions', 'getFunctionTypes', 'getFunctionParameters']),
+    ...mapActions('policy', ['updatePolicy', 'getPolicy']),
     ...mapActions('category', ['getCategories']),
-    onCreate (e) {
+    calculateColumns () {
+      switch (+this.payload.action) {
+        case 1: // add column
+          this.calculatedColumns = _.chain(this.columns).map(c => c.column_name)
+            .difference(_.map(this.redColumns, c => c.name))
+            .value()
+          break
+        case 2: // drop column
+        case 4: // modify column
+        case 6: // set column desciption
+          this.calculatedColumns = _.map(this.redColumns, c => c.column_name)
+          break
+      }
+    },
+    onSubmit (e) {
       e.preventDefault()
+      this.isSpinner = true
+      this.updatePolicy(this.payload).then(() => {
+        this.$toast.success('Success. Updated policy')
+      }).catch(error => {
+        console.log(error)
+        this.$toast.error('Error. Failed update policy')
+      }).finally(() => {
+        this.isSpinner = false
+      })
     },
     onCancel () { window.history.back() },
     loadColumns () {
       const { object_schema, object_name } = this.payload
       this.getColumns({ object_schema, object_name })
-    },
-    onOwnerSelect (owner) {
-      this.getTables({ owner })
-    },
-    onTableSelect (table) {
-      this.loadColumns()
     }
   },
   created () {
-    this.getObjectSchemas()
-    this.getTables()
-    this.getFunctionTypes()
-    this.getFunctionParameters()
-    this.getPolicies().then(() => {
-      const {
-        policy_name, object_name, object_owner
-      } = this.$route.query
-      const policy = _.find(this.policies, { policy_name, object_name, object_owner })
-      const {
-        function_type, function_parameters
-      } = policy
-      this.payload = {
-        policy_name,
-        object_name,
-        object_owner,
-        function_type,
-        function_parameters
-      }
+    this.isSpinner = true
+    const {
+      policy_name, object_name, object_owner
+    } = this.$route.query
+    const promises = [
+      this.getPolicy({ policy_name, object_name, object_owner })
+    ]
+    _.isEmpty(this.functionTypes) && promises.push(this.getFunctionTypes())
+    _.isEmpty(this.functionParameters) && promises.push(this.getFunctionParameters())
+    _.isEmpty(this.actions) && promises.push(this.getActions())
+
+    Promise.all(promises).then(([policy]) => {
+      const { object_owner, ...p } = policy
+      this.payload = { ...this.payload, object_schema: object_owner, ...p }
+      this.schemas.push(object_owner)
+      this.tables.push(p.object_name)
+    }).finally(() => {
+      this.isSpinner = false
     })
   }
 }
