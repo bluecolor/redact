@@ -11,8 +11,6 @@ import Discoveries, { DiscoveriesByRule, DiscoveriesForRule } from '@/pages/disc
 import Policies, {
   CreatePolicy,
   EditPolicy,
-  AlterPolicyAddColumn,
-  AlterPolicyModifyExpression,
   Columns as RedactionColumns
 } from '@/pages/policies'
 import Expressions, { CreateExpression, EditExpression } from '@/pages/expressions'
@@ -65,19 +63,7 @@ const routes = [
           path: '/connections/:connectionId/policies/columns',
           props: true,
           component: RedactionColumns,
-          meta: { group: 'policies', title: 'Redaction Columns' }
-        }, {
-          name: 'alterPolicyAddColumn',
-          path: '/connections/:connectionId/policies/columns/add',
-          props: true,
-          component: AlterPolicyAddColumn,
-          meta: { group: 'policies', title: 'Add Column' }
-        }, {
-          name: 'alterPolicyModifyExpression',
-          path: '/connections/:connectionId/policies/columns/modify-expression',
-          props: true,
-          component: AlterPolicyModifyExpression,
-          meta: { group: 'policies', title: 'Modify Expression' }
+          meta: { group: 'policies', title: 'Policy Columns' }
         }, {
           name: 'policies',
           path: '/connections/:connectionId/policies',

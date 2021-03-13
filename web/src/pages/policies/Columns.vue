@@ -5,7 +5,7 @@
     .project-logo.flex.justify-center.mt-10.w-full()
       svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
     .flex.justify-center.mt-10
-      t-button.mt-10.w-full.text-center(tagName="a" :href="`/connections/${connectionId}/policies/columns/add`")
+      t-button.mt-10.w-full.text-center(tagName="a" :href="addColumnUrl")
         | Add New Column
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
@@ -14,31 +14,30 @@
           t-input(v-model="search" placeholder="Search")
           t-button(
             variant="secondary" tagName="a"
-            :href="`/connections/${connectionId}/policies/columns/add?${qs.stringify(this.$route.query)}`"
+            :href="addColumnUrl"
           ) Add
-        t-table(:headers="headers" :data="redactionColumns" variant="thin")
+        t-table(:headers="headers" :data="redColumns")
           template(slot='row' slot-scope='props')
             tr(:class="[props.trClass, 'hover:bg-gray-50']")
-              td(:class='props.tdClass')
+              td.overflow-ellipsis(:class='props.tdClass')
                 | {{ props.row.object_owner }}
-              td(:class='props.tdClass')
+              td.overflow-ellipsis(:class='props.tdClass')
                 | {{ props.row.object_name }}
-              td(:class='props.tdClass')
+              td.overflow-ellipsis(:class='props.tdClass')
                 | {{ props.row.column_name }}
-              td(:class='props.tdClass')
+              td.overflow-ellipsis(:class='props.tdClass')
                 | {{ props.row.function_type }}
               td.flex.gap-x-5(:class='props.tdClass')
-                .icon-btn.las.la-code(@click="onModifyExpression(props.row)")
-                .icon-btn.las.la-pen
-                .icon-btn.danger.las.la-trash-alt(@click="onDropColumn(props.row)")
+                .row-action-btn.icon-btn.las.la-pen
+                .row-action-btn.icon-btn.danger.las.la-trash-alt(@click="onDropColumn(props.row)")
 
 </template>
 
 <script>
 /* eslint-disable camelcase */
+import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
-import { PolicyActions } from '@/utils'
 import qs from 'qs'
 
 export default {
@@ -56,43 +55,58 @@ export default {
       redColumns: []
     }
   },
+  watch: {
+    search (s) {
+      if (_.isEmpty(this.redColumns_)) {
+        this.redColumns_ = [...this.redColumns]
+      }
+      if (_.isEmpty(s)) {
+        this.redColumns = this.redColumns_
+        return
+      }
+      this.redColumns = _.filter(this.redColumns_, c => {
+        return (
+          c.column_name.toLowerCase().includes(s.toLowerCase())
+        )
+      })
+    }
+  },
   computed: {
     ...mapGetters('policy', ['policies']),
     isColumnsEmpty () {
-      return this.redColumns.length === 0
+      return _.isEmpty(this.search) && this.redColumns.length === 0
+    },
+    addColumnUrl () {
+      const query = { action: 1, ...this.$route.query }
+      return `/connections/${this.connectionId}/policies/edit?${qs.stringify(query)}`
     }
   },
   methods: {
     ...mapActions('policy', ['updatePolicy']),
     ...mapActions('column', { getRedColumns: 'getColumns' }),
     load () {
-      this.isSpinner = true
-      this.getRedactionColumns().finally(() => { this.isSpinner = false })
-    },
-    onDropColumn (record) {
-      const action = PolicyActions.DROP_COLUMN
       const {
-        object_owner, object_name, column_name
-      } = record
-      const { policy_name } = this.$route.query
-      const payload = {
-        object_schema: object_owner, object_name, column_name, policy_name, action
-      }
-      this.alterPolicy(payload).then(() => {
-        this.$toast.success('Success. Column removed from redactions')
-      }).catch(error => {
-        console.log(error)
-        this.$toast.error('Error. Failed to remove column')
-      })
+        policy_name, object_name, object_owner
+      } = this.$route.query
+      this.isSpinner = true
+      this.getRedColumns({ policy_name, object_name, object_owner })
+        .then(result => {
+          this.redColumns = result
+        })
+        .finally(() => { this.isSpinner = false })
+    },
+    onDropColumn ({ column_name }) {
+      const query = { action: 2, column_name, ...this.$route.query }
+      const path = `/connections/${this.connectionId}/policies/edit?${qs.stringify(query)}`
+      this.$router.push({ path })
     },
     onModifyExpression ({ column_name }) {
       const params = { ...this.$route.query, column_name }
       this.$router.push({ path: `columns/modify-expression?${qs.stringify(params)}` })
     }
   },
-  mounted () {
-    console.log('here')
-    // this.load()
+  created () {
+    this.load()
   }
 }
 </script>
@@ -103,5 +117,17 @@ export default {
 }
 .page {
 }
+tr .row-action-btn {
+  @apply text-gray-100;
+}
+tr .row-action-btn.danger {
+  @apply text-red-100;
+}
 
+tr:hover .row-action-btn.danger {
+  @apply text-red-600;
+}
+tr:hover .row-action-btn {
+  @apply text-gray-600;
+}
 </style>

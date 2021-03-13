@@ -64,7 +64,7 @@ const settings = {
         table: 'rounded-sm overflow-hidden min-w-full divide-y divide-gray-100 shadow-sm border-gray-200 border',
         thead: '',
         theadTr: '',
-        theadTh: 'px-3 py-2 font-semibold text-left bg-gray-100 border-b',
+        theadTh: 'px-3 py-2 font-medium text-left bg-gray-100 border-b',
         tbody: 'bg-white divide-y divide-gray-100',
         tr: '',
         td: 'px-3 py-2 whitespace-no-wrap',

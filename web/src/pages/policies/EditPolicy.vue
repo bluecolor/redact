@@ -45,8 +45,9 @@
         .form-item
           t-input-group(label='Action')
             t-select(
+              :disabled="isActionsDisabled"
               placeholder="Select action"
-              v-model="payload.action"
+              v-model.number="payload.action"
               :options="actions",
               value-attribute='action',
               text-attribute="name"
@@ -60,6 +61,7 @@
         .form-item(v-if="[1, 2, 4, 6].indexOf(+payload.action) > -1")
           t-input-group(label='Column')
             t-select(
+              :disabled="isColumnsDisabled"
               placeholder="Select column"
               v-model="payload.column_name"
               :options="calculatedColumns",
@@ -138,7 +140,13 @@ export default {
   computed: {
     ...mapGetters('func', ['actions', 'functionTypes', 'functionParameters']),
     ...mapActions('policy', ['policies']),
-    ...mapGetters('category', ['categories'])
+    ...mapGetters('category', ['categories']),
+    isActionsDisabled () {
+      return !_.isEmpty(this.$route.query.action)
+    },
+    isColumnsDisabled () {
+      return !_.isEmpty(this.$route.query.column_name)
+    }
   },
   methods: {
     ...mapActions('column', { getRedColumns: 'getColumns' }),
@@ -181,7 +189,7 @@ export default {
   created () {
     this.isSpinner = true
     const {
-      policy_name, object_name, object_owner
+      action, column_name, policy_name, object_name, object_owner
     } = this.$route.query
     const promises = [
       this.getPolicy({ policy_name, object_name, object_owner })
@@ -192,9 +200,10 @@ export default {
 
     Promise.all(promises).then(([policy]) => {
       const { object_owner, ...p } = policy
-      this.payload = { ...this.payload, object_schema: object_owner, ...p }
+      this.payload = { ...this.payload, object_schema: object_owner, ...p, action, column_name }
       this.schemas.push(object_owner)
-      this.tables.push(p.object_name)
+      this.tables.push(object_name)
+      this.columns.push(column_name)
     }).finally(() => {
       this.isSpinner = false
     })
