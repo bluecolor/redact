@@ -12,8 +12,6 @@ from .base import router
 from app.database import get_db
 from app.oracle import redact
 from pydantic import parse_obj_as
-from app import get_redis_pool
-from app.settings.arq import settings as redis_settings
 from arq.connections import ArqRedis, create_pool
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page, Params

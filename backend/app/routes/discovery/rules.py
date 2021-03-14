@@ -7,7 +7,6 @@ import app.models.orm as models
 import app.models.schemas.discovery as s
 from .base import router
 from app.database import get_db
-from app.settings.arq import settings as redis_settings
 from arq.connections import ArqRedis, create_pool
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page, Params

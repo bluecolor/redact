@@ -7,12 +7,9 @@ import app.models.orm as models
 import app.models.schemas.discovery as s
 from .base import router
 from app.database import get_db
-from app.settings.arq import settings as redis_settings
-from arq.connections import ArqRedis, create_pool
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page, Params
 from pydantic import parse_obj_as
-from app import get_redis_pool
 
 
 @router.get(
@@ -106,11 +103,13 @@ async def delete(conn_id: int, id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/connections/{conn_id}/discovery/plans/{id}/run", tags=["Plans"])
-async def run(
-    conn_id: int,
-    id: int,
-    db: Session = Depends(get_db),
-    redis: ArqRedis = Depends(get_redis_pool),
-):
-    job = await redis.enqueue_job("run_plan", conn_id, id)
-    return job.job_id
+def run(conn_id: int, id: int, db: Session = Depends(get_db)):
+    from app.tasks.discovery.plan import run
+
+    print("Calling task")
+    run.delay()
+    print("called task")
+
+    # job = await redis.enqueue_job("run_plan", conn_id, id)
+    # return job.job_id
+    return None
