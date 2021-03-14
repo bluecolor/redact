@@ -1,7 +1,7 @@
 import Discoveries from './Discoveries.vue'
-import DiscoveriesByRule from './DiscoveriesByRule'
+import DiscoveriesGroupByRule from './DiscoveriesGroupByRule'
 import DiscoveriesForRule from './DiscoveriesForRule'
 
 export default Discoveries
 
-export { DiscoveriesByRule, DiscoveriesForRule }
+export { DiscoveriesGroupByRule, DiscoveriesForRule }

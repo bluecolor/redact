@@ -95,8 +95,10 @@ async def update(
     response_model=s.PlanDeleteOut,
 )
 async def delete(conn_id: int, id: int, db: Session = Depends(get_db)):
-    plan = db.query(models.Plan).filter(
-        models.Connection.id == conn_id, models.Plan.id == id
+    plan = (
+        db.query(models.Plan)
+        .filter(models.Connection.id == conn_id, models.Plan.id == id)
+        .one()
     )
     db.delete(plan)
     db.commit()

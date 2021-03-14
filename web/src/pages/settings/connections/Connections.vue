@@ -8,42 +8,22 @@
       t-button.mt-10.w-full.text-center(tagName="a" :href="`/settings/connections/create`")
         | Create New Connection
   .connections.gap-y-3.flex.flex-col.w-full(v-if="!isConnectionsEmpty")
-    t-card.card(v-for="c in connections" :connection="c")
-      template(v-slot:header)
-        .flex.justify-between
-          .title
-            | {{c.name}}
-          .actions.flex.justify-end
-            .btns.gap-x-3.flex(v-if="!isSpinner")
-              router-link.icon-btn.las.la-pen(:to="`connections/${c.id}/edit`" v-slot="{ navigate }")
-              .icon-btn.las.la-vial(
-                content="Test connection" v-tippy='{ placement : "top" }'
-                @click="onTest(c.id)"
-              )
-              .icon-btn.las.la-trash-alt.danger.text-center.items-center(@click="onDelete(c.id)")
-              t-icon-dropdown(
-                :classes="{icon: 'las la-ellipsis-v'}"
-                :emitValue="true" :items="menu", valueProp="path")
-            .spinner.lds-dual-ring(v-else)
-      template(v-slot:default)
-        |{{c.host}}:{{c.port}}/{{c.service}}
+    connection-card.card(v-for="c in connections" :c="c")
+
     t-button.mt-10.w-full.text-center(tagName="a" href="connections/create" text="Create New Connection")
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
-import TIconDropdown from '@/components/TIconDropdown'
+import ConnectionCard from '@/components/ConnectionCard'
 
 export default {
   components: {
-    SvgIcon, TIconDropdown
+    SvgIcon, ConnectionCard
   },
   data () {
     return {
-      menu: [
-        { name: 'Export', value: 'export', icon: 'las la-download' },
-        { name: 'Import', value: 'import', icon: 'las la-upload' }],
       isSpinner: false,
       title: 'Connections'
     }

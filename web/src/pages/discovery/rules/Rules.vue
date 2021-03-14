@@ -10,41 +10,7 @@
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .gap-y-3.flex.flex-col.w-full
-        t-card.card(v-for="r in rules")
-          template(v-slot:header)
-            .flex.justify-between
-              .title
-                | {{r.name}}
-              .actions.flex.justify-end
-                .btns.gap-x-3.flex(v-if="!isSpinner")
-                  router-link.icon-btn.las.la-pen(:to="`rules/${r.id}`")
-                  .icon-btn.las.la-trash-alt.danger(
-                    content="Delete rule" v-tippy='{ placement : "top" }'
-                    @click="onDelete(r)"
-                  )
-                .spinner.lds-dual-ring(v-else)
-          template(v-slot:default)
-            .flex.justify-between
-              .start.flex.flex-col.gap-y-2
-                .expression.text-gray-600.overflow-ellipsis {{r.expression}}
-                .description.text-gray-400.overflow-ellipsis {{r.description}}
-              .end.flex.flex-col.justify-end.gap-y-3
-                .rule-type.flex.justify-end
-                  .flex.gap-x-2
-                    t-tag.p-1(
-                      content="Rule type" v-tippy='{ placement : "left" }'
-                      :class="{ 'bg-yellow-100': r.type==='metadata',\
-                          'bg-green-100': r.type==='data'}"
-                      tag-name="span" variant="badge"
-                    ) {{r.type}}
-                    t-tag.p-1(
-                      content="Severity" v-tippy='{ placement : "left" }'
-                      :class="{ 'bg-gray-100': r.severity==='low',\
-                          'bg-indigo-100': r.severity==='medium',\
-                          'bg-red-100': r.severity==='high'}"
-                      tag-name="span" variant="badge"
-                    ) {{r.severity}}
-                .text-gray-400.text-sm.flex.justify-end {{formatDate(r.created_on)}}
+        rule-card(v-for="r in rules" :r="r")
       t-button.mt-10.w-full.text-center(tagName="a" :href="`rules/create`")
         | Create New Rule
 
@@ -53,12 +19,11 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
-import { dateMixin } from '@/mixins'
+import RuleCard from '@/components/RuleCard'
 
 export default {
-  mixins: [dateMixin],
   components: {
-    SvgIcon
+    SvgIcon, RuleCard
   },
   data () {
     return {
@@ -72,18 +37,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('rule', ['getRules', 'deleteRule']),
-    onDelete ({ id }) {
-      this.isSpinner = true
-      this.deleteRule(id).then(() => {
-        this.$toasted.success('Success. Deleted rule')
-      }).catch(error => {
-        console.log(error)
-        this.$toasted.error('Error. Failed to delete rule')
-      }).finally(() => {
-        this.isSpinner = false
-      })
-    }
+    ...mapActions('rule', ['getRules'])
   },
   created () {
     this.getRules()

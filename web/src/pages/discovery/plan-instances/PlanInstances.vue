@@ -7,38 +7,19 @@
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .connections.gap-y-3.flex.flex-col.w-full
-        t-card.card(v-for="p in planInstances")
-          template(v-slot:header)
-            .flex.justify-between
-              .title
-                | {{p.plan.name}} {{fromNow(p.created_on)}}
-              .actions.flex.justify-end
-                .btns.gap-x-3.flex(v-if="!isSpinner")
-                  router-link.icon-btn.las.la-info-circle(
-                    content="Discoveries" v-tippy='{ placement : "top" }'
-                    :to="`instances/${p.id}/discoveries-by-rule`")
-                  router-link.icon-btn.las.la-stop-circle(
-                    content="Stop" v-tippy='{ placement : "top" }'
-                    :to="`policies/edit?policy_name=${encodeURI(p.policy_name)}&object_owner=${encodeURI(p.object_owner)}&object_name=${encodeURI(p.object_name)}`")
-                  .icon-btn.las.la-trash-alt.danger(
-                    content="Delete" v-tippy='{ placement : "top" }'
-                    @click="onDelete()"
-                  )
-                .spinner.lds-dual-ring(v-else)
-          template(v-slot:default)
-            | Content of the card.
+        plan-instance-card(v-for="p in planInstances" :p="p" @delete="onDelete" @reload="onReloadOne", @stop="onStop")
 </template>
 
 <script>
+import _ from 'lodash'
 import { mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
-import { dateMixin } from '@/mixins'
+import PlanInstanceCard from '@/components/PlanInstanceCard'
 
 export default {
-  mixins: [dateMixin],
   props: ['connectionId', 'planId'],
   components: {
-    SvgIcon
+    SvgIcon, PlanInstanceCard
   },
   data () {
     return {
@@ -53,13 +34,31 @@ export default {
     }
   },
   methods: {
-    ...mapActions('discovery', ['getPlanInstances']),
+    ...mapActions('planInstance', ['getPlanInstancesByPlan']),
     load () {
       this.isSpinner = true
-      const planId = +this.planId
-      return this.getPlanInstances({ planId }).then(result => {
+      return this.getPlanInstancesByPlan(+this.planId).then(result => {
         this.planInstances = result
       }).finally(() => { this.isSpinner = false })
+    },
+    onDelete ({ id }) {
+      const i = _.findIndex(this.planInstances, { id })
+      if (i > -1) {
+        this.planInstances.splice(i, 1)
+      }
+    },
+    replace (p) {
+      const { id } = p
+      const i = _.findIndex(this.planInstances, { id })
+      if (i > -1) {
+        this.planInstances.splice(i, 1, p)
+      }
+    },
+    onStop (p) {
+      this.replace(p)
+    },
+    onReloadOne (p) {
+      this.replace(p)
     }
   },
   mounted () {

@@ -6,6 +6,7 @@ import api from '@/api/discovery/planInstance'
 const SET_PLAN_INSTANCES = 'SET_PLAN_INSTANCES'
 const DELETE = 'DELETE'
 const STOP = 'STOP'
+const UPDATE = 'UPDATE'
 
 const state = {
   planInstances: []
@@ -16,7 +17,7 @@ const getters = {
 }
 
 const actions = {
-  getPlanInstancesByPlan ({ rootGetters }, { planId }) {
+  getPlanInstancesByPlan ({ rootGetters }, planId) {
     return api.getAllByPlan(rootGetters['app/connectionId'], planId)
   },
   getAllPlanInstances ({ commit, rootGetters }) {
@@ -25,8 +26,11 @@ const actions = {
       return result
     })
   },
-  getPlanInstance ({ rootGetters }, { planId, id }) {
-    return api.getOne(rootGetters['app/connectionId'], planId, id)
+  getPlanInstance ({ commit, rootGetters }, { planId, id }) {
+    return api.getOne(rootGetters['app/connectionId'], planId, id).then(result => {
+      commit(UPDATE, result)
+      return result
+    })
   },
   deletePlanInstance ({ commit, rootGetters }, { planId, id }) {
     return api.delete(rootGetters['app/connectionId'], planId, id).then(result => {
@@ -56,6 +60,13 @@ const mutations = {
     const p = _.find(state.planInstances, { id })
     if (p) {
       p.status = status
+    }
+  },
+  [UPDATE]: (state, data) => {
+    const { id } = data
+    const i = _.findIndex(state.planInstances, { id })
+    if (i > -1) {
+      state.planInstances.splice(i, 1, data)
     }
   }
 }

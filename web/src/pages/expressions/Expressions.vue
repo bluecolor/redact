@@ -10,24 +10,7 @@ div
   .container.flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .gap-y-3.flex.flex-col.w-full
-        t-card.card(v-for="e in expressions")
-          template(v-slot:header)
-            .flex.justify-between
-              .title
-                | {{e.policy_expression_name}}
-              .actions.flex.justify-end
-                .btns.gap-x-3.flex(v-if="!isSpinner")
-                  router-link.icon-btn.las.la-pen(:to="`expressions/${encodeURI(e.policy_expression_name)}`")
-                  .icon-btn.las.la-trash-alt.danger(@click="onDelete(e)")
-                .spinner.lds-dual-ring(v-else)
-          template(v-slot:default)
-            .flex.justify-between
-              .start.flex.flex-col.gap-y-2
-                .expression.text-gray-600.overflow-ellipsis {{e.expression}}
-                .description.text-gray-400.overflow-ellipsis {{e.policy_expression_description}}
-              .end.flex.flex-col.justify-end
-                .object-full-name {{getFullName(e)}}
-
+        expression-card(v-for="e in expressions" :e="e")
       t-button.mt-10.w-full.text-center(tagName="a"
         :href="`expressions/create`" text="Create New Expression")
 </template>
@@ -36,11 +19,12 @@ div
 /* eslint-disable camelcase */
 import { mapActions, mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
+import ExpressionCard from '@/components/ExpressionCard'
 
 export default {
   props: ['connectionId'],
   components: {
-    SvgIcon
+    SvgIcon, ExpressionCard
   },
   data () {
     return {
@@ -56,24 +40,9 @@ export default {
   },
   methods: {
     ...mapActions('expression', ['getExpressions', 'deleteExpression']),
-    getFullName (e) {
-      const names = []
-      e.object_owner && names.push(e.object_owner)
-      e.object_name && names.push(e.object_name)
-      e.column_name && names.push(e.column_name)
-      return names.join('.')
-    },
     load () {
       this.isSpinner = true
       this.getExpressions(this.connectionId).finally(() => { this.isSpinner = false })
-    },
-    onDelete ({ policy_expression_name }) {
-      this.deleteExpression({ policy_expression_name }).then(() => {
-        this.$toast.success('Success. Dropped expression')
-      }).catch(error => {
-        console.log(error)
-        this.$toast.error('Error. Failed to drop expression')
-      })
     }
   },
   mounted () {

@@ -1,5 +1,5 @@
 <template lang="pug">
-.flex.flex-col(class="w-3/4")
+.flex.flex-col
   t-card
     template(v-slot:default)
       form.flex.flex-col(autocomplete="off" @submit="onSubmit")

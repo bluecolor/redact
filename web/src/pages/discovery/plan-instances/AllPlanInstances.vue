@@ -32,53 +32,18 @@
               text-attribute="name"
               @input="onStatusSelect"
             )
-        t-card.card(v-for="p in planInstances")
-          template(v-slot:header)
-            .flex.justify-between
-              .title
-                | {{p.plan.name}}
-              .actions.flex.justify-end
-                .btns.gap-x-3.flex(v-if="!isSpinner")
-                  .icon-btn.las.la-sync-alt
-                  router-link.icon-btn.las.la-info-circle(
-                    content="Discoveries" v-tippy='{ placement : "top" }'
-                    :to="`instances/${p.id}/discoveries-by-rule`")
-                  .icon-btn.las.la-stop-circle(
-                    v-if="p.status==='running'"
-                    content="Stop" v-tippy='{ placement : "top" }'
-                    @click="onStop(p)")
-                  .icon-btn.las.la-trash-alt.danger(
-                    v-if="p.status!=='running'"
-                    content="Delete" v-tippy='{ placement : "top" }'
-                    @click="onDelete(p)"
-                  )
-                .spinner.lds-dual-ring(v-else)
-          template(v-slot:default)
-            .body.flex.justify-between
-              .flex.flex-col
-                .start-date.text-gray-400
-                  | started {{fromNow(p.created_on)}}
-                .description
-                  | {{p.description}}
-              .status
-                t-tag.p-1(
-                  :class="{ 'bg-red-200': p.status==='error',\
-                      'bg-blue-200': p.status==='running',\
-                      'bg-green-200': p.status==='success'}"
-                  tag-name="span" variant="badge"
-                ) {{p.status}}
+        plan-instance-card(v-for="p in planInstances" :p="p")
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
-import { dateMixin } from '@/mixins'
+import PlanInstanceCard from '@/components/PlanInstanceCard'
 
 export default {
-  mixins: [dateMixin],
   props: ['connectionId'],
   components: {
-    SvgIcon
+    SvgIcon, PlanInstanceCard
   },
   data () {
     return {
@@ -96,14 +61,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('discovery', ['plans']),
+    ...mapGetters('plan', ['plans']),
     isPlanInstancesEmpty () {
       return this.planInstances.length === 0
     }
   },
   methods: {
-    ...mapActions('planInstance', ['getAllPlanInstances', 'deletePlanInstance', 'stopPlanInstance']),
-    ...mapActions('discovery', ['getPlans']),
+    ...mapActions('planInstance', ['getAllPlanInstances']),
+    ...mapActions('plan', ['getPlans']),
     onReload () {
       this.isSpinner = true
       return this.getAllPlanInstances().then(result => {
@@ -111,23 +76,7 @@ export default {
       }).finally(() => { this.isSpinner = false })
     },
     onPlanSelect (id) {},
-    onStatusSelect (id) {},
-    onDelete (p) {
-      this.deletePlanInstance({ id: p.id, planId: p.plan.id }).then(result => {
-        this.$toasted.success('Success. Deleted plan run.')
-      })
-    },
-    onStop (p) {
-      this.isSpinner = true
-      this.stopPlanInstance({ id: p.id, planId: p.plan.id }).then(() => {
-        this.$toasted.success('Success. Stopped plan')
-      }).catch(error => {
-        console.log(error)
-        this.$toasted.error('Failed to stop plan')
-      }).finally(() => {
-        this.isSpinner = false
-      })
-    }
+    onStatusSelect (id) {}
   },
   mounted () {
     // this.onReload()

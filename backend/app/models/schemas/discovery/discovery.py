@@ -10,6 +10,6 @@ class DiscoveryOut(Base):
     rule: Rule
 
 
-class DiscoveryByRuleOut(Base):
-    rule_id: int
+class DiscoveryGroupByRuleOut(Base):
+    rule: Rule
     count: int

@@ -33,7 +33,6 @@
 
 <script>
 /* eslint-disable camelcase */
-import _ from 'lodash'
 import { mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 import { dateMixin } from '@/mixins'
@@ -58,20 +57,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions('discovery', ['getDiscoveries', 'getPlanInstance']),
+    ...mapActions('discovery', ['getDiscoveriesGroupByRule']),
     load () {
       this.isSpinner = true
+      const planId = +this.planId
       const planInstanceId = +this.planInstanceId
-      const query = { by_rule: true }
-      return Promise.all([
-        this.getDiscoveries({ planInstanceId, query }),
-        this.getPlanInstance(planInstanceId)
-      ]).then(([discoveries, planInstance]) => {
-        this.discoveries = _.map(discoveries, ({ rule_id, count }) => {
-          const rule = _.find(planInstance?.plan?.rules, { id: rule_id })
-          return { rule, count }
-        })
-        this.planInstance = planInstance
+      this.getDiscoveriesGroupByRule({ planId, planInstanceId }).then(result => {
+        this.discoveries = result
       }).finally(() => { this.isSpinner = false })
     }
   },

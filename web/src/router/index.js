@@ -6,7 +6,7 @@ import Connections, { CreateConnection, EditConnection } from '@/pages/settings/
 import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
 import Plans, { CreatePlan, EditPlan } from '@/pages/discovery/plans'
 import PlanInstances, { AllPlanInstances } from '@/pages/discovery/plan-instances'
-import Discoveries, { DiscoveriesByRule, DiscoveriesForRule } from '@/pages/discovery/discoveries'
+import Discoveries, { DiscoveriesGroupByRule, DiscoveriesForRule } from '@/pages/discovery/discoveries'
 
 import Policies, {
   CreatePolicy,
@@ -173,9 +173,9 @@ const routes = [
           props: true,
           meta: { title: 'Discoveries', group: 'planInstances' }
         }, {
-          name: 'discoveriesByRule',
+          name: 'DiscoveriesGroupByRule',
           path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/discoveries-by-rule',
-          component: DiscoveriesByRule,
+          component: DiscoveriesGroupByRule,
           props: true,
           meta: { title: 'Discoveries by Rule', group: 'planInstances' }
         }, {
