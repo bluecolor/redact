@@ -13,7 +13,10 @@ import Policies, {
   EditPolicy,
   Columns as RedactionColumns
 } from '@/pages/policies'
-import Expressions, { CreateExpression, EditExpression } from '@/pages/expressions'
+import Expressions, {
+  ApplyExpressionToColumn as EApplyExpressionToColumn,
+  CreateExpression, EditExpression
+} from '@/pages/expressions'
 import Categories, { EditCategory, CreateCategory } from '@/pages/categories'
 import Login from '@/pages/auth'
 
@@ -100,6 +103,12 @@ const routes = [
           props: true,
           component: EditExpression,
           meta: { group: 'expressions', title: 'Edit Expression' }
+        }, {
+          name: 'eApplyExpressionToColumn',
+          path: '/connections/:connectionId/expressions/:policy_expression_name/apply-to-column',
+          props: true,
+          component: EApplyExpressionToColumn,
+          meta: { group: 'expressions', title: 'Apply Expression' }
         }, {
           name: 'categories',
           path: '/connections/:connectionId/categories',

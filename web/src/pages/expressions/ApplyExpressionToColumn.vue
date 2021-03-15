@@ -2,10 +2,10 @@
 .flex.justify-center.flex-col
   t-card
     template(v-slot:default)
-      form(autocomplete="off" @submit="onSubmit")
+      form(autocomplete="off" @submit="onCreate")
         .form-item
           t-input-group(label='Name', required)
-            t-input(disabled v-model="payload.policy_expression_name" required autofocus)
+            t-input(disabled v-model="policy_expression_name" required autofocus)
         .form-item
           t-input-group(label='Expression', required)
             t-textarea(v-model="payload.expression" required)
@@ -18,13 +18,13 @@
             .flex.gap-x-3(v-else class="w-1/2")
               t-button(type="submit" value="submit" text="Save")
             .end
-              t-button(@click="onCancel" type="button" text="Close" variant="error")
+              t-button(@click="onCancel" text="Close" variant="error")
 </template>
 
 <script>
+/* eslint-disable camelcase */
 
-import _ from 'lodash'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import SimpleSpinner from '@/components/loaders'
 
 export default {
@@ -36,47 +36,43 @@ export default {
     return {
       isSpinner: false,
       isValid: false,
+      policy_expression_description: '',
+      expression: '',
+      polices: [],
       payload: {
-        policy_expression_name: '',
-        expression: '',
-        policy_expression_description: ''
+        object_schema: '',
+        object_name: '',
+        column_name: ''
       }
     }
   },
   computed: {
-    ...mapGetters('expression', ['expressions'])
   },
   methods: {
-    ...mapActions('expression', ['updateExpression', 'getExpression']),
-    onSubmit (e) {
+    ...mapActions('expression', ['getExpression']),
+    ...mapActions('policy', ['getPolicies']),
+    onCreate (e) {
       e.preventDefault()
       this.isSpinner = true
       const { connectionId } = this
-      this.updateExpression({ connectionId, ...this.payload }).then(() => {
-        this.$toast.success('Success Expression updated')
+      this.createExpression({ connectionId, ...this.payload }).then(() => {
+        this.$toast.success('Success Expression created')
       }).finally(() => {
         this.isSpinner = false
       })
     },
-    onCancel () {
-      window.history.back()
+    onCancel () { window.history.back() },
+    load () {
+      const { policy_expression_name } = this
+      this.isSpinner = true
+      this.getExpression(policy_expression_name).then(result => {
+        this.expression = result.expression
+        this.policy_expression_description = result.policy_expression_description
+      }).finally(() => { this.isSpinner = false })
     }
   },
-  mounted () {
-    /* eslint-disable camelcase */
-    const { policy_expression_name } = this
-    if (_.isEmpty(this.expressions)) {
-      this.isSpinner = true
-      const { connectionId } = this
-      this.getExpression({ connectionId, policy_expression_name }).then(result => {
-        this.payload = { ...result }
-      }).catch(() => {
-        this.$toast.error('Failed to find expression')
-      }).finally(() => { this.isSpinner = false })
-    } else {
-      const expression = _.find(this.expressions, { policy_expression_name })
-      this.payload = { ...expression }
-    }
+  created () {
+    this.load()
   }
 }
 </script>

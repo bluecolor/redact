@@ -35,8 +35,8 @@ const actions = {
       return result
     })
   },
-  getExpression ({ commit }, payload) {
-    return api.getOne(payload)
+  getExpression ({ commit, rootGetters }, policy_expression_name) {
+    return api.getOne(rootGetters['app/connectionId'], policy_expression_name)
   },
   updateExpression ({ commit }, params) {
     return api.update(params).then(result => {

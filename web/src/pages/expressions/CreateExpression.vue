@@ -2,7 +2,7 @@
 .flex.justify-center.flex-col
   t-card
     template(v-slot:default)
-      form(autocomplete="off" @submit="onCreate")
+      form(autocomplete="off" @submit="onSumbit")
         .form-item
           t-input-group(label='Name', required)
             t-input(v-model="payload.policy_expression_name" required autofocus)
@@ -43,8 +43,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions('redact', ['createExpression']),
-    onCreate (e) {
+    ...mapActions('expression', ['createExpression']),
+    onSumbit (e) {
       e.preventDefault()
       this.isSpinner = true
       const { connectionId } = this
