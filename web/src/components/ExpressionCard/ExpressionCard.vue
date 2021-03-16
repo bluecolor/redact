@@ -6,7 +6,7 @@ t-card.card
         | {{e.policy_expression_name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
-          router-link.icon-btn.las.la-columns(
+          router-link.icon-btn.las.la-stamp(
             content="Apply to column" v-tippy='{ placement : "top" }'
             :to="`expressions/${encodeURI(e.policy_expression_name)}/apply-to-column`"
           )

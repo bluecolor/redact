@@ -38,11 +38,14 @@ const actions = {
   getExpression ({ commit, rootGetters }, policy_expression_name) {
     return api.getOne(rootGetters['app/connectionId'], policy_expression_name)
   },
-  updateExpression ({ commit }, params) {
-    return api.update(params).then(result => {
+  updateExpression ({ commit, rootGetters }, payload) {
+    return api.update(rootGetters['app/connectionId'], payload).then(result => {
       commit(UPDATE, result)
       return result
     })
+  },
+  applyExpressionToColumn ({ rootGetters }, payload) {
+    return api.apply(rootGetters['app/connectionId'], payload)
   }
 }
 

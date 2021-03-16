@@ -6,6 +6,7 @@ from app.models.schemas.redact.base import Expression
 from .base import connect
 import app.models.orm as models
 import app.models.schemas.redact as s
+import app.models.schemas.metadata as ms
 from . import queries as q
 from .base import callproc, queryall
 
@@ -205,6 +206,20 @@ def get_policy(
         raise Exception("Multiple results found for policy")
 
     return None
+
+
+def get_policy_owners(connection: models.Connection) -> List[ms.ObjectOwner]:
+    query = q.redaction_policy_owners()
+    result = queryall(connection, query)
+    return parse_obj_as(List[ms.ObjectOwner], result)
+
+
+def get_policy_tables(
+    connection: models.Connection, owner: str
+) -> List[ms.Table]:
+    query = q.redaction_policy_tables(owner)
+    result = queryall(connection, query)
+    return parse_obj_as(List[ms.Table], result)
 
 
 def get_expressions(

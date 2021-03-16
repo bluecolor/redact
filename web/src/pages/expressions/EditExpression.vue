@@ -51,8 +51,7 @@ export default {
     onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
-      const { connectionId } = this
-      this.updateExpression({ connectionId, ...this.payload }).then(() => {
+      this.updateExpression(this.payload).then(() => {
         this.$toast.success('Success Expression updated')
       }).finally(() => {
         this.isSpinner = false

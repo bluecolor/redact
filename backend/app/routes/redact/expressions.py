@@ -69,11 +69,15 @@ def delete(conn_id: int, name=str, db: Session = Depends(get_db)):
     return True
 
 
-@router.post(
-    "/connections/{conn_id}/redact/expressions/apply", response_model=bool,
+@router.put(
+    "/connections/{conn_id}/redact/expressions/{policy_expression_name}/apply-to-column",
+    response_model=bool,
 )
 def apply(
-    payload: s.ExpressionApplyIn, conn_id: int, db: Session = Depends(get_db),
+    payload: s.ExpressionApplyIn,
+    conn_id: int,
+    policy_expression_name: str,
+    db: Session = Depends(get_db),
 ):
     connection = db.query(models.Connection).get(conn_id)
     redact.apply_policy_expr_to_col(connection, payload.dict())

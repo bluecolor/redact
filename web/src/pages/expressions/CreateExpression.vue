@@ -49,7 +49,10 @@ export default {
       this.isSpinner = true
       const { connectionId } = this
       this.createExpression({ connectionId, ...this.payload }).then(() => {
-        this.$toast.success('Success Expression created')
+        this.$toasted.success('Success. Expression created')
+      }).catch(error => {
+        console.log(error)
+        this.$toasted.success('Error. Failed to create expression')
       }).finally(() => {
         this.isSpinner = false
       })

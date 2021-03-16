@@ -2,6 +2,14 @@ REDACTION_POLICIES = """
     select * from redaction_policies
 """
 
+REDACTION_POLICY_OWNERS = """
+    select distinct object_owner as name from redaction_policies
+"""
+
+REDACTION_POLICY_TABLES = """
+    select distinct object_owner as owner, object_name as table_name from redaction_policies
+"""
+
 REDACTION_EXPRESSIONS = """
     select * from redaction_expressions
 """
@@ -21,6 +29,14 @@ ALL_OBJECT_OWNERS = """
 ALL_TAB_COLS = """
     select owner, table_name, column_name, data_type from all_tab_cols
 """
+
+
+def redaction_policy_owners() -> str:
+    return REDACTION_POLICY_OWNERS
+
+
+def redaction_policy_tables(owner: str) -> str:
+    return f"{REDACTION_POLICY_TABLES} where object_owner='{owner}'"
 
 
 def redaction_policies(

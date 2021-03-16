@@ -2,22 +2,30 @@
 import request from '@/api/request'
 
 export default {
-  getAll (connectionId) {
-    return request.get(`/connections/${connectionId}/redact/expressions`)
+  getAll (connId) {
+    return request.get(`/connections/${connId}/redact/expressions`)
   },
-  getOne (connectionId, policy_expression_name) {
-    return request.get(`/connections/${connectionId}/redact/expressions/${encodeURI(policy_expression_name)}`)
+  getOne (connId, policy_expression_name) {
+    return request.get(`/connections/${connId}/redact/expressions/${encodeURI(policy_expression_name)}`)
   },
-  create (connectionId, payload) {
-    return request.post(`/connections/${connectionId}/redact/expressions`, payload)
+  create (connId, payload) {
+    return request.post(`/connections/${connId}/redact/expressions`, payload)
   },
   delete (connId, policy_expression_name) {
     return request.delete(`/connections/${connId}/redact/expressions/${encodeURI(policy_expression_name)}`)
   },
-  update (connectionId, policy_expression_name, payload) {
+  update (connId, payload) {
+    const { policy_expression_name } = payload
     return request.put(
-      `/connections/${connectionId}/redact/expressions/${encodeURI(policy_expression_name)}`,
-      { policy_expression_name, ...payload }
+      `/connections/${connId}/redact/expressions/${encodeURI(policy_expression_name)}`,
+      payload
+    )
+  },
+  apply (connId, payload) {
+    const { policy_expression_name } = payload
+    return request.put(
+      `/connections/${connId}/redact/expressions/${encodeURI(policy_expression_name)}/apply-to-col`,
+      payload
     )
   }
 }

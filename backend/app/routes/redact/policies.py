@@ -4,6 +4,7 @@ from pydantic.tools import parse_obj_as
 from sqlalchemy.orm import Session
 import app.models.orm as models
 import app.models.schemas.redact as s
+import app.models.schemas.metadata as ms
 from .base import router
 from app.database import get_db
 from app.oracle import redact
@@ -23,6 +24,28 @@ def get_one(
     return redact.get_policy(
         connection, object_owner, object_name, policy_name
     )
+
+
+@router.get(
+    "/connections/{conn_id}/redact/policies/owners",
+    response_model=List[ms.ObjectOwner],
+)
+def get_owners(
+    conn_id: int, db: Session = Depends(get_db),
+):
+    connection = db.query(models.Connection).get(conn_id)
+    return redact.get_policy_owners(connection)
+
+
+@router.get(
+    "/connections/{conn_id}/redact/policies/owners/{owner}/tables",
+    response_model=List[ms.Table],
+)
+def get_tables(
+    conn_id: int, owner: str, db: Session = Depends(get_db),
+):
+    connection = db.query(models.Connection).get(conn_id)
+    return redact.get_policy_tables(connection, owner)
 
 
 @router.post(

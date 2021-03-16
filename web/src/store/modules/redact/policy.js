@@ -27,6 +27,12 @@ const actions = {
   getPolicy ({ rootGetters }, q) {
     return api.getOne(rootGetters['app/connectionId'], q)
   },
+  getPolicyOwners ({ rootGetters }) {
+    return api.getOwners(rootGetters['app/connectionId'])
+  },
+  getPolicyTables ({ rootGetters }, owner) {
+    return api.getTables(rootGetters['app/connectionId'], owner)
+  },
   createPolicy ({ commit, rootGetters }, payload) {
     return api.create(rootGetters['app/connectionId'], payload).then(result => {
       commit(CREATE, result)
@@ -67,6 +73,18 @@ const mutations = {
     const i = _.findIndex(state.policies, { object_owner, object_name, policy_name })
     if (i > -1) {
       state.policies.splice(i, 1)
+    }
+  },
+  [DISABLE]: (state, { object_owner, object_name, policy_name }) => {
+    const p = _.find(state.policies, { object_owner, object_name, policy_name })
+    if (p) {
+      p.enable = 'NO'
+    }
+  },
+  [ENABLE]: (state, { object_owner, object_name, policy_name }) => {
+    const p = _.find(state.policies, { object_owner, object_name, policy_name })
+    if (p) {
+      p.enable = 'YES'
     }
   }
 }

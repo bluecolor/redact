@@ -7,6 +7,12 @@ export default {
   getAll (connId, q) {
     return request.get(`/connections/${connId}/redact/policies?${qs.stringify(q)}`)
   },
+  getOwners (connId) {
+    return request.get(`/connections/${connId}/redact/policies/owners`)
+  },
+  getTables (connId, owner) {
+    return request.get(`/connections/${connId}/redact/policies/owners/${encodeURI(owner)}/tables`)
+  },
   getOne (connId, q) {
     return request.get(`/connections/${connId}/redact/policies/one?${qs.stringify(q)}`)
   },
