@@ -34,7 +34,7 @@ def update_status(p: Union[m.Plan, m.PlanInstance], status: str, db: Session):
 
 
 @celery_app.task
-def callme(result, conn_id, plan_instance_id):
+def callback(results, conn_id, plan_instance_id):
     print(f"Success callback: {conn_id} {plan_instance_id}")
     for db in get_db():
         ...
@@ -68,10 +68,9 @@ def start(conn_id: int, plan_instance_id: int):
             connection, schemas, plan_instance.worker_count
         )
 
-        callback = callme.s(conn_id, plan_instance_id).on_error(
+        cb = callback.s(conn_id, plan_instance_id).on_error(
             on_chord_error.s(conn_id, plan_instance_id)
         )
-
         chord(
             [
                 run.s(
@@ -79,21 +78,7 @@ def start(conn_id: int, plan_instance_id: int):
                 )
                 for pack in packs
             ]
-        )(callback)
-        # print(result)
-
-        # status = "success" if result.successful() else "error"
-        # print(status)
-
-        # plan = (
-        #     db.query(m.Plan)
-        #     .filter(
-        #         m.Connection.id == conn_id, m.Plan.id == plan_instance.plan_id,
-        #     )
-        #     .one()
-        # )
-        # update_status(plan, status, db)
-        # update_status(plan_instance, status, db)
+        )(cb)
 
 
 @celery_app.task(acks_late=True)
