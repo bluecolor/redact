@@ -24,7 +24,7 @@ export default {
   apply (connId, payload) {
     const { policy_expression_name } = payload
     return request.put(
-      `/connections/${connId}/redact/expressions/${encodeURI(policy_expression_name)}/apply-to-col`,
+      `/connections/${connId}/redact/expressions/${encodeURI(policy_expression_name)}/apply-to-column`,
       payload
     )
   }

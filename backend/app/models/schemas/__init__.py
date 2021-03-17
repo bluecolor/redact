@@ -7,3 +7,5 @@ from .connection import (
 )
 from .metadata import Table, Column, ObjectOwner
 
+from .discovery import Rule
+

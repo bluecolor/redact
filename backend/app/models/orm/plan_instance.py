@@ -12,10 +12,10 @@ from sqlalchemy import (
     String,
     DateTime,
     Text,
-    Table
+    Table,
 )
 
-from .base import Base, plan_instance_rules
+from .base import Base
 
 
 class PlanInstance(Base):
@@ -40,7 +40,6 @@ class PlanInstance(Base):
         DateTime, default=datetime.utcnow, server_default=func.now()
     )
     ended_on = Column(DateTime, nullable=True)
-
 
     @property
     def schema_list(self) -> List[str]:

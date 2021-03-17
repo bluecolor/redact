@@ -19,7 +19,9 @@ passlib = "^1.7.4"
 cx-Oracle = "^8.1.0"
 cryptography = "^3.4.4"
 fastapi-pagination = "^0.6.1"
-rq = "^1.7.0"
+celery = "^5.0.5"
+redis = "^3.5.3"
+pydash = "^4.9.3"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"

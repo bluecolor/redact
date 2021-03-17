@@ -43,7 +43,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('plan', ['deletePlan']),
+    ...mapActions('plan', ['deletePlan', 'runPlan']),
     onDelete (p) {
       this.isSpinner = true
       this.deletePlan(p.id).then(() => {
@@ -56,7 +56,19 @@ export default {
         this.isSpinner = false
       })
     },
-    onRun (p) {}
+    onRun (plan) {
+      const { id } = plan
+      this.isSpinner = true
+      this.runPlan(id).then(result => {
+        this.$emit('run', plan)
+        this.$toasted.success('Plan started')
+      }).catch(error => {
+        console.log(error)
+        this.$toasted.error('Error. Failed to start plan')
+      }).finally(() => {
+        this.isSpinner = false
+      })
+    }
   }
 }
 </script>

@@ -18,6 +18,8 @@ class Plan(Base):
     schemas: str
     status: Optional[str]
     description: Optional[str]
+    worker_count: Optional[int]
+    sample_size: Optional[int]
 
 
 class Rule(Base):
@@ -26,3 +28,17 @@ class Rule(Base):
     severity: Optional[str]
     expression: str
     description: Optional[str]
+
+
+class PlanInstanceOut(Base):
+    plan: Plan
+    status: Optional[str]
+    worker_count: Optional[int]
+    sample_size: Optional[int]
+
+
+class Discovery(BaseModel):
+    schema_name: str
+    table_name: str
+    column_name: Optional[str]
+    rule: Rule

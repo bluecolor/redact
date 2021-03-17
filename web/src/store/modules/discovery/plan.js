@@ -48,7 +48,7 @@ const actions = {
   },
   runPlan ({ commit, rootGetters }, id) {
     return api.run(rootGetters['app/connectionId'], id).then(result => {
-      commit(SET_STATUS, result)
+      commit(SET_STATUS, { id, status: 'running' })
       return result
     })
   }
@@ -75,8 +75,8 @@ const mutations = {
     }
   },
   [SET_STATUS]: (state, { id, status }) => {
-    const plan = _.find(this.plans, { id })
-    plan.status = status
+    const plan = _.find(state.plans, { id })
+    if (plan) { plan.status = status }
   }
 }
 

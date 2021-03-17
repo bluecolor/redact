@@ -5,6 +5,7 @@ from app.models.schemas import connection
 from .base import Base
 from .rule import Rule
 from .base import Plan
+from app.settings.discovery import SAMPLE_SIZE, WORKER_COUNT
 
 
 class PlanOut(Plan):
@@ -15,6 +16,8 @@ class PlanCreateIn(Base):
     name: str
     schemas: str
     rules: List[int]
+    worker_count: Optional[int] = SAMPLE_SIZE
+    sample_size: Optional[int] = WORKER_COUNT
     description: Optional[str]
 
 
@@ -22,6 +25,8 @@ class PlanUpdateIn(Base):
     name: str
     schemas: str
     rules: List[int]
+    worker_count: Optional[int]
+    sample_size: Optional[int]
     description: Optional[str]
 
 

@@ -1,3 +1,6 @@
+from typing import List
+
+
 REDACTION_POLICIES = """
     select * from redaction_policies
 """
@@ -22,6 +25,7 @@ ALL_TABLES = """
     select owner, table_name from all_tables
 """
 
+
 ALL_OBJECT_OWNERS = """
     select username as name from all_users
 """
@@ -29,6 +33,10 @@ ALL_OBJECT_OWNERS = """
 ALL_TAB_COLS = """
     select owner, table_name, column_name, data_type from all_tab_cols
 """
+
+
+def all_tables_in_schemas(schemas: List[str]) -> str:
+    return f"""{ALL_TABLES} where owner in ({', '.join(["'"+s+"'" for s in schemas]) })"""
 
 
 def redaction_policy_owners() -> str:
@@ -110,8 +118,14 @@ def all_object_owners() -> str:
     return ALL_OBJECT_OWNERS
 
 
-def columns_like(schema, expression) -> str:
+def columns_like(*, schema, table_name=None, expression) -> str:
+    if table_name is None:
+        return f"""
+            select table_name, column_name from all_tab_cols where
+            owner = '{schema}' and regexp_like(column_name, '{expression}', 'i')
+        """
+
     return f"""
         select table_name, column_name from all_tab_cols where
-        owner = '{schema}' and regexp_like(column_name, '{expression}', 'i')
+        owner = '{schema}' and table_name = '{table_name}' and regexp_like(column_name, '{expression}', 'i')
     """

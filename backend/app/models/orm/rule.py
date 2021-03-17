@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import relationship
 from sqlalchemy import (
     func,
@@ -9,10 +8,10 @@ from sqlalchemy import (
     Integer,
     String,
     DateTime,
-    Text
+    Text,
 )
 
-from .base import Base, plan_rules, plan_instance_rules
+from .base import Base, plan_rules
 
 
 class Rule(Base):
@@ -25,12 +24,11 @@ class Rule(Base):
     expression = Column(Text)
     description = Column(Text, nullable=True)
 
-    plans = relationship("Plan",secondary=plan_rules,back_populates="rules")
+    plans = relationship("Plan", secondary=plan_rules, back_populates="rules")
     discoveries = relationship("Discovery", back_populates="rule")
 
     connection_id = Column(Integer, ForeignKey("connections.id"))
-    connection= relationship("Connection", back_populates="rules")
-
+    connection = relationship("Connection", back_populates="rules")
 
     def __init__(self, **kw):
         super().__init__(**kw)

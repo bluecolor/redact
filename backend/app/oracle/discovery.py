@@ -1,57 +1,13 @@
-from typing import List, Any
-import json
+from app.models.schemas.discovery import SearchResult
+from typing import List
 
 from sqlalchemy.sql.expression import column, table
-from app.models.orm import Connection, Rule, Discovery
+from app.models.orm import Connection, Discovery
+from app.models.schemas import Rule, Table
+import app.models.schemas.discovery as sd
 from .base import connect
 from . import queries as q
 from .base import queryall
-
-
-def search(
-    connection: Connection, schemas: List[str], rule: Rule
-) -> Discovery:
-    print(f"Rule type: {rule.type}")
-    if rule.type == "metadata":
-        yield from search_metadata(connection, schemas, rule)
-    elif rule.type == "data":
-        yield from search_data(connection, schemas, rule)
-
-
-def search_metadata(
-    connection: Connection, schemas: List[str], rule: Rule
-) -> Discovery:
-    for schema in schemas:
-        query = q.columns_like(schema, rule.expression)
-        results = queryall(connection, query)
-        for r in results:
-            yield Discovery(
-                rule=rule,
-                schema_name=schema,
-                table_name=r["table_name"],
-                column_name=r["column_name"],
-            )
-
-
-def search_data(
-    connection: Connection, schemas: List[str], rule: Rule
-) -> Discovery:
-    query: str = f"""select owner, table_name as name from all_tables where owner in ({','.join([f"'{s}'" for s in schemas])})"""
-    tables: List[dict] = queryall(connection, query)
-    for t in tables:
-        query, _ = _build_data_search_query(
-            connection, schema=t["owner"], table=t["name"], rule=rule
-        )
-        results: List[dict] = queryall(connection, query)
-        for record in results:
-            for col_name, is_match in record.items():
-                if is_match == 1:
-                    yield Discovery(
-                        rule=rule,
-                        schema_name=t["owner"],
-                        table_name=t["name"],
-                        column_name=col_name,
-                    )
 
 
 def _build_data_search_query(
@@ -80,4 +36,66 @@ def _build_data_search_query(
         ) where rownum < 5000 and ({' or '.join(filter_expressions)})
     """
 
-    return query, columns
+    return query
+
+
+def search_tables(
+    connection: Connection, tables: List[Table], rules: List[Rule]
+) -> sd.SearchResult:
+    for t, r in [(table, rule) for rule in rules for table in tables]:
+        if r.type == "metadata":
+            yield from search_table_metadata(connection, table=t, rule=r)
+        elif r.type == "data":
+            yield from search_table_data(connection, table=t, rule=r)
+
+
+def search_table_metadata(
+    connection: Connection, table: Table, rule: Rule
+) -> sd.SearchResult:
+    query = q.columns_like(
+        schema=table.owner,
+        table_name=table.table_name,
+        expression=rule.expression,
+    )
+    print(f"m => {table.owner}.{table.table_name}")
+    results = queryall(connection, query)
+    for r in results:
+        discovery = sd.Discovery(
+            rule=rule,
+            schema_name=table.owner,
+            table_name=table.table_name,
+            column_name=r["column_name"],
+        )
+        yield sd.SearchResult(hit=True, discovery=discovery)
+
+    if len(results) == 0:
+        yield sd.SearchResult(hit=False)
+
+
+def search_table_data(
+    connection: Connection, table: Table, rule: Rule
+) -> sd.SearchResult:
+    query = _build_data_search_query(
+        connection, schema=table.owner, table=table.table_name, rule=rule
+    )
+    print(f"d => {table.owner}.{table.table_name}")
+    results: List[dict] = []
+    try:
+        results = queryall(connection, query)
+    except:
+        yield SearchResult(hit=False)
+
+    for record in results:
+        for col_name, is_match in record.items():
+            if is_match == 1:
+                discovery = sd.Discovery(
+                    rule=rule,
+                    schema_name=table.owner,
+                    table_name=table.table_name,
+                    column_name=col_name,
+                )
+                yield SearchResult(hit=True, discovery=discovery)
+
+    if len(results) == 0:
+        yield SearchResult(hit=False)
+

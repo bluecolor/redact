@@ -24,10 +24,10 @@
             )
         .form-item
           t-input-group(label='Sample Size')
-            t-input(v-model="payload.sample_size")
+            t-input(v-model.number="payload.sample_size")
         .form-item
           t-input-group(label='Number of Workers')
-            t-input(v-model="payload.worker_count")
+            t-input(v-model.number="payload.worker_count")
         .form-item
           t-input-group(label='Description', required)
             t-textarea(v-model="payload.description")

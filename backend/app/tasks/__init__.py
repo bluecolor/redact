@@ -1,1 +1,3 @@
-# from .discovery import run_plan
+from app.celery import celery_app
+
+from .discovery import run

@@ -10,6 +10,7 @@ from app.database import get_db
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page, Params
 from pydantic import parse_obj_as
+from app.tasks.discovery import start
 
 
 @router.get(
@@ -102,14 +103,21 @@ async def delete(conn_id: int, id: int, db: Session = Depends(get_db)):
     return s.PlanDeleteOut.from_orm(plan)
 
 
-@router.post("/connections/{conn_id}/discovery/plans/{id}/run", tags=["Plans"])
+@router.put(
+    "/connections/{conn_id}/discovery/plans/{id}/run",
+    tags=["Plans"],
+    response_model=s.PlanInstanceOut,
+)
 def run(conn_id: int, id: int, db: Session = Depends(get_db)):
-    from app.tasks.discovery.plan import run
 
-    print("Calling task")
-    run.delay()
-    print("called task")
-
-    # job = await redis.enqueue_job("run_plan", conn_id, id)
-    # return job.job_id
-    return None
+    plan = (
+        db.query(models.Plan)
+        .filter(models.Connection.id == conn_id, models.Plan.id == id)
+        .one()
+    )
+    plan_instance: models.PlanInstance = plan.get_new_instance()
+    db.add(plan_instance)
+    db.commit()
+    db.refresh(plan_instance)
+    start.delay(conn_id, plan_instance.id)
+    return s.PlanInstanceOut.from_orm(plan_instance)

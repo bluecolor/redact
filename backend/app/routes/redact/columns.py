@@ -19,3 +19,4 @@ def get_all(
 ) -> List[s.ColumnOut]:
     connection = db.query(models.Connection).get(conn_id)
     return redact.get_columns(connection, object_owner, object_name)
+

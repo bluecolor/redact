@@ -50,7 +50,7 @@
             .flex.gap-x-3(v-else class="w-1/2")
               t-button(type="submit" value="submit" text="Save")
             .end
-              t-button(@click="onCancel" text="Close" variant="error")
+              t-button(@click="onCancel" type="button" text="Close" variant="error")
 </template>
 
 <script>
@@ -83,7 +83,7 @@ export default {
   computed: {
   },
   methods: {
-    ...mapActions('md', ['getColumns']),
+    ...mapActions('column', { getRedColumns: 'getColumns' }),
     ...mapActions('expression', ['getExpression', 'applyExpressionToColumn']),
     ...mapActions('policy', ['getPolicies', 'getPolicyOwners', 'getPolicyTables']),
     onSubmit (e) {
@@ -94,7 +94,7 @@ export default {
         this.$toasted.success('Success. Expression applied')
       }).catch(error => {
         console.log(error)
-        this.$toasted.success('Error. Failed to appy expression')
+        this.$toasted.error('Error. Failed to appy expression')
       }).finally(() => {
         this.isSpinner = false
       })
@@ -110,9 +110,12 @@ export default {
     },
     onTableSelect (table_name) {
       this.isSpinner = true
-      this.getColumns(this.payload).then(result => { this.columns = result }).finally(() => {
-        this.isSpinner = false
-      })
+      const object_owner = this.payload.object_schema
+      const { object_name } = this.payload
+      this.getRedColumns({ object_owner, object_name })
+        .then(result => { this.columns = result }).finally(() => {
+          this.isSpinner = false
+        })
     },
     load () {
       const { policy_expression_name } = this

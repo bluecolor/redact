@@ -1,6 +1,6 @@
 from typing import List, Optional, Any
 from app.models.schemas import connection
-from .base import Base, Rule
+from .base import Base, Rule, BaseModel, Discovery
 
 
 class DiscoveryOut(Base):
@@ -13,3 +13,8 @@ class DiscoveryOut(Base):
 class DiscoveryGroupByRuleOut(Base):
     rule: Rule
     count: int
+
+
+class SearchResult(BaseModel):
+    hit: bool
+    discovery: Optional[Discovery]

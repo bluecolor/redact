@@ -24,10 +24,10 @@
             )
         .form-item
           t-input-group(label='Sample Size')
-            t-input(v-model="payload.sample_size")
+            t-input(v-model.number="payload.sample_size")
         .form-item
           t-input-group(label='Number of Workers')
-            t-input(v-model="payload.worker_count")
+            t-input(v-model.number="payload.worker_count")
         .form-item
           t-input-group(label='Description', required)
             t-textarea(v-model="payload.description")
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 import SimpleSpinner from '@/components/loaders'
@@ -86,10 +87,10 @@ export default {
     },
     onCancel () { window.history.back() },
     setPayload (plan) {
-      const { name, description } = plan
+      const { name, description, worker_count, sample_size } = plan
       const rules = _.map(plan.rules, r => r.id)
       const schemas = JSON.parse(plan.schemas)
-      this.payload = { ...this.payload, name, description, rules, schemas }
+      this.payload = { ...this.payload, name, description, rules, schemas, worker_count, sample_size }
     }
   },
   created () {

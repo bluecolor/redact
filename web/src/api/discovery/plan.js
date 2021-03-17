@@ -2,22 +2,22 @@
 import request from '@/api/request'
 
 export default {
-  getAll (connectionId) {
-    return request.get(`/connections/${connectionId}/discovery/plans`)
+  getAll (connId) {
+    return request.get(`/connections/${connId}/discovery/plans`)
   },
-  getOne (connectionId, id) {
-    return request.get(`/connections/${connectionId}/discovery/plans/${id}`)
+  getOne (connId, id) {
+    return request.get(`/connections/${connId}/discovery/plans/${id}`)
   },
-  create (connectionId, payload) {
-    return request.post(`/connections/${connectionId}/discovery/plans`, payload)
+  create (connId, payload) {
+    return request.post(`/connections/${connId}/discovery/plans`, payload)
   },
-  update (connectionId, id, payload) {
-    return request.put(`/connections/${connectionId}/discovery/plans/${id}`, payload)
+  update (connId, id, payload) {
+    return request.put(`/connections/${connId}/discovery/plans/${id}`, payload)
   },
-  delete (connectionId, id) {
-    return request.delete(`/connections/${connectionId}/discovery/plans/${id}`)
+  delete (connId, id) {
+    return request.delete(`/connections/${connId}/discovery/plans/${id}`)
   },
-  run (connectionId, id) {
-    return request.get(`/connections/${connectionId}/discovery/plans/${id}/run`)
+  run (connId, id) {
+    return request.put(`/connections/${connId}/discovery/plans/${id}/run`)
   }
 }

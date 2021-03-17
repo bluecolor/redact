@@ -22,8 +22,6 @@ from app.routes.redact import (
     columns,
     categories,
 )
-from rq.connections import push_connection, pop_connection
-from . import rq_redis_connection
 
 app.include_router(router, prefix="/api/v1")
 
@@ -38,17 +36,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.middleware("http")
-async def logging_middleware(request: Request, call_next):
-    response = Response("Internal server error", status_code=500)
-    push_connection(rq_redis_connection)
-    try:
-        response: Response = await call_next(request)
-    finally:
-        pop_connection()
-    return response
 
 
 add_pagination(app)
