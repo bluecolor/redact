@@ -14,6 +14,9 @@ const actions = {
   },
   getDiscoveries ({ rootGetters }, { planId, planInstanceId, query }) {
     return api.getAll(rootGetters['app/connectionId'], planId, planInstanceId, query)
+  },
+  getDiscoveriesByRule ({ rootGetters }, { planId, planInstanceId, ruleId, query }) {
+    return api.getAllByRule(rootGetters['app/connectionId'], planId, planInstanceId, ruleId, query)
   }
 }
 

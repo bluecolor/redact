@@ -182,7 +182,7 @@ const routes = [
           props: true,
           meta: { title: 'Discoveries', group: 'planInstances' }
         }, {
-          name: 'DiscoveriesGroupByRule',
+          name: 'discoveriesGroupByRule',
           path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/discoveries-by-rule',
           component: DiscoveriesGroupByRule,
           props: true,
@@ -192,7 +192,7 @@ const routes = [
           path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/rules/:ruleId/discoveries',
           component: DiscoveriesForRule,
           props: true,
-          meta: { title: 'Discoveries for Rule', group: 'discoveries' }
+          meta: { title: 'Discoveries for Rule', group: 'planInstances' }
         }]
       }
     ]

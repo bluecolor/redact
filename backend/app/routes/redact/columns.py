@@ -3,6 +3,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 import app.models.orm as models
 import app.models.schemas.redact as s
+import app.models.schemas.metadata as ms
 from .base import router
 from app.database import get_db
 from app.oracle import redact
@@ -19,4 +20,3 @@ def get_all(
 ) -> List[s.ColumnOut]:
     connection = db.query(models.Connection).get(conn_id)
     return redact.get_columns(connection, object_owner, object_name)
-

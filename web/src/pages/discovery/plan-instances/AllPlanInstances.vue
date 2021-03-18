@@ -11,9 +11,10 @@
           .flex.flex-row.justify-between
             .title
               | All Plan Runs
-            .filter.flex.justify-end.text-xl.gap-x-3
+            .filter.flex.justify-end.text-xl.gap-x-3(v-if="!isSpinner")
               .icon-btn.las.la-sync-alt.cursor-pointer(@click="onReload")
               .las.la-filter.cursor-pointer(@click="isFilter=!isFilter" :class="{'text-blue-500': isFilter}")
+            .spinner.lds-dual-ring(v-else)
           .is-filter.flex.flex-col.gap-y-2(v-if="isFilter")
             t-datepicker(v-model="date" placeholder="Pick a date")
             t-select(
@@ -51,13 +52,14 @@ export default {
       isFilter: false,
       title: 'Plan Runs',
       planInstances: [],
+      date: undefined,
+      status: undefined,
       statuses: [
         { id: 'running', name: 'Running' },
         { id: 'success', name: 'Success' },
         { id: 'error', name: 'Error' }
       ],
-      planId: undefined,
-      data: undefined
+      planId: undefined
     }
   },
   computed: {
@@ -79,9 +81,9 @@ export default {
     onStatusSelect (id) {}
   },
   mounted () {
-    // this.onReload()
+    this.onReload()
     if (this.plans.length === 0) {
-      ;// this.getPlans()
+      this.getPlans()
     }
     // const ws = new WebSocket('ws://localhost:8000/api/v1/ws/plans/instances')
     // ws.onmessage = (message) => {

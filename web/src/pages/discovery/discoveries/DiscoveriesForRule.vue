@@ -3,25 +3,11 @@
   .bg-white.empty.w-full(v-if="isDiscoveriesEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
     .project-logo.flex.justify-center.mt-10.w-full()
-      svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")
+      svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .discoveries.gap-y-3.flex.flex-col.w-full
-        t-card.card(v-for="d in items")
-          template(v-slot:header)
-            .flex.justify-between
-              .title
-                | {{d.rule.name}}
-              .actions.flex.justify-end
-                .btns.gap-x-3.flex(v-if="!isLoading")
-                  .icon-btn.las.la-info-circle(
-                    content="Delete" v-tippy='{ placement : "top" }'
-                    @click="onDelete()"
-                  )
-                .spinner.lds-dual-ring(v-else)
-          template(v-slot:default)
-            | {{d.schema_name}}.{{d.table_name}}.{{d.column_name}}
-
+        discovery-card(v-for="d in items" :d="d")
 </template>
 
 <script>
@@ -29,12 +15,13 @@
 import { mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 import { dateMixin, paginationMixin } from '@/mixins'
+import DiscoveryCard from '@/components/DiscoveryCard'
 
 export default {
   mixins: [dateMixin, paginationMixin],
   props: ['connectionId', 'planInstanceId', 'planId', 'ruleId'],
   components: {
-    SvgIcon
+    SvgIcon, DiscoveryCard
   },
   data () {
     return {
@@ -51,14 +38,15 @@ export default {
   },
   methods: {
     ...mapActions('app', ['setTitle']),
-    ...mapActions('discovery', ['getDiscoveriesForRule', 'getRule']),
+    ...mapActions('discovery', ['getDiscoveriesByRule']),
+    ...mapActions('rule', ['getRule']),
     load (q) {
       this.isLoading = true
       const planInstanceId = +this.planInstanceId
       const planId = +this.planId
       const ruleId = +this.ruleId
       const query = q ?? { page: this.page }
-      this.getDiscoveriesForRule({ planId, planInstanceId, ruleId, query }).then(result => {
+      this.getDiscoveriesByRule({ planId, planInstanceId, ruleId, query }).then(result => {
         this.addPage(result)
       }).finally(() => { this.isLoading = false })
     },
@@ -74,7 +62,6 @@ export default {
       const id = +this.ruleId
       this.setTitle({ isLoading: true })
       this.getRule(id).then(result => {
-        console.log(result.name)
         this.setTitle({ isLoading: false, text: `Discoveries for Rule: ${result.name}` })
       })
     }

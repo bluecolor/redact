@@ -8,6 +8,7 @@ import app.models.schemas.metadata as ms
 from .base import router
 from app.database import get_db
 from app.oracle import redact
+import pydash
 
 
 @router.get(
@@ -124,3 +125,26 @@ def update(
     redact.alter_policy(connection, policy.dict())
     return True
 
+
+@router.post(
+    "/connections/{conn_id}/redact/policies/ask/tables",
+    response_model=List[s.PolicyTableAnswer],
+)
+def ask_tables(
+    tables: List[ms.Table], conn_id: int, db: Session = Depends(get_db),
+):
+    connection = db.query(models.Connection).get(conn_id)
+    policies: List[s.PolicyOut] = redact.get_policies_for_tables(
+        connection, tables
+    )
+    answers: List[s.PolicyTableAnswer] = []
+    for t in tables:
+        answer = s.PolicyTableAnswer(table=t)
+        answer.policy = pydash.find(
+            policies,
+            lambda x: x.object_owner == t.owner
+            and x.object_name == t.table_name,
+        )
+        answers.append(answer)
+
+    return answers

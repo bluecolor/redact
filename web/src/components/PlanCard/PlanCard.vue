@@ -26,12 +26,21 @@ t-card.card
         .text-red-300(v-if="p.rules.length==0") Does not have rules
       .end.flex.flex-col.justify-end.gap-y-3
         .flex.justify-end
-          t-tag.p-1.bg-blue-100(v-if="p.status==='running'" tag-name="span" variant="badge") {{p.status}}
+          .status(@click="onNavLastRun(p)")
+            t-tag.p-1.cursor-pointer(
+              content="Last run" v-tippy='{ placement : "left" }'
+              :class="{\
+                'bg-blue-100': p.status=='running',\
+                'bg-red-100': p.status=='error',\
+                'bg-green-100': p.status=='success',\
+              }"
+              tag-name="span" variant="badge"
+            ) {{p.status}}
         .text-gray-400.text-sm.flex.justify-end {{formatDate(p.created_on)}}
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { dateMixin } from '@/mixins'
 
 export default {
@@ -42,8 +51,11 @@ export default {
       isSpinner: false
     }
   },
+  computed: {
+    ...mapGetters('app', ['connectionId'])
+  },
   methods: {
-    ...mapActions('plan', ['deletePlan', 'runPlan']),
+    ...mapActions('plan', ['deletePlan', 'runPlan', 'getLastInstance']),
     onDelete (p) {
       this.isSpinner = true
       this.deletePlan(p.id).then(() => {
@@ -68,6 +80,19 @@ export default {
       }).finally(() => {
         this.isSpinner = false
       })
+    },
+    onNavLastRun (plan) {
+      this.isSpinner = true
+      const planId = plan.id
+      this.getLastInstance(plan.id).then((planInstance) => {
+        const name = 'discoveriesGroupByRule'
+        const { connectionId } = this
+        const planInstanceId = planInstance.id
+        this.$router.push({ name, params: { name, planId, planInstanceId, connectionId } })
+      }).catch(error => {
+        console.log(error)
+        this.$toasted.error('Errro. Failed to get last run.')
+      }).finally(() => { this.isSpinner = false })
     }
   }
 }

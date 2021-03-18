@@ -19,5 +19,8 @@ export default {
   },
   run (connId, id) {
     return request.put(`/connections/${connId}/discovery/plans/${id}/run`)
+  },
+  getLastInstance (connId, id) {
+    return request.get(`/connections/${connId}/discovery/plans/${id}/last-instance`)
   }
 }

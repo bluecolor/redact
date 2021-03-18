@@ -51,6 +51,9 @@ const actions = {
       commit(SET_STATUS, { id, status: 'running' })
       return result
     })
+  },
+  getLastInstance ({ commit, rootGetters }, id) {
+    return api.getLastInstance(rootGetters['app/connectionId'], id)
   }
 }
 

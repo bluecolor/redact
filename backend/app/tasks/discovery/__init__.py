@@ -21,37 +21,51 @@ def update_status(p: Union[m.Plan, m.PlanInstance], status: str, db: Session):
     db.refresh(p)
 
 
-# @celery_app.task()
-# def callback(result):
-#     print(result)
-#     print("Success Finished")
-
-
-# @celery_app.task(name="error_callback")
-# def error_callback(result):
-#     print(result)
-#     print("Error Finished")
-
-
 @celery_app.task
-def callback(results, conn_id, plan_instance_id):
-    print(f"Success callback: {conn_id} {plan_instance_id}")
+def callback(results, conn_id, plan_id, plan_instance_id):
+    print(f"Success callback: {conn_id} {plan_id} {plan_instance_id}")
     for db in get_db():
-        ...
-    # plan = (
-    #     db.query(m.Plan)
-    #     .filter(
-    #         m.Connection.id == conn_id, m.Plan.id == plan_instance.plan_id,
-    #     )
-    #     .one()
-    # )
-    # update_status(plan, status, db)
-    # update_status(plan_instance, status, db)
+
+        plan = (
+            db.query(m.Plan)
+            .filter(m.Connection.id == conn_id, m.Plan.id == plan_id,)
+            .one()
+        )
+
+        plan_instance = (
+            db.query(m.PlanInstance)
+            .filter(
+                m.Connection.id == conn_id,
+                m.Plan.id == plan_id,
+                m.PlanInstance.id == plan_instance_id,
+            )
+            .one()
+        )
+        update_status(plan, "success", db)
+        update_status(plan_instance, "success", db)
 
 
 @celery_app.task
-def on_chord_error(task_id, conn_id, plan_instance_id):
-    print(f"Error callback: {conn_id} {plan_instance_id}")
+def on_chord_error(task_id, conn_id, plan_id, plan_instance_id):
+    print(f"Error callback: {conn_id} {plan_id}, {plan_instance_id}")
+    for db in get_db():
+        plan = (
+            db.query(m.Plan)
+            .filter(m.Connection.id == conn_id, m.Plan.id == plan_id,)
+            .one()
+        )
+
+        plan_instance = (
+            db.query(m.PlanInstance)
+            .filter(
+                m.Connection.id == conn_id,
+                m.Plan.id == plan_id,
+                m.PlanInstance.id == plan_instance_id,
+            )
+            .one()
+        )
+        update_status(plan, "error", db)
+        update_status(plan_instance, "error", db)
 
 
 @celery_app.task(acks_late=True)
@@ -67,9 +81,9 @@ def start(conn_id: int, plan_instance_id: int):
         packs: List[List[Table]] = get_table_packs(
             connection, schemas, plan_instance.worker_count
         )
-
-        cb = callback.s(conn_id, plan_instance_id).on_error(
-            on_chord_error.s(conn_id, plan_instance_id)
+        plan_id: int = plan_instance.plan_id
+        cb = callback.s(conn_id, plan_id, plan_instance_id).on_error(
+            on_chord_error.s(conn_id, plan_id, plan_instance_id)
         )
         chord(
             [

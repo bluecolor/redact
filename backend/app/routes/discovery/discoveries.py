@@ -69,6 +69,35 @@ async def get_discoveries_group_by_rule(
 
 
 @router.get(
+    "/connections/{conn_id}/discovery/plans/{plan_id}/instances/{plan_instance_id}/rules/{rule_id}/discoveries",
+    tags=["Discoveries"],
+    response_model=Page[s.DiscoveryOut],
+)
+async def get_discoveries_for_rule(
+    conn_id: int,
+    plan_id,
+    plan_instance_id: int,
+    rule_id: Optional[int] = None,
+    db: Session = Depends(get_db),
+    params: Params = Depends(),
+):
+    disvcoveries = (
+        db.query(models.Discovery)
+        .outerjoin(models.Rule)
+        .outerjoin(models.PlanInstance)
+        .outerjoin(models.Plan)
+        .outerjoin(models.Connection)
+        .filter(
+            models.Connection.id == conn_id,
+            models.Plan.id == plan_id,
+            models.PlanInstance.id == plan_instance_id,
+            models.Rule.id == rule_id,
+        )
+    )
+    return paginate(disvcoveries, params)
+
+
+@router.get(
     "/connections/{conn_id}/discovery/plans/{plan_id}/instances/{plan_instance_id}/discoveries",
     tags=["Discoveries"],
     response_model=Page[s.DiscoveryOut],

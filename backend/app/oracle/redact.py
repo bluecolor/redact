@@ -192,6 +192,27 @@ def get_policies(
     return parse_obj_as(List[s.PolicyOut], queryall(connection, query))
 
 
+def get_policies_for_tables(
+    connection: models.Connection, tables: List[ms.Table]
+) -> List[s.PolicyOut]:
+    query = q.redaction_policies_for_tables(tables)
+    return parse_obj_as(List[s.PolicyOut], queryall(connection, query))
+
+
+def get_expressions_in_columns(
+    connection: models.Connection, columns: List[ms.ColumnIn]
+) -> List[s.ExpressionOut]:
+    query = q.redaction_expressions_in_columns(columns)
+    return parse_obj_as(List[s.ExpressionOut], queryall(connection, query))
+
+
+def get_columns_in_columns(
+    connection: models.Connection, columns: List[ms.ColumnIn]
+) -> List[s.ColumnOut]:
+    query = q.redaction_columns_in_columns(columns)
+    return parse_obj_as(List[s.ColumnOut], queryall(connection, query))
+
+
 def get_policy(
     connection: models.Connection,
     object_owner: str,

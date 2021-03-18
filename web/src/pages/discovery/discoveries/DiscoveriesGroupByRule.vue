@@ -3,32 +3,11 @@
   .bg-white.empty.w-full(v-if="isDiscoveriesEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
     .project-logo.flex.justify-center.mt-10.w-full()
-      svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")
+      svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .connections.gap-y-3.flex.flex-col.w-full
-        t-card.card(v-for="d in discoveries")
-          template(v-slot:header)
-            .flex.justify-between
-              .title
-                | {{d.rule.name}}
-              .actions.flex.justify-end
-                .btns.gap-x-3.flex(v-if="!isSpinner")
-                  router-link.icon-btn.las.la-info-circle(
-                    content="Details" v-tippy='{ placement : "top" }'
-                    :to="`/`"
-                  )
-                .spinner.lds-dual-ring(v-else)
-          template(v-slot:default)
-            .flex.justify-between
-              .flex.gap-x-3
-                t-tag(tag-name="span" variant="badge") Rule type: {{d.rule.type}}
-                t-tag(tag-name="span" variant="badge") Severity: {{d.rule.severity}}
-              .result
-                router-link(
-                  :to="`/connections/${connectionId}/discovery/plans/${planId}/instances/${planInstanceId}/rules/${d.rule.id}/discoveries`"
-                ) {{d.count}} findings
-
+        discovery-rule-card(v-for="d in discoveries" :d="d")
 </template>
 
 <script>
@@ -36,12 +15,13 @@
 import { mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 import { dateMixin } from '@/mixins'
+import DiscoveryRuleCard from '@/components/DiscoveryRuleCard'
 
 export default {
   mixins: [dateMixin],
   props: ['connectionId', 'planInstanceId', 'planId'],
   components: {
-    SvgIcon
+    SvgIcon, DiscoveryRuleCard
   },
   data () {
     return {

@@ -1,4 +1,6 @@
 from typing import Optional
+
+from app.models.schemas.metadata import Table
 from .base import BaseModel
 
 
@@ -42,3 +44,8 @@ class PolicyDisableIn(BaseModel):
     object_schema: str
     object_name: str
     policy_name: str
+
+
+class PolicyTableAnswer(BaseModel):
+    table: Table
+    policy: Optional[PolicyOut]

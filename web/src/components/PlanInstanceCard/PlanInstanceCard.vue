@@ -7,9 +7,9 @@ t-card.card
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
           .icon-btn.las.la-sync-alt(@click="onReload")
-          router-link.icon-btn.las.la-info-circle(
+          router-link.icon-btn.las.la-compass(
             content="Discoveries" v-tippy='{ placement : "top" }'
-            :to="`instances/${p.id}/discoveries-by-rule`")
+            :to="`/connections/${p.plan.connection.id}/discovery/plans/${p.plan.id}/instances/${p.id}/discoveries-by-rule`")
           .icon-btn.las.la-stop-circle(
             v-if="p.status==='running'"
             content="Stop" v-tippy='{ placement : "top" }'
@@ -25,15 +25,18 @@ t-card.card
       .flex.flex-col
         .start-date.text-gray-400
           | started {{fromNow(p.created_on)}}
-        .description
-          | {{p.description}}
-      .status
-        t-tag.p-1(
-          :class="{ 'bg-red-200': p.status==='error',\
-              'bg-blue-200': p.status==='running',\
-              'bg-green-200': p.status==='success'}"
-          tag-name="span" variant="badge"
-        ) {{p.status}}
+        .description.flex.flex-col.gap-y-2
+          .description {{p.description}}
+      .end.flex.flex-col.justify-between.gap-y-3
+        .status.flex.justify-end
+          t-tag.p-1(
+            :class="{ 'bg-red-200': p.status==='error',\
+                'bg-blue-200': p.status==='running',\
+                'bg-green-200': p.status==='success'}"
+            tag-name="span" variant="badge"
+          ) {{p.status}}
+        .flex.justify-end
+          | {{p.discoveries.length}} discoveries
 </template>
 
 <script>

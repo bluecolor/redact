@@ -1,4 +1,5 @@
 from typing import List
+import app.models.schemas.metadata as ms
 
 
 REDACTION_POLICIES = """
@@ -55,13 +56,21 @@ def redaction_policies(
         filters.append(f"object_owner = '{object_owner}'")
     if object_name:
         filters.append(f"object_name = '{object_name}'")
-    if object_name:
+    if policy_name:
         filters.append(f"policy_name = '{policy_name}'")
 
     if len(filters) == 0:
         return REDACTION_POLICIES
 
     return f"{REDACTION_POLICIES} where {' and '.join(filters)}"
+
+
+def redaction_policies_for_tables(tables: List[ms.Table]) -> str:
+    filters = [
+        f"(object_owner = '{t.owner}' and object_name = '{t.table_name}')"
+        for t in tables
+    ]
+    return f"{REDACTION_POLICIES} where {' or '.join(filters)}"
 
 
 def redaction_expressions(object_owner: str = None, object_name: str = None):
@@ -74,6 +83,22 @@ def redaction_expressions(object_owner: str = None, object_name: str = None):
         return REDACTION_EXPRESSIONS
 
     return f"{REDACTION_EXPRESSIONS} where {' and '.join(filters)}"
+
+
+def redaction_expressions_in_columns(columns: List[ms.ColumnIn]) -> str:
+    filters = [
+        f"(object_owner = '{c.owner}' and object_name='{c.table_name}' and column_name='{c.column_name}')"
+        for c in columns
+    ]
+    return f"{REDACTION_EXPRESSIONS} where {' and '.join(filters)}"
+
+
+def redaction_columns_in_columns(columns: List[ms.ColumnIn]) -> str:
+    filters = [
+        f"(object_owner = '{c.owner}' and object_name='{c.table_name}' and column_name='{c.column_name}')"
+        for c in columns
+    ]
+    return f"{REDACTION_COLUMNS} where {' and '.join(filters)}"
 
 
 def redaction_expression(name: str) -> str:

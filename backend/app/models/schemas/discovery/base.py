@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List, Any
 from datetime import datetime
 from app.models.schemas.base import Base, BaseModel
 
@@ -30,15 +30,16 @@ class Rule(Base):
     description: Optional[str]
 
 
-class PlanInstanceOut(Base):
-    plan: Plan
-    status: Optional[str]
-    worker_count: Optional[int]
-    sample_size: Optional[int]
-
-
 class Discovery(BaseModel):
     schema_name: str
     table_name: str
     column_name: Optional[str]
     rule: Rule
+
+
+class PlanInstanceOut(Base):
+    plan: Plan
+    status: Optional[str]
+    worker_count: Optional[int]
+    sample_size: Optional[int]
+    discoveries: Optional[Any]

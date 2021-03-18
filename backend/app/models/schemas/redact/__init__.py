@@ -12,5 +12,8 @@ from .policy import (
     PolicyCreateIn,
     PolicyEnableIn,
     PolicyDisableIn,
+    PolicyTableAnswer,
 )
 from .column import ColumnOut
+
+from .redact import ColumnAnswerOut

@@ -121,3 +121,18 @@ def run(conn_id: int, id: int, db: Session = Depends(get_db)):
     db.refresh(plan_instance)
     start.delay(conn_id, plan_instance.id)
     return s.PlanInstanceOut.from_orm(plan_instance)
+
+
+@router.get(
+    "/connections/{conn_id}/discovery/plans/{id}/last-instance",
+    response_model=s.PlanInstanceOut,
+)
+async def delete(conn_id: int, id: int, db: Session = Depends(get_db)):
+    plan_instance = (
+        db.query(models.PlanInstance)
+        .filter(models.Connection.id == conn_id, models.Plan.id == id)
+        .order_by(models.PlanInstance.created_on.desc())
+        .first()
+    )
+    return s.PlanInstanceOut.from_orm(plan_instance)
+
