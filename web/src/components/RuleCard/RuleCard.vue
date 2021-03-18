@@ -15,7 +15,8 @@ t-card.card
   template(v-slot:default)
     .flex.justify-between
       .start.flex.flex-col.gap-y-2
-        .expression.text-gray-600.overflow-ellipsis {{r.expression}}
+        .expression.text-gray-600.overflow-ellipsis.text-red-400
+          |{{r.expression}}
         .description.text-gray-400.overflow-ellipsis {{r.description}}
       .end.flex.flex-col.justify-end.gap-y-3
         .rule-type.flex.justify-end
