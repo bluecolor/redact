@@ -59,6 +59,9 @@ const actions = {
   },
   updatePolicy ({ commit, rootGetters }, payload) {
     return api.update(rootGetters['app/connectionId'], payload)
+  },
+  askPolicyTables ({ rootGetters }, payload) {
+    return api.askTables(rootGetters['app/connectionId'], payload)
   }
 }
 

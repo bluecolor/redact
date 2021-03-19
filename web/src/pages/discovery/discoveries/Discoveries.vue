@@ -7,20 +7,7 @@
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .connections.gap-y-3.flex.flex-col.w-full
-        t-card.card(v-for="d in discoveries")
-          template(v-slot:header)
-            .flex.justify-between
-              .title
-                | {{d.rule.name}}
-              .actions.flex.justify-end
-                .btns.gap-x-3.flex(v-if="!isSpinner")
-                  .icon-btn.las.la-info-circle(
-                    content="Delete" v-tippy='{ placement : "top" }'
-                    @click="onDelete()"
-                  )
-                .spinner.lds-dual-ring(v-else)
-          template(v-slot:default)
-            | {{d.schema_name}}.{{d.table_name}}.{{d.column_name}}
+        discoveries-table(v-for="d in discoveries" :d="d")
       .loading.p-10.w-full.flex.bg-white(v-if="isLoading && this.items.length > 0")
         | Loading....
 
@@ -31,12 +18,13 @@ import _ from 'lodash'
 import { mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 import { dateMixin } from '@/mixins'
+import DiscoveriesTable from '@/components/DiscoveriesTable'
 
 export default {
   mixins: [dateMixin],
   props: ['connectionId', 'planInstanceId'],
   components: {
-    SvgIcon
+    SvgIcon, DiscoveriesTable
   },
   data () {
     return {

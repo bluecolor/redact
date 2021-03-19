@@ -2,8 +2,10 @@
 t-card.card
   template(v-slot:header)
     .flex.justify-between
-      .title
-        | {{d.rule.name}}
+      .title.flex.gap-x-2.items-center
+        .las.la-ruler.text-2xl.text-gray-400
+        .text
+          | {{d.rule.name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
           router-link.icon-btn.las.la-info-circle(
@@ -29,6 +31,7 @@ t-card.card
         ) {{d.rule.severity}}
       .result
         router-link(
+          class="hover:underline"
           :to="`rules/${d.rule.id}/discoveries`"
         ) {{d.count}} findings
 

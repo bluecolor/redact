@@ -1,5 +1,5 @@
 .menu {
-  @apply ring-1 ring-black ring-opacity-5 shadow-md w-64
+  @apply ring-1 ring-black ring-opacity-5 shadow-md w-64 z-50
     rounded-md mt-3 absolute right-0 origin-top-right text-left text-gray-900;
 
   .item {

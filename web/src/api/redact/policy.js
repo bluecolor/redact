@@ -30,5 +30,8 @@ export default {
   },
   disable (connId, payload) {
     return request.put(`/connections/${connId}/redact/policies/disable`, payload)
+  },
+  askTables (connId, payload) {
+    return request.post(`/connections/${connId}/redact/policies/ask/tables`, payload)
   }
 }

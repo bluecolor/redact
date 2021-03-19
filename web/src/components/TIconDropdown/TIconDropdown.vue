@@ -1,5 +1,5 @@
 <template lang="pug">
-.t-icon-menu(:class="cls.wrapper")
+.t-icon-menu.relative(:class="cls.wrapper")
   button(
     @click="isOpen = true",
     :class="`${cls.button} ${cls.icon}`"

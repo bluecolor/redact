@@ -7,7 +7,7 @@
   .flex.justify-center.w-full(v-else)
     .body.w-full.flex.items-center.flex-col
       .discoveries.gap-y-3.flex.flex-col.w-full
-        discovery-card(v-for="d in items" :d="d")
+        discoveries-table(:d="items")
 </template>
 
 <script>
@@ -15,13 +15,13 @@
 import { mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 import { dateMixin, paginationMixin } from '@/mixins'
-import DiscoveryCard from '@/components/DiscoveryCard'
+import DiscoveriesTable from '@/components/DiscoveriesTable'
 
 export default {
   mixins: [dateMixin, paginationMixin],
   props: ['connectionId', 'planInstanceId', 'planId', 'ruleId'],
   components: {
-    SvgIcon, DiscoveryCard
+    SvgIcon, DiscoveriesTable
   },
   data () {
     return {
