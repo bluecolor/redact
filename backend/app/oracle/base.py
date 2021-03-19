@@ -9,17 +9,21 @@ def connect(connection: models.Connection) -> Any:
     )
 
 
-def fetchall(cursor):
-    columns = [col[0].lower() for col in cursor.description]
+def fetchall(cursor, lower_keys=True):
+    columns = [
+        col[0].lower() if lower_keys else col[0] for col in cursor.description
+    ]
     rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
     return rows
 
 
-def queryall(connection: models.Connection, query: str) -> List[dict]:
+def queryall(
+    connection: models.Connection, query: str, lower_keys=True
+) -> List[dict]:
     with connect(connection=connection) as conn:
         cursor = conn.cursor()
         cursor.execute(query)
-        result = fetchall(cursor=cursor)
+        result = fetchall(cursor=cursor, lower_keys=lower_keys)
         cursor.close()
     return result
 

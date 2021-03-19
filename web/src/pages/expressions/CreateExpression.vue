@@ -1,14 +1,22 @@
 <template lang="pug">
-.flex.justify-center.flex-col
+.relative.flex.justify-center.flex-col
+  expression-items(
+    @close="isExpressionItems=false"
+    v-if="isExpressionItems"
+    :items="expressionItems"
+    @add="onAddItemToExpression"
+    @remove="onRemoveItemFromExpression"
+  )
   t-card
     template(v-slot:default)
       form(autocomplete="off" @submit="onSumbit")
         .form-item
           t-input-group(label='Name', required)
             t-input(v-model="payload.policy_expression_name" required autofocus)
-        .form-item
+        .form-item.relative.expression
           t-input-group(label='Expression', required)
             t-textarea(v-model="payload.expression" required)
+          .tabulate.icon-btn.las.la-table(v-if="canTabulate" @click="onTabulate")
         .form-item
           t-input-group(label='Description', required)
             t-textarea(v-model="payload.policy_expression_description")
@@ -25,11 +33,14 @@
 
 import { mapActions } from 'vuex'
 import SimpleSpinner from '@/components/loaders'
+import ExpressionItems from '@/components/ExpressionItems'
+import { expressionMixin } from '@/mixins'
 
 export default {
+  mixins: [expressionMixin],
   props: ['connectionId'],
   components: {
-    SimpleSpinner
+    SimpleSpinner, ExpressionItems
   },
   data () {
     return {
@@ -37,7 +48,7 @@ export default {
       isValid: false,
       payload: {
         policy_expression_name: '',
-        expression: '',
+        expression: "sys(*) in ('a', 'b')",
         policy_expression_description: ''
       }
     }
@@ -63,4 +74,11 @@ export default {
 </script>
 
 <style lang="postcss">
+.expression .tabulate {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 24px;
+  @apply text-gray-300 hover:text-gray-600
+}
 </style>

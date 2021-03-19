@@ -22,7 +22,8 @@ import {
   TTable,
   TTag,
   TDatepicker,
-  TToggle
+  TToggle,
+  TDialog
 } from 'vue-tailwind/dist/components'
 import VueTippy, { TippyComponent } from 'vue-tippy'
 
@@ -43,6 +44,7 @@ const settings = {
   TRadio,
   TDatepicker,
   TToggle,
+  TDialog,
   't-tag': {
     component: TTag,
     props: {

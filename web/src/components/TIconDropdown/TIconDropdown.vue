@@ -8,7 +8,7 @@
   .fixed.inset-0(v-if="isOpen", @click="isOpen = false", tabindex="-1")
   div.bg-white(v-if="isOpen" :class="cls.menu")
     template(v-if="!loading && items.length > 0" v-for="i in items")
-      div(:class="cls.menuItem" @click="onItemClick(i)")
+      div(:class="cls.menuItem + (i.disabled ? ' disabled' : '')" @click="onItemClick(i)")
         div(v-if="i.icon" :class="`${cls.itemIcon} ${i.icon}`")
         .text-base.block.px-4.py-2.leading-tight {{i[displayProp]}}
     t-simple-spinner(v-if="loading")
@@ -62,5 +62,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="postcss">
+.t-icon-menu .disabled {
+  @apply text-gray-400 hover:bg-white cursor-not-allowed;
+}
 </style>

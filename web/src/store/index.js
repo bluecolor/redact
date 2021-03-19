@@ -10,6 +10,7 @@ import column from './modules/redact/column'
 import expression from './modules/redact/expression'
 import func from './modules/redact/func'
 import policy from './modules/redact/policy'
+import redaction from './modules/redact/redaction'
 
 import discovery from './modules/discovery/discovery'
 import planInstance from './modules/discovery/planInstance'
@@ -34,6 +35,7 @@ export default new Vuex.Store({
     expression,
     app,
     md,
+    redaction,
     discovery,
     planInstance,
     plan,

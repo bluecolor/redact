@@ -19,7 +19,7 @@ def ask_columns(
 ):
     connection = db.query(models.Connection).get(conn_id)
     expressions = redact.get_expressions_in_columns(connection, columns)
-    columns = redact.get_columns_in_columns(connection, columns)
+    red_columns = redact.get_columns_in_columns(connection, columns)
     answers: List[s.ColumnAnswerOut] = []
 
     for c in columns:
@@ -27,7 +27,7 @@ def ask_columns(
             owner=c.owner, table_name=c.table_name, column_name=c.column_name
         )
         answer.column = pydash.find(
-            columns,
+            red_columns,
             lambda x: x.object_owner == c.owner
             and x.object_name == c.table_name
             and x.column_name == c.column_name,

@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import relationship
 from sqlalchemy import (
     func,
@@ -9,7 +8,7 @@ from sqlalchemy import (
     Integer,
     String,
     DateTime,
-    Text
+    Text,
 )
 
 from .base import Base
@@ -23,7 +22,9 @@ class Discovery(Base):
     table_name = Column(String(128))
     column_name = Column(String(128))
 
-    plan_instance_id = Column(Integer, ForeignKey("plan_instances.id"), nullable=True)
+    plan_instance_id = Column(
+        Integer, ForeignKey("plan_instances.id"), nullable=True
+    )
     plan_instance = relationship("PlanInstance", back_populates="discoveries")
 
     rule_id = Column(Integer, ForeignKey("rules.id"))

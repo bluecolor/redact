@@ -96,7 +96,7 @@ import { mapActions, mapGetters } from 'vuex'
 import TSimpleSpinner from '@/components/loaders'
 
 export default {
-  props: ['connectionId'],
+  props: ['connectionId', 'object_schema', 'object_name', 'column_name'],
   components: {
     TSimpleSpinner
   },
@@ -109,9 +109,9 @@ export default {
       columns: [],
       tables: [],
       payload: {
-        object_schema: '',
-        object_name: '',
-        column_name: '',
+        object_schema: this.object_schema,
+        object_name: this.object_name,
+        column_name: this.column_name,
         policy_name: '',
         function_type: undefined,
         function_parameters: undefined,
@@ -173,11 +173,21 @@ export default {
   },
   created () {
     this.isSpinner = true
-    Promise.all([
+    const promises = [
       this.getObjectSchemas(),
       this.getFunctionTypes(),
       this.getFunctionParameters(),
-      this.getCategories()]).finally(() => { this.isSpinner = false })
+      this.getCategories()
+    ]
+
+    if (this.object_name) {
+      promises.push(this.onOwnerSelect(this.object_schema))
+    }
+    if (this.column_name) {
+      promises.push(this.onTableSelect(this.object_name))
+    }
+
+    Promise.all(promises).finally(() => { this.isSpinner = false })
   }
 }
 </script>

@@ -6,6 +6,9 @@ from app.models.schemas.metadata import ColumnIn
 from .base import ColumnOut, Expression
 
 
-class ColumnAnswerOut(ColumnOut):
+class ColumnAnswerOut(BaseModel):
+    owner: str
+    table_name: str
+    column_name: str
     column: Optional[ColumnOut]
     expression: Optional[Expression]

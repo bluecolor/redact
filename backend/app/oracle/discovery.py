@@ -81,7 +81,7 @@ def search_table_data(
     print(f"d => {table.owner}.{table.table_name}")
     results: List[dict] = []
     try:
-        results = queryall(connection, query)
+        results = queryall(connection, query, lower_keys=False)
     except:
         yield SearchResult(hit=False)
 
