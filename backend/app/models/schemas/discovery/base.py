@@ -30,6 +30,14 @@ class Rule(Base):
     description: Optional[str]
 
 
+class RuleExport(BaseModel):
+    name: str
+    type: str
+    severity: Optional[str]
+    expression: str
+    description: Optional[str]
+
+
 class Discovery(BaseModel):
     schema_name: str
     table_name: str

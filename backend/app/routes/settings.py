@@ -6,12 +6,14 @@ from sqlalchemy.orm import Session
 import app.models.orm as models
 from app.models.orm.category import Category
 import app.models.schemas as s
-from app.models.schemas.redact import CategoryExportOut
+from app.models.schemas.redact import CategoryOut
+from app.models.schemas.discovery import PlanOut, RuleOut
 from .base import router
 from app.database import get_db
 from app.oracle import redact
 from fastapi.responses import FileResponse
 import pydash
+from fastapi.encoders import jsonable_encoder
 
 
 @router.post("/connections/{conn_id}/settings/export")
@@ -39,8 +41,22 @@ def export(conn_id: int, payload: s.ExportIn, db: Session = Depends(get_db)):
             result["policies"].append(policy)
     if "categories" in payload.options:
         result["categories"] = [
-            CategoryExportOut.from_orm(c).dict()
+            CategoryOut.from_orm(c).dict()
             for c in db.query(models.Category)
+            .filter(models.Connection.id == conn_id)
+            .all()
+        ]
+    if "plans" in payload.options:
+        result["plans"] = [
+            PlanOut.from_orm(p).dict()
+            for p in db.query(models.Plan)
+            .filter(models.Connection.id == conn_id)
+            .all()
+        ]
+    if "rules" in payload.options:
+        result["rules"] = [
+            RuleOut.from_orm(r).dict()
+            for r in db.query(models.Rule)
             .filter(models.Connection.id == conn_id)
             .all()
         ]
@@ -48,7 +64,7 @@ def export(conn_id: int, payload: s.ExportIn, db: Session = Depends(get_db)):
     with tempfile.NamedTemporaryFile(
         prefix=conn.name, suffix="_export.json", mode="w", delete=False
     ) as handler:
-        handler.write(json.dumps(result, indent=4))
+        handler.write(json.dumps(jsonable_encoder(result), indent=4))
         name = handler.name
 
     return FileResponse(name)

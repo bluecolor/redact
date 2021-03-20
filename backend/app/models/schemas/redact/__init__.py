@@ -2,7 +2,6 @@ from .category import (
     CategoryCreateIn,
     CategoryOut,
     CategoryUpdateIn,
-    CategoryExportOut,
 )
 from .expression import (
     ExpressionApplyIn,
