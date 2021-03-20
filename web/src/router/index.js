@@ -20,7 +20,7 @@ import Expressions, {
 import Categories, { EditCategory, CreateCategory } from '@/pages/redaction/categories'
 import Login from '@/pages/auth'
 import SettingsLayout from '@/pages/settings'
-import ExportImportLayout, { Export } from '@/pages/settings/export-import'
+import ExportImportLayout, { Export, Import } from '@/pages/settings/export-import'
 
 Vue.use(VueRouter)
 
@@ -74,10 +74,17 @@ const routes = [
             component: ExportImportLayout,
             redirect: '/connections/:connectionId/settings/export-import/export',
             children: [{
+              name: 'exportSettings',
               path: '/connections/:connectionId/settings/export-import/export',
               props: true,
               component: Export,
               meta: { group: 'export-import', title: 'Export' }
+            }, {
+              name: 'importSettings',
+              path: '/connections/:connectionId/settings/export-import/import',
+              props: true,
+              component: Import,
+              meta: { group: 'export-import', title: 'Import' }
             }]
           }]
         }, {

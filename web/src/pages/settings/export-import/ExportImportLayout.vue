@@ -7,7 +7,7 @@
           t-radio(name='options' value='export'  v-model="ei")
           span.ml-2.text-sm Export
         label.flex.items-center.ml-2.cursor-pointer
-          t-radio(name='options' value='category' v-model="ei")
+          t-radio(name='options' value='import' v-model="ei")
           span.ml-2.text-sm Import
   .body
     router-view
@@ -16,16 +16,24 @@
 <script>
 
 export default {
+  props: ['connectionId'],
   data () {
     return {
-      ei: 'export'
+      ei: undefined
     }
   },
-  components: {
-  },
-  methods: {
-  },
   watch: {
+    ei (v, o) {
+      if (!o) { return }
+      const path = `/connections/${this.connectionId}/settings/export-import/${v}`
+      this.$router.push({ path })
+    }
+  },
+  created () {
+    switch (this.$route.name) {
+      case 'exportSettings': this.ei = 'export'; break
+      case 'importSettings': this.ei = 'import'; break
+    }
   }
 }
 </script>
