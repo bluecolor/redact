@@ -1,5 +1,9 @@
 <template lang="pug">
 .flex.justify-center.flex-col
+  regexp-items(
+    @close="isRegexpItems=false"
+    v-if="isRegexpItems"
+  )
   t-card
     template(v-slot:default)
       form(autocomplete="off" @submit="onSubmit")
@@ -22,9 +26,10 @@
               value-attribute='value',
               text-attribute="text"
             )
-        .form-item
+        .form-item.relative.expression
           t-input-group(label='Expression', required)
             t-textarea(v-model="payload.expression" required)
+          .regexp-items.icon-btn.las.la-bookmark(@click="isRegexpItems=true")
         .form-item
           t-input-group(label='Description', required)
             t-textarea(v-model="payload.description")
@@ -43,17 +48,19 @@
 import { mapActions } from 'vuex'
 import SimpleSpinner from '@/components/loaders'
 import ruleMixin from './ruleMixin'
+import RegexpItems from '@/components/RegexpItems'
 
 export default {
   mixins: [ruleMixin],
   props: ['connectionId'],
   components: {
-    SimpleSpinner
+    SimpleSpinner, RegexpItems
   },
   data () {
     return {
       isSpinner: false,
       isValid: false,
+      isRegexpItems: false,
       payload_: {
         name: '',
         type: 'metadata',
@@ -93,4 +100,11 @@ export default {
 </script>
 
 <style lang="postcss">
+.expression .regexp-items {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 24px;
+  @apply text-gray-300 hover:text-gray-600
+}
 </style>

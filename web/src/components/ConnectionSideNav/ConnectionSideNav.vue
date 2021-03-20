@@ -49,6 +49,12 @@ export default {
         title: 'Plan Runs',
         group: 'planInstances',
         icon: 'las la-shipping-fast'
+      }, { category: true, title: 'Settings' },
+      {
+        path: `/connections/${this.connectionId}/settings/export-import`,
+        title: 'Export/Import',
+        group: 'export-import',
+        icon: 'las la-share'
       }]
     }
   },

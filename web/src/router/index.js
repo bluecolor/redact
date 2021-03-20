@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MainLayout, { ConnectionLayout, SettingsLayout } from '@/layouts'
+import MainLayout, { ConnectionLayout, SettingsLayout as AppSettingsLayout } from '@/layouts'
 import Home from '@/pages/Home.vue'
-import Connections, { CreateConnection, EditConnection } from '@/pages/settings/connections'
+import Connections, { CreateConnection, EditConnection } from '@/pages/appsettings/connections'
 import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
 import Plans, { CreatePlan, EditPlan } from '@/pages/discovery/plans'
 import PlanInstances, { AllPlanInstances } from '@/pages/discovery/plan-instances'
@@ -12,13 +12,15 @@ import Policies, {
   CreatePolicy,
   EditPolicy,
   Columns as RedactionColumns
-} from '@/pages/policies'
+} from '@/pages/redaction/policies'
 import Expressions, {
   ApplyExpressionToColumn as EApplyExpressionToColumn,
   CreateExpression, EditExpression
-} from '@/pages/expressions'
-import Categories, { EditCategory, CreateCategory } from '@/pages/categories'
+} from '@/pages/redaction/expressions'
+import Categories, { EditCategory, CreateCategory } from '@/pages/redaction/categories'
 import Login from '@/pages/auth'
+import SettingsLayout from '@/pages/settings'
+import ExportImportLayout, { Export } from '@/pages/settings/export-import'
 
 Vue.use(VueRouter)
 
@@ -34,7 +36,7 @@ const routes = [
       { name: 'home', path: '', component: Home },
       {
         path: '/settings',
-        component: SettingsLayout,
+        component: AppSettingsLayout,
         children: [
           {
             name: 'createConnection',
@@ -62,6 +64,22 @@ const routes = [
         component: ConnectionLayout,
         redirect: '/connections/:connectionId/expressions',
         children: [{
+          path: '/connections/:connectionId/settings',
+          props: true,
+          component: SettingsLayout,
+          redirect: '/connections/:connectionId/settings/export-import',
+          children: [{
+            path: '/connections/:connectionId/settings/export-import',
+            props: true,
+            component: ExportImportLayout,
+            redirect: '/connections/:connectionId/settings/export-import/export',
+            children: [{
+              path: '/connections/:connectionId/settings/export-import/export',
+              props: true,
+              component: Export
+            }]
+          }]
+        }, {
           name: 'redactionColumns',
           path: '/connections/:connectionId/policies/columns',
           props: true,
@@ -138,7 +156,7 @@ const routes = [
           path: '/connections/:connectionId/discovery/rules/create',
           component: CreateRule,
           props: true,
-          meta: { title: 'CreateRule', group: 'rules' }
+          meta: { title: 'Create Rule', group: 'rules' }
         }, {
           name: 'editRule',
           path: '/connections/:connectionId/discovery/rules/:id',

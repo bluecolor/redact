@@ -25,12 +25,12 @@
           .flex.justify-between.items-center
             t-simple-spinner(v-if="isSpinner")
             .flex.gap-x-3(v-else class="w-1/2")
-              t-button(type="submit" value="submit" variant="secondary")
+              t-button(type="submit" value="submit")
                 span Save
-              t-button(@click="onTest" variant="secondary")
+              t-button(@click="onTest" type="button" variant="secondary")
                 span Test
             .end
-              t-button(@click="onCancel" variant="error")
+              t-button(@click="onCancel" type="button" variant="error")
                 | Close
 </template>
 

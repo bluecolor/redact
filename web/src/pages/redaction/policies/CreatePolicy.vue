@@ -39,10 +39,10 @@
               required
             )
         .flex
-          label.flex.items-center
+          label.flex.items-center.cursor-pointer
             t-radio(name='options' value='custom'  v-model="method")
             span.ml-2.text-sm Custom
-          label.flex.items-center.ml-2
+          label.flex.items-center.ml-2.cursor-pointer
             t-radio(name='options' value='category' v-model="method")
             span.ml-2.text-sm From category
         .flex.flex-col.gap-y-5(v-if="method==='category'")
