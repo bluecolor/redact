@@ -17,6 +17,8 @@ import planInstance from './modules/discovery/planInstance'
 import plan from './modules/discovery/plan'
 import rule from './modules/discovery/rule'
 
+import impexp from './modules/settings/impexp'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -39,6 +41,7 @@ export default new Vuex.Store({
     discovery,
     planInstance,
     plan,
-    rule
+    rule,
+    impexp
   }
 })

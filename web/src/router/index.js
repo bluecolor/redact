@@ -76,7 +76,8 @@ const routes = [
             children: [{
               path: '/connections/:connectionId/settings/export-import/export',
               props: true,
-              component: Export
+              component: Export,
+              meta: { group: 'export-import', title: 'Export' }
             }]
           }]
         }, {

@@ -23,7 +23,8 @@ import {
   TTag,
   TDatepicker,
   TToggle,
-  TDialog
+  TDialog,
+  TCheckboxGroup
 } from 'vue-tailwind/dist/components'
 import VueTippy, { TippyComponent } from 'vue-tippy'
 
@@ -45,6 +46,7 @@ const settings = {
   TDatepicker,
   TToggle,
   TDialog,
+  TCheckboxGroup,
   't-tag': {
     component: TTag,
     props: {
