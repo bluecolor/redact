@@ -6,11 +6,13 @@ const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
 
 const state = {
-  access_token: undefined
+  access_token: undefined,
+  current_user: {}
 }
 
 const getters = {
-  access_token: state => state.access_token
+  access_token: state => state.access_token,
+  current_user: state => state.current_user
 }
 
 const actions = {
