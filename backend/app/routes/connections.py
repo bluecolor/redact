@@ -69,9 +69,8 @@ def test_with_id(id: int, db: Session = Depends(get_db)):
     )
     return ping(connection)
 
+
 @router.post("/connections/test", response_model=bool)
 def test_with_payload(connection: schemas.ConnectionTestIn):
     conn: models.Connection = models.Connection(**connection.dict())
     return ping(conn)
-
-

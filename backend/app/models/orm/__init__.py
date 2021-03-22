@@ -5,3 +5,4 @@ from .rule import Rule
 from .plan import Plan
 from .plan_instance import PlanInstance
 from .discovery import Discovery
+from .setting import Setting

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import MainLayout, { ConnectionLayout, SettingsLayout as AppSettingsLayout } from '@/layouts'
 import Home from '@/pages/Home.vue'
 import Connections, { CreateConnection, EditConnection } from '@/pages/appsettings/connections'
+import Users, { CreateUser, EditUser } from '@/pages/appsettings/users'
 import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
 import Plans, { CreatePlan, EditPlan } from '@/pages/discovery/plans'
 import PlanInstances, { AllPlanInstances } from '@/pages/discovery/plan-instances'
@@ -42,19 +43,35 @@ const routes = [
             name: 'createConnection',
             path: 'connections/create',
             component: CreateConnection,
-            meta: { title: 'Create Connection' }
+            meta: { title: 'Create Connection', group: 'connections' }
           },
           {
             name: 'editConnection',
             path: 'connections/:id',
             component: EditConnection,
             props: true,
-            meta: { title: 'Edit Connection' }
+            meta: { title: 'Edit Connection', group: 'connections' }
           }, {
             name: 'connections',
             path: 'connections',
             component: Connections,
-            meta: { title: 'Connections' }
+            meta: { title: 'Connections', group: 'connections' }
+          }, {
+            name: 'users',
+            path: 'users',
+            component: Users,
+            meta: { title: 'Users', group: 'users' }
+          }, {
+            name: 'createUser',
+            path: 'users/create',
+            component: CreateUser,
+            meta: { title: 'Create User', group: 'users' }
+          }, {
+            name: 'editUser',
+            path: 'users/:id',
+            props: true,
+            component: EditUser,
+            meta: { title: 'Edit User', group: 'users' }
           }
         ]
       }, {

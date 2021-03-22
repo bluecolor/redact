@@ -1,9 +1,9 @@
 <template lang="pug">
-.w-full.flex.items-center.flex-col.py-10
+.w-full.flex.items-center.flex-col
   .w-full.bg-white.empty.border-dashed(v-if="isConnectionsEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
     .project-logo.flex.justify-center.mt-10(class="h-1/4 ")
-      svg-icon(name="cloud-computing", addClass="fill-current text-gray-300 w-24 h-24")
+      svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
     .flex.justify-center.mt-10
       t-button.mt-10.w-full.text-center(tagName="a" :href="`/settings/connections/create`")
         | Create New Connection

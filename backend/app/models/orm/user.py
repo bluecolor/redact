@@ -22,6 +22,8 @@ class User(Base):
     username = Column(String(255))
     password_hash = Column(String)
 
+    disabled = Column(Boolean, default=False)
+
     def __init__(self, **kw):
         super().__init__(**kw)
 

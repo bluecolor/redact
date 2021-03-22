@@ -16,8 +16,9 @@ import discovery from './modules/discovery/discovery'
 import planInstance from './modules/discovery/planInstance'
 import plan from './modules/discovery/plan'
 import rule from './modules/discovery/rule'
-
 import impexp from './modules/settings/impexp'
+import user from './modules/user'
+import auth from './modules/auth'
 
 Vue.use(Vuex)
 
@@ -42,6 +43,8 @@ export default new Vuex.Store({
     planInstance,
     plan,
     rule,
-    impexp
+    impexp,
+    user,
+    auth
   }
 })

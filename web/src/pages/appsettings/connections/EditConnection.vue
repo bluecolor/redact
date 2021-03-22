@@ -1,8 +1,8 @@
 <template lang="pug">
-.flex.justify-center.flex-col.pt-10
+.flex.justify-center.flex-col
   t-card
     template(v-slot:default)
-      form.mt-10(autocomplete="off" @submit="onSubmit")
+      form(autocomplete="off" @submit="onSubmit")
         .form-item
           t-input-group(label='Name', required)
             t-input(v-model="payload.name")

@@ -23,17 +23,27 @@ export default {
     }
   },
   watch: {
+    '$route.name' (v) {
+      this.setEI()
+    },
     ei (v, o) {
-      if (!o) { return }
+      if (!o || v === o) { return }
       const path = `/connections/${this.connectionId}/settings/export-import/${v}`
-      this.$router.push({ path })
+      if (path !== this.$route.path) {
+        this.$router.push({ path })
+      }
+    }
+  },
+  methods: {
+    setEI () {
+      switch (this.$route.name) {
+        case 'exportSettings': this.ei !== 'export' && (this.ei = 'export'); break
+        case 'importSettings': this.ei !== 'import' && (this.ei = 'import'); break
+      }
     }
   },
   created () {
-    switch (this.$route.name) {
-      case 'exportSettings': this.ei = 'export'; break
-      case 'importSettings': this.ei = 'import'; break
-    }
+    this.setEI()
   }
 }
 </script>

@@ -30,7 +30,6 @@ def get_object_owners(
     return md.get_object_owners(connection=conn)
 
 
-
 @router.get(
     "/connections/{conn_id}/metadata/columns",
     response_model=List[schemas.Column],

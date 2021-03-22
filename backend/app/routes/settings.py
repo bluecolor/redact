@@ -14,10 +14,13 @@ from app.oracle import redact
 from fastapi.responses import FileResponse
 import pydash
 from fastapi.encoders import jsonable_encoder
+from fastapi import FastAPI, File, UploadFile
 
 
 @router.post("/connections/{conn_id}/settings/export")
-def export(conn_id: int, payload: s.ExportIn, db: Session = Depends(get_db)):
+def export_settings(
+    conn_id: int, payload: s.ExportIn, db: Session = Depends(get_db)
+):
     conn = db.query(models.Connection).get(conn_id)
     result = {}
     if "expressions" in payload.options:
@@ -68,3 +71,29 @@ def export(conn_id: int, payload: s.ExportIn, db: Session = Depends(get_db)):
         name = handler.name
 
     return FileResponse(name)
+
+
+@router.post("/connections/{conn_id}/settings/import")
+async def import_settings(
+    conn_id: int,
+    ignore_errors: bool,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    conn = db.query(models.Connection).get(conn_id)
+    content = json.loads(await file.read())
+
+    result: dict = {}
+
+    if "expressions" in content:
+        result["expressions"] = []
+        for e in content["expressions"]:
+            try:
+                redact.create_policy_expression(conn, e)
+                result["expressions"].append(e)
+            except:
+                ...
+    if "policies" in content:
+        ...
+
+    return result

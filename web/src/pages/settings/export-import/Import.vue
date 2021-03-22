@@ -3,13 +3,13 @@ t-card
   form.flex.flex-col(autocomplete="off" @submit="onSumbit")
     .form-item
       t-input-group(label='File')
-        input(type="file")
+        input(type="file", name="file")
     .form-item
       t-input-group(label='Ignore errors')
         t-toggle(:checked="ignore_errors")
     .form-item.mt-5
       .flex.justify-between.items-center
-        t-simple-spinner(v-if="isSpinner")
+        .spinner.lds-dual-ring(v-if="isSpinner")
         .flex.gap-x-3(v-else class="w-1/2")
           t-button(type="submit" value="submit" text="Import")
         .end
@@ -22,6 +22,7 @@ import * as FilePond from 'filepond'
 import 'filepond/dist/filepond.min.css'
 
 export default {
+  props: ['connectionId'],
   components: {
   },
   data () {
@@ -34,13 +35,21 @@ export default {
   },
   methods: {
     ...mapActions('impexp', ['exportSettings']),
-    onCancel () {},
+    onCancel () {
+      window.history.back()
+    },
     handleFilePondInit () {
 
     },
     onSumbit (e) {
+      e.preventDefault()
+      this.pond.setOptions({
+        server: {
+          url: `http://localhost:8000/api/v1/connections/${this.connectionId}/settings/import?ignore_errors=${this.ignore_errors}`
+        }
+      })
       this.pond.processFile().then(file => {
-        // File has been processed
+        console.log(file)
       })
     }
   },
@@ -48,6 +57,7 @@ export default {
     const inputElement = document.querySelector('input[type="file"]')
     this.pond = FilePond.create(inputElement, {
       credits: false,
+      instantUpload: false,
       allowMultiple: false,
       required: true
     })

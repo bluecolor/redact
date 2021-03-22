@@ -7,20 +7,23 @@ from .base import Base
 
 class User(Base):
     name: str
-    email: EmailStr
-    phone_number: str
-    country_code: str
+    email: Optional[EmailStr]
+    username: str
+
+
+class UserOut(Base):
+    name: str
+    email: Optional[EmailStr]
+    username: str
 
 
 class UserCreateIn(BaseModel):
     name: str
     email: EmailStr
-    phone_number: str
-    country_code: str
+    username: str
 
 
 class UserUpdateIn(BaseModel):
     name: Optional[str]
     email: Optional[EmailStr]
-    phone_number: Optional[str]
-    country_code: Optional[str]
+    username: Optional[str]
