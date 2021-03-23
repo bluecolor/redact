@@ -2,7 +2,7 @@
 .flex.justify-center.flex-col
   t-card
     template(v-slot:default)
-      form(autocomplete="off" @submit="onCreate")
+      form(autocomplete="off" @submit="onSubmit")
         .form-item
           t-input-group(label='Name', required)
             t-input(v-model="payload.name" required autofocus)
@@ -72,7 +72,7 @@ export default {
     ...mapActions('rule', ['getRules']),
     ...mapActions('plan', ['createPlan']),
     ...mapActions('md', ['getSchemas']),
-    onCreate (e) {
+    onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
       const schemas = JSON.stringify(this.payload.schemas)

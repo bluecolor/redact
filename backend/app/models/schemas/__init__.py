@@ -9,3 +9,4 @@ from .metadata import Table, Column, ObjectOwner
 from .discovery import Rule
 from .settings import ExportIn
 from .auth import TokenOut
+from .app_settings import SettingIn, SettingOut

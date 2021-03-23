@@ -24,6 +24,7 @@ const actions = {
   },
   logout ({ commit }) {
     commit(LOGOUT)
+    return Promise.resolve()
   }
 }
 

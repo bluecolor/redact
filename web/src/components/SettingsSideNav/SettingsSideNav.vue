@@ -30,11 +30,6 @@ export default {
         group: 'users',
         icon: 'las la-user'
       }, {
-        path: '/settings/mail',
-        title: 'Mail',
-        group: 'mail',
-        icon: 'las la-envelope'
-      }, {
         path: '/settings/notifications',
         title: 'Notifications',
         group: 'notifications',

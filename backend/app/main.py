@@ -13,7 +13,15 @@ from starlette.responses import Response
 
 from app.app import app
 
-from app.routes import router, connections, users, metadata, settings, auth
+from app.routes import (
+    router,
+    connections,
+    users,
+    metadata,
+    settings,
+    auth,
+    app_settings,
+)
 from app.routes.discovery import plan_instances, plans, rules, discoveries
 
 from app.routes.redact import (

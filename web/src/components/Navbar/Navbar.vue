@@ -41,9 +41,13 @@ export default {
         icon: 'las la-plug',
         name: 'Connections'
       }, {
-        path: '/',
+        path: '/settings/users',
         icon: 'las la-user',
         name: 'Users'
+      }, {
+        path: '/settings/notifications',
+        icon: 'las la-bell',
+        name: 'Notifications'
       }]
     }
   },

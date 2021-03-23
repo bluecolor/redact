@@ -4,6 +4,8 @@ import MainLayout, { ConnectionLayout, SettingsLayout as AppSettingsLayout } fro
 import Home from '@/pages/Home.vue'
 import Connections, { CreateConnection, EditConnection } from '@/pages/appsettings/connections'
 import Users, { CreateUser, EditUser } from '@/pages/appsettings/users'
+import Notifications from '@/pages/appsettings/notifications'
+
 import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
 import Plans, { CreatePlan, EditPlan } from '@/pages/discovery/plans'
 import PlanInstances, { AllPlanInstances } from '@/pages/discovery/plan-instances'
@@ -39,6 +41,12 @@ const routes = [
         path: '/settings',
         component: AppSettingsLayout,
         children: [
+          {
+            name: 'notifications',
+            path: 'notifications',
+            component: Notifications,
+            meta: { title: 'Notifications', group: 'notifications' }
+          },
           {
             name: 'createConnection',
             path: 'connections/create',

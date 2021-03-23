@@ -7,6 +7,7 @@ import app.models.schemas as schemas
 from .base import router
 from app.database import get_db
 from app.oracle import ping
+from .base import get_current_active_user
 
 
 @router.post(
@@ -21,7 +22,10 @@ def create(request: schemas.ConnectionCreateIn, db: Session = Depends(get_db)):
 
 
 @router.get("/connections", response_model=List[schemas.Connection])
-def index(db: Session = Depends(get_db)):
+def index(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_active_user),
+):
     return db.query(models.Connection).all()
 
 
