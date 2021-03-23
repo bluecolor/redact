@@ -3,7 +3,7 @@
     .grid.grid-cols-3.gap-10.pa-10(class="w-6/12")
       t-card.text-center(header="John Doe")
         template(v-slot:default)
-          img(:src="img", alt="avatar")
+          img(:src="current_user.avatar_url", alt="avatar")
         template(v-slot:footer)
           t-button.w-full(text="Profile")
       t-card.text-center(header="Connections" :classes="card.classes")
@@ -42,7 +42,6 @@
 
 <script>
 
-import { v4 as uuidv4 } from 'uuid'
 import { mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 
@@ -53,7 +52,6 @@ export default {
   },
   data () {
     return {
-      img: `https://avatars.dicebear.com/4.5/api/identicon/${uuidv4()}.svg?r=50&m=15`,
       options: {},
       card: {
         classes: {
@@ -80,6 +78,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('auth', ['current_user']),
     ...mapGetters('connection', ['connections'])
   },
   methods: {

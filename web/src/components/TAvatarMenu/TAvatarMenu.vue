@@ -7,10 +7,6 @@
   )
     img(:src="img", alt="avatar" :class="classes.img")
   .fixed.inset-0(v-if="isOpen", @click="isOpen = false", tabindex="-1")
-  //- div.bg-white(v-if="isOpen" :class="classes.menuWrapper")
-  //-     template(v-for="i in items")
-  //-       .cursor-pointer(v-if="i !== '-'" :class="classes.menuItem" @click="onItemClick(i)") {{i.title}}
-  //-       div(v-if="i === '-'" :class="classes.separator")
   div.bg-white(v-if="isOpen" :class="classes.menuWrapper")
     template(v-if="items.length > 0" v-for="i in items")
       .cursor-pointer(v-if="i !== '-'"  :class="classes.menuItem" @click="onItemClick(i)")
@@ -54,6 +50,8 @@ export default {
         icon: 'las la-sign-out-alt'
       }]
     }
+  },
+  computed: {
   },
   methods: {
     onItemClick (i) {

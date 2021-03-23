@@ -1,4 +1,6 @@
 /* eslint-disable camelcase */
+
+import { v4 as uuidv4 } from 'uuid'
 import Cookies from 'js-cookie'
 import api from '@/api/auth'
 
@@ -7,7 +9,9 @@ const LOGOUT = 'LOGOUT'
 
 const state = {
   access_token: undefined,
-  current_user: {}
+  current_user: {
+    avatar_url: `https://avatars.dicebear.com/4.5/api/identicon/${uuidv4()}.svg?r=50&m=15`
+  }
 }
 
 const getters = {

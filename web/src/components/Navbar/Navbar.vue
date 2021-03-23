@@ -13,13 +13,19 @@ header
           .title.text-gray-500 {{_title}}
       .flex.items-center.pr-2.gap-x-4(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
         .icon-btn.las.la-search
+        .icon-btn.las.la-bell.danger.relative
+          t-tag(
+            style="color:red;position:absolute;top:-5px;right:-10px;padding-left:0.25rem;padding-right:0.25rem"
+            class="bg-red-100"
+            tag-name="span" variant="badge"
+          ) 13
         t-icon-dropdown(
           :classes="{icon: 'las la-plug'}"
           :emitValue="true" :items="connections", displayProp="name", valueProp="id" @select="onSelectConnection")
         t-icon-dropdown(
           :classes="{icon: 'las la-sliders-h'}"
           :emitValue="true" :items="settings", valueProp="path" @select="onSelectSetting")
-        t-avatar-menu
+        t-avatar-menu(:img="current_user.avatar_url")
 </template>
 
 <script>
@@ -52,6 +58,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('auth', ['current_user']),
     ...mapGetters('connection', ['connections']),
     ...mapGetters('app', ['connection', 'title']),
     connectionName () {
