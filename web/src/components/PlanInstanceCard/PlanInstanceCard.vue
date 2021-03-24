@@ -22,11 +22,13 @@ t-card.card
         .spinner.lds-dual-ring(v-else)
   template(v-slot:default)
     .body.flex.justify-between
-      .flex.flex-col
+      .flex.flex-col.gap-y-2
         .start-date.text-gray-400
           | started {{fromNow(p.created_on)}}
         .description.flex.flex-col.gap-y-2
           .description {{p.description}}
+        .progress
+          | {{progress}}
       .end.flex.flex-col.justify-between.gap-y-3
         .status.flex.justify-end
           t-tag.p-1(
@@ -36,10 +38,14 @@ t-card.card
             tag-name="span" variant="badge"
           ) {{p.status}}
         .flex.justify-end
-          | {{p.discoveries.length}} discoveries
+          router-link(
+            class="hover:underline"
+            :to="`/connections/${p.plan.connection.id}/discovery/plans/${p.plan.id}/instances/${p.id}/discoveries-by-rule`")
+            | {{p.discoveries.length}} discoveries
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import { mapActions } from 'vuex'
 import { dateMixin } from '@/mixins'
 
@@ -47,7 +53,25 @@ export default {
   mixins: [dateMixin],
   props: { p: { type: Object, default: () => {} } },
   data () {
-    return { isSpinner: false }
+    return {
+      isSpinner: false,
+      searchResult: {
+        hit: false,
+        table: {},
+        clear: function () {
+          this.hit = false
+          this.table = {}
+        }
+      }
+    }
+  },
+  computed: {
+    progress () {
+      if (this.searchResult?.table?.table_name) {
+        return `${this.searchResult?.table?.owner}.${this.searchResult.table.table_name}`
+      }
+      return ''
+    }
   },
   methods: {
     ...mapActions('planInstance', ['deletePlanInstance', 'stopPlanInstance', 'getPlanInstance']),
@@ -84,6 +108,34 @@ export default {
       }).finally(() => {
         this.isSpinner = false
       })
+    }
+  },
+  created () {
+    const plan_instance_id = this.p.id
+    const plan_id = this.p.plan.id
+    const conn_id = this.p.plan.connection_id
+    const channel = `ws/connections/${conn_id}/discovery/plans/${plan_id}/instances/${plan_instance_id}`
+    const ws = new WebSocket(`ws://localhost:8000/api/v1/${channel}`)
+    const sync = () => {
+      this.getPlanInstance({ planId: plan_id, id: plan_instance_id }).then(result => {
+        this.$emit('reload', result)
+      })
+    }
+    ws.onmessage = (message) => {
+      const { data } = message
+      try {
+        const { hit, table: { owner, table_name } } = JSON.parse(data)
+        this.searchResult = { ...this.searchResult, hit, table: { owner, table_name } }
+        if (hit) {
+          sync()
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    ws.onclose = () => {
+      this.searchResult.clear()
+      sync()
     }
   }
 

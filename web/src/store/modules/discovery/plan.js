@@ -8,6 +8,7 @@ const CREATE = 'CREATE'
 const UPDATE = 'UPDATE'
 const DELETE = 'DELETE'
 const SET_STATUS = 'SET_STATUS'
+const SET_PLAN = 'SET_PLAN'
 
 const state = {
   plans: []
@@ -26,6 +27,12 @@ const actions = {
   },
   getPlan ({ rootGetters }, id) {
     return api.getOne(rootGetters['app/connectionId'], id)
+  },
+  reloadPlan ({ commit, rootGetters }, id) {
+    return api.getOne(rootGetters['app/connectionId'], id).then(result => {
+      commit(SET_PLAN, result)
+      return result
+    })
   },
   createPlan ({ commit, rootGetters }, payload) {
     return api.create(rootGetters['app/connectionId'], payload).then(result => {
@@ -80,6 +87,15 @@ const mutations = {
   [SET_STATUS]: (state, { id, status }) => {
     const plan = _.find(state.plans, { id })
     if (plan) { plan.status = status }
+  },
+  [SET_PLAN]: (state, data) => {
+    const { id } = data
+    const i = _.findIndex(state.plans, { id })
+    if (i > -1) {
+      state.plans.splice(i, 1, data)
+    } else {
+      state.plans.push(data)
+    }
   }
 }
 

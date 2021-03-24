@@ -12,6 +12,9 @@ from app.models.schemas import Table, Rule
 import app.models.orm as m
 from app.oracle.discovery import search_tables
 from fastapi.encoders import jsonable_encoder
+from app.models.schemas.discovery import SearchResult
+import redis
+from app.settings.celery import REDIS_URL
 
 
 def update_status(p: Union[m.Plan, m.PlanInstance], status: str, db: Session):
@@ -88,7 +91,10 @@ def start(conn_id: int, plan_instance_id: int):
         chord(
             [
                 run.s(
-                    conn_id, plan_instance_id, json.dumps(pack, default=vars)
+                    conn_id,
+                    plan_id,
+                    plan_instance_id,
+                    json.dumps(pack, default=vars),
                 )
                 for pack in packs
             ]
@@ -97,8 +103,9 @@ def start(conn_id: int, plan_instance_id: int):
 
 @celery_app.task(acks_late=True)
 def run(
-    conn_id: int, plan_instance_id: int, tables_json: str,
+    conn_id: int, plan_id: int, plan_instance_id: int, tables_json: str,
 ):
+    redis_conn = redis.from_url(REDIS_URL)
     for db in get_db():
         connection = db.query(m.Connection).get(conn_id)
         plan_instance = (
@@ -115,6 +122,10 @@ def run(
             tables=tables,
             rules=[Rule.from_orm(r) for r in plan_instance.plan.rules],
         ):
+            channel = f"discovery:search:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
+            redis_conn.publish(
+                channel, json.dumps(jsonable_encoder(result.dict()))
+            )
             if result.hit:
                 d = result.discovery
                 discovery = m.Discovery(

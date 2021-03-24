@@ -66,10 +66,10 @@ def search_table_metadata(
             table_name=table.table_name,
             column_name=r["column_name"],
         )
-        yield sd.SearchResult(hit=True, discovery=discovery)
+        yield sd.SearchResult(hit=True, table=table, discovery=discovery)
 
     if len(results) == 0:
-        yield sd.SearchResult(hit=False)
+        yield sd.SearchResult(hit=False, table=table)
 
 
 def search_table_data(
@@ -83,7 +83,7 @@ def search_table_data(
     try:
         results = queryall(connection, query, lower_keys=False)
     except:
-        yield SearchResult(hit=False)
+        yield SearchResult(hit=False, table=table)
 
     for record in results:
         for col_name, is_match in record.items():
@@ -94,8 +94,8 @@ def search_table_data(
                     table_name=table.table_name,
                     column_name=col_name,
                 )
-                yield SearchResult(hit=True, discovery=discovery)
+                yield SearchResult(hit=True, table=table, discovery=discovery)
 
     if len(results) == 0:
-        yield SearchResult(hit=False)
+        yield SearchResult(hit=False, table=table)
 

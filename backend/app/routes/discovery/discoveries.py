@@ -1,6 +1,5 @@
 from sqlalchemy import func
 from typing import List, Optional, Union
-from arq.connections import ArqRedis
 from fastapi import Depends, WebSocket
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import outerjoin
@@ -12,9 +11,11 @@ from .base import router
 from app.database import get_db
 from app.oracle import redact
 from pydantic import parse_obj_as
-from arq.connections import ArqRedis, create_pool
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page, Params
+from app.settings.celery import REDIS_URL
+import aioredis
+import asyncio
 
 
 @router.get(
@@ -126,15 +127,21 @@ async def get_discoveries(
     return paginate(disvcoveries, params)
 
 
-@router.websocket("/ws/plans/instances")
-async def plan_runs(websocket: WebSocket):
-    ...
-    # await websocket.accept()
-    # redis: ArqRedis = await create_pool(redis_settings)
-    # res = await redis.subscribe('plan:run')
-    # ch = res[0]
+@router.websocket(
+    "/ws/connections/{conn_id}/discovery/plans/{plan_id}/instances/{plan_instance_id}"
+)
+async def plan_runs(
+    conn_id: int, plan_id: int, plan_instance_id: int, websocket: WebSocket
+):
+    await websocket.accept()
 
-    # while (await ch.wait_message()):
-    #     msg = await ch.get_json()
-    #     print("Got Message:", msg)
-    #     await websocket.send_json(msg)
+    async def reader(ch):
+        print("hello")
+        while await ch.wait_message():
+            msg = await ch.get_json()
+            await websocket.send_json(msg)
+
+    redis = await aioredis.create_redis(REDIS_URL)
+    address = f"discovery:search:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
+    res = await redis.subscribe(address)
+    await asyncio.ensure_future(reader(res[0]))

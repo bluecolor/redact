@@ -1,5 +1,5 @@
 from typing import List, Optional, Any
-from app.models.schemas import connection
+from app.models.schemas import Table
 from .base import Base, Rule, BaseModel, Discovery
 
 
@@ -17,4 +17,5 @@ class DiscoveryGroupByRuleOut(Base):
 
 class SearchResult(BaseModel):
     hit: bool
+    table: Optional[Table]
     discovery: Optional[Discovery]

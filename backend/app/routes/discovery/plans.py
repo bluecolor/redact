@@ -115,6 +115,9 @@ def run(conn_id: int, id: int, db: Session = Depends(get_db)):
         .filter(models.Connection.id == conn_id, models.Plan.id == id)
         .one()
     )
+    plan.status = "running"
+    db.add(plan)
+
     plan_instance: models.PlanInstance = plan.get_new_instance()
     db.add(plan_instance)
     db.commit()
@@ -127,7 +130,9 @@ def run(conn_id: int, id: int, db: Session = Depends(get_db)):
     "/connections/{conn_id}/discovery/plans/{id}/last-instance",
     response_model=s.PlanInstanceOut,
 )
-async def delete(conn_id: int, id: int, db: Session = Depends(get_db)):
+async def get_last_instance(
+    conn_id: int, id: int, db: Session = Depends(get_db)
+):
     plan_instance = (
         db.query(models.PlanInstance)
         .filter(models.Connection.id == conn_id, models.Plan.id == id)

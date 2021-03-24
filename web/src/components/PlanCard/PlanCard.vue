@@ -6,6 +6,7 @@ t-card.card
         | {{p.name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
+          .icon-btn.las.la-sync-alt(@click="onReload(p)")
           .icon-btn.las.la-play(
             v-if="p.rules.length > 0"
             content="Run plan" v-tippy='{ placement : "top" }'
@@ -48,14 +49,21 @@ export default {
   props: { p: { type: Object, default: () => {} } },
   data () {
     return {
-      isSpinner: false
+      isSpinner: false,
+      interval: undefined
     }
   },
   computed: {
     ...mapGetters('app', ['connectionId'])
   },
   methods: {
-    ...mapActions('plan', ['deletePlan', 'runPlan', 'getLastInstance']),
+    ...mapActions('plan', ['deletePlan', 'runPlan', 'getLastInstance', 'reloadPlan']),
+    onReload (p) {
+      this.$emit('reload', p)
+      const { id } = p
+      this.isSpinner = true
+      this.reloadPlan(id).finally(() => { this.isSpinner = false })
+    },
     onDelete (p) {
       this.isSpinner = true
       this.deletePlan(p.id).then(() => {
@@ -71,9 +79,10 @@ export default {
     onRun (plan) {
       const { id } = plan
       this.isSpinner = true
-      this.runPlan(id).then(result => {
+      this.runPlan(id).then(({ id }) => {
         this.$emit('run', plan)
         this.$toasted.success('Plan started')
+        this.triggerPlanChecker(id)
       }).catch(error => {
         console.log(error)
         this.$toasted.error('Error. Failed to start plan')
@@ -93,6 +102,14 @@ export default {
         console.log(error)
         this.$toasted.error('Errro. Failed to get last run.')
       }).finally(() => { this.isSpinner = false })
+    },
+    triggerPlanChecker () {
+      const { id } = this.p
+      this.interval = setInterval(() => {
+        this.reloadPlan(id).then((status) => {
+          if (status !== 'running') { clearInterval(this.interval) }
+        })
+      })
     }
   }
 }
