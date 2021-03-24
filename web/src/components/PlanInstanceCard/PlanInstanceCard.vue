@@ -117,25 +117,26 @@ export default {
     const channel = `ws/connections/${conn_id}/discovery/plans/${plan_id}/instances/${plan_instance_id}`
     const ws = new WebSocket(`ws://localhost:8000/api/v1/${channel}`)
     const sync = () => {
-      this.getPlanInstance({ planId: plan_id, id: plan_instance_id }).then(result => {
+      return this.getPlanInstance({ planId: plan_id, id: plan_instance_id }).then(result => {
         this.$emit('reload', result)
       })
     }
     ws.onmessage = (message) => {
       const { data } = message
       try {
-        const { hit, table: { owner, table_name } } = JSON.parse(data)
-        this.searchResult = { ...this.searchResult, hit, table: { owner, table_name } }
-        if (hit) {
+        const { done, hit, table } = JSON.parse(data)
+        if (done) {
           sync()
+          this.searchResult.clear()
+        } else {
+          this.searchResult = { ...this.searchResult, hit, table }
+          if (hit) {
+            sync()
+          }
         }
       } catch (e) {
         console.log(e)
       }
-    }
-    ws.onclose = () => {
-      this.searchResult.clear()
-      sync()
     }
   }
 

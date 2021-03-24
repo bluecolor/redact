@@ -13,8 +13,7 @@ import app.models.orm as m
 from app.oracle.discovery import search_tables
 from fastapi.encoders import jsonable_encoder
 from app.models.schemas.discovery import SearchResult
-import redis
-from app.settings.celery import REDIS_URL
+from app.redis import redis_conn as redis
 
 
 def update_status(p: Union[m.Plan, m.PlanInstance], status: str, db: Session):
@@ -46,6 +45,8 @@ def callback(results, conn_id, plan_id, plan_instance_id):
         )
         update_status(plan, "success", db)
         update_status(plan_instance, "success", db)
+        channel = f"discovery:search:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
+        redis.publish(channel, json.dumps({"done": True}))
 
 
 @celery_app.task
@@ -69,6 +70,9 @@ def on_chord_error(task_id, conn_id, plan_id, plan_instance_id):
         )
         update_status(plan, "error", db)
         update_status(plan_instance, "error", db)
+
+    channel = f"discovery:search:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
+    redis.publish(channel, json.dumps({"done": True}))
 
 
 @celery_app.task(acks_late=True)
@@ -105,7 +109,6 @@ def start(conn_id: int, plan_instance_id: int):
 def run(
     conn_id: int, plan_id: int, plan_instance_id: int, tables_json: str,
 ):
-    redis_conn = redis.from_url(REDIS_URL)
     for db in get_db():
         connection = db.query(m.Connection).get(conn_id)
         plan_instance = (
@@ -117,15 +120,14 @@ def run(
             .one()
         )
         tables = [Table.parse_obj(t) for t in json.loads(tables_json)]
+
         for result in search_tables(
             connection=connection,
             tables=tables,
             rules=[Rule.from_orm(r) for r in plan_instance.plan.rules],
         ):
             channel = f"discovery:search:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
-            redis_conn.publish(
-                channel, json.dumps(jsonable_encoder(result.dict()))
-            )
+            redis.publish(channel, json.dumps(jsonable_encoder(result.dict())))
             if result.hit:
                 d = result.discovery
                 discovery = m.Discovery(

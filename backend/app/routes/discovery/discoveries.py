@@ -136,7 +136,6 @@ async def plan_runs(
     await websocket.accept()
 
     async def reader(ch):
-        print("hello")
         while await ch.wait_message():
             msg = await ch.get_json()
             await websocket.send_json(msg)
