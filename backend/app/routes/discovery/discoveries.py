@@ -14,6 +14,7 @@ from pydantic import parse_obj_as
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page, Params
 from app.settings.celery import REDIS_URL
+from app.settings.redis import REDIS_PUBSUB_TIMEOUT
 import aioredis
 import asyncio
 
@@ -127,6 +128,7 @@ async def get_discoveries(
     return paginate(disvcoveries, params)
 
 
+# todo handle client disconnect
 @router.websocket(
     "/ws/connections/{conn_id}/discovery/plans/{plan_id}/instances/{plan_instance_id}"
 )
@@ -138,9 +140,13 @@ async def plan_runs(
     async def reader(ch):
         while await ch.wait_message():
             msg = await ch.get_json()
+            if msg.get("done"):
+                break
             await websocket.send_json(msg)
 
-    redis = await aioredis.create_redis(REDIS_URL)
+    redis = await aioredis.create_redis(
+        REDIS_URL, timeout=REDIS_PUBSUB_TIMEOUT
+    )
     address = f"discovery:search:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
     res = await redis.subscribe(address)
     await asyncio.ensure_future(reader(res[0]))

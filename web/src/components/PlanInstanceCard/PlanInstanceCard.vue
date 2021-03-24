@@ -55,6 +55,7 @@ export default {
   data () {
     return {
       isSpinner: false,
+      ws: undefined,
       searchResult: {
         hit: false,
         table: {},
@@ -115,13 +116,13 @@ export default {
     const plan_id = this.p.plan.id
     const conn_id = this.p.plan.connection_id
     const channel = `ws/connections/${conn_id}/discovery/plans/${plan_id}/instances/${plan_instance_id}`
-    const ws = new WebSocket(`ws://localhost:8000/api/v1/${channel}`)
+    this.ws = new WebSocket(`ws://localhost:8000/api/v1/${channel}`)
     const sync = () => {
       return this.getPlanInstance({ planId: plan_id, id: plan_instance_id }).then(result => {
         this.$emit('reload', result)
       })
     }
-    ws.onmessage = (message) => {
+    this.ws.onmessage = (message) => {
       const { data } = message
       try {
         const { done, hit, table } = JSON.parse(data)
@@ -138,6 +139,13 @@ export default {
         console.log(e)
       }
     }
+    this.ws.onclose = () => {
+      this.searchResult.clear()
+      sync()
+    }
+  },
+  beforeDestroy () {
+    this.ws.close()
   }
 
 }
