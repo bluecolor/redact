@@ -89,6 +89,15 @@ def start(conn_id: int, plan_instance_id: int):
             connection, schemas, plan_instance.worker_count
         )
         plan_id: int = plan_instance.plan_id
+
+        total = len(plan_instance.plan.rules) * sum(
+            [len(pack) for pack in packs]
+        )
+        total_key = f"discovery:search:total:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
+        progress_key = f"discovery:search:progress:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
+        redis.set(total_key, total)
+        redis.set(progress_key, 0)
+
         cb = callback.s(conn_id, plan_id, plan_instance_id).on_error(
             on_chord_error.s(conn_id, plan_id, plan_instance_id)
         )
@@ -109,6 +118,7 @@ def start(conn_id: int, plan_instance_id: int):
 def run(
     conn_id: int, plan_id: int, plan_instance_id: int, tables_json: str,
 ):
+    progress_key = f"discovery:search:progress:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
     for db in get_db():
         connection = db.query(m.Connection).get(conn_id)
         plan_instance = (
@@ -139,3 +149,4 @@ def run(
                 )
                 db.add(discovery)
                 db.commit()
+            redis.incr(progress_key)

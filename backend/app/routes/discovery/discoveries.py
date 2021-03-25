@@ -135,14 +135,24 @@ async def get_discoveries(
 async def plan_runs(
     conn_id: int, plan_id: int, plan_instance_id: int, websocket: WebSocket
 ):
+    total_key = f"discovery:search:total:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
+    progress_key = f"discovery:search:progress:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
+
     await websocket.accept()
 
     async def reader(ch):
+        redis = await aioredis.create_redis(
+            REDIS_URL, timeout=REDIS_PUBSUB_TIMEOUT
+        )
+        total = int(await redis.get(total_key))
         while await ch.wait_message():
             msg = await ch.get_json()
             if msg.get("done"):
                 break
-            await websocket.send_json(msg)
+            progress = int(await redis.get(progress_key))
+            await websocket.send_json(
+                {**msg, "total": total, "progress": progress}
+            )
 
     redis = await aioredis.create_redis(
         REDIS_URL, timeout=REDIS_PUBSUB_TIMEOUT

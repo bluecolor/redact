@@ -1,5 +1,5 @@
 <template lang="pug">
-t-card.card
+t-card.card.plan-instance-card
   template(v-slot:header)
     .flex.justify-between
       .title
@@ -21,41 +21,51 @@ t-card.card
           )
         .spinner.lds-dual-ring(v-else)
   template(v-slot:default)
-    .body.flex.justify-between
-      .flex.flex-col.gap-y-2
-        .start-date.text-gray-400
-          | started {{fromNow(p.created_on)}}
-        .description.flex.flex-col.gap-y-2
-          .description {{p.description}}
-        .progress
-          | {{progress}}
-      .end.flex.flex-col.justify-between.gap-y-3
-        .status.flex.justify-end
-          t-tag.p-1(
-            :class="{ 'bg-red-200': p.status==='error',\
-                'bg-blue-200': p.status==='running',\
-                'bg-green-200': p.status==='success'}"
-            tag-name="span" variant="badge"
-          ) {{p.status}}
-        .flex.justify-end
-          router-link(
-            class="hover:underline"
-            :to="`/connections/${p.plan.connection.id}/discovery/plans/${p.plan.id}/instances/${p.id}/discoveries-by-rule`")
-            | {{p.discoveries.length}} discoveries
+    .body.flex.flex-col.gap-y-2
+      .flex.justify-between
+        .flex.flex-col.gap-y-2
+          .start-date.text-gray-400
+            | started {{fromNow(p.created_on)}}
+          .description.flex.flex-col.gap-y-2
+            .description {{p.description}}
+          .progress
+            | {{progress}}
+        .end.flex.flex-col.justify-between.gap-y-3
+          .status.flex.justify-end
+            t-tag.p-1(
+              :class="{ 'bg-red-200': p.status==='error',\
+                  'bg-blue-200': p.status==='running',\
+                  'bg-green-200': p.status==='success'}"
+              tag-name="span" variant="badge"
+            ) {{p.status}}
+          .flex.justify-end
+            router-link(
+              class="hover:underline"
+              :to="`/connections/${p.plan.connection.id}/discovery/plans/${p.plan.id}/instances/${p.id}/discoveries-by-rule`")
+              | {{p.discoveries.length}} discoveries
+      k-progress.progressbar(v-if="showProgressbar" :percent="progressbar.percent")
 </template>
 
 <script>
 /* eslint-disable camelcase */
 import { mapActions } from 'vuex'
 import { dateMixin } from '@/mixins'
+import KProgress from 'k-progress'
 
 export default {
   mixins: [dateMixin],
   props: { p: { type: Object, default: () => {} } },
+  components: { KProgress },
   data () {
     return {
       isSpinner: false,
       ws: undefined,
+      progressbar: {
+        percent: 0,
+        clear: function () {
+          this.percent = 0
+        }
+      },
       searchResult: {
         hit: false,
         table: {},
@@ -72,6 +82,9 @@ export default {
         return `${this.searchResult?.table?.owner}.${this.searchResult.table.table_name}`
       }
       return ''
+    },
+    showProgressbar () {
+      return this.p.status === 'running'
     }
   },
   methods: {
@@ -79,6 +92,7 @@ export default {
     onDelete (p) {
       this.isSpinner = true
       this.deletePlanInstance({ id: p.id, planId: p.plan.id }).then(result => {
+        this.ws.close()
         this.$toasted.success('Success. Deleted plan run')
         this.$emit('delete', p)
       }).catch(error => {
@@ -125,7 +139,8 @@ export default {
     this.ws.onmessage = (message) => {
       const { data } = message
       try {
-        const { done, hit, table } = JSON.parse(data)
+        const { done, hit, table, total, progress } = JSON.parse(data)
+        this.progressbar.percent = parseInt((progress * 100 / total).toFixed(2))
         if (done) {
           sync()
           this.searchResult.clear()
@@ -141,6 +156,7 @@ export default {
     }
     this.ws.onclose = () => {
       this.searchResult.clear()
+      this.progressbar.clear()
       sync()
     }
   },
@@ -150,3 +166,10 @@ export default {
 
 }
 </script>
+
+<style>
+.plan-instance-card .k-progress-outer {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+}
+</style>

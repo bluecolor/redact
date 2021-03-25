@@ -1,89 +1,42 @@
 <template lang="pug">
-.home-container.flex.justify-center.pt-10
-    .grid.grid-cols-3.gap-10.pa-10(class="w-6/12")
-      t-card.text-center(header="John Doe")
-        template(v-slot:default)
-          img(:src="current_user.avatar_url", alt="avatar")
-        template(v-slot:footer)
-          t-button.w-full(text="Profile")
-      t-card.text-center(header="Connections" :classes="card.classes")
-        template(v-slot:default)
-          t-button.w-full(v-for="c in connections" variant="secondary" :text="c.name")
-        template(v-slot:footer)
-          t-button.w-full(text="See All")
-      t-card.text-center(header="Settings" :classes="card.classes")
-        template(v-slot:default)
-          t-button.w-full(v-for="s in settings" variant="secondary")
-            .flex.gap-x-5.items-center
-              .icon.text-2xl(:class="s.icon")
-              .text {{s.title}}
-        template(v-slot:footer)
-          t-button.w-full(text="General Settings")
-      t-card.text-center(header="Discover" :classes="card.classes")
-        template(v-slot:default)
-          .flex.justify-center
-            svg-icon(name="telescope", addClass="fill-current text-gray-300 w-24 h-24")
-        template(v-slot:footer)
-          t-button.w-full(text="Define & Find Sensitve Data" tagName="a" href="/discovery")
-      t-card.text-center(header="Search" :classes="card.classes")
-        template(v-slot:default)
-          .flex.justify-center
-            svg-icon(name="search", addClass="fill-current w-24 h-24")
-        template(v-slot:footer)
-          t-button.w-full(text="Search Everywhere")
-      t-card.text-center(header="Help" :classes="card.classes")
-        template(v-slot:default)
-          .flex.justify-center
-            svg-icon(name="lifesaver", addClass="fill-current  w-24 h-24")
-        template(v-slot:footer)
-          t-button.w-full(text="Documentation")
-
+.flex.justify-center
+  .pt-20(class="w-6/12")
+    .empty.bg-white(v-if="isConnectionsEmpty")
+      .text-xl.text-gray-400.text-center There is nothing here!
+        .flex.justify-center.mt-10.w-full()
+          svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
+        .flex.justify-center.mt-10
+          t-button.mt-10.w-full.text-center(tagName="a" href="/")
+            | Create New Conneciton
+    .flex.w-full.justify-center(v-if="!isConnectionsEmpty")
+      .grid.grid-cols-3.gap-4.w-full()
+        quick-connect-card.w-full(v-for="c in connections" :c="c")
+        add-connection-card
 </template>
 
 <script>
 
 import { mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
+import QuickConnectCard from '@/components/QuickConnectCard'
+import AddConnectionCard from '@/components/AddConnectionCard'
 
 export default {
   name: 'Home',
   components: {
-    SvgIcon
+    SvgIcon, QuickConnectCard, AddConnectionCard
   },
   data () {
     return {
-      options: {},
-      card: {
-        classes: {
-          wrapper: 'flex flex-col border rounded shadow-sm bg-white border-gray-100',
-          body: 'p-3 flex-grow flex flex-col gap-y-3',
-          header: 'border-b border-gray-100 p-3 rounded-t',
-          footer: 'border-gray-100 border-t p-3 rounded-b'
-        }
-      },
-      settings: [{
-        title: 'Connections',
-        icon: 'las la-plug'
-      }, {
-        title: 'Users',
-        icon: 'las la-user'
-      }, {
-        title: 'Customize',
-        icon: 'las la-pencil-ruler'
-      }, {
-        title: 'Discovery',
-        icon: 'las la-compass',
-        path: '/discovery'
-      }]
     }
   },
   computed: {
-    ...mapGetters('auth', ['current_user']),
-    ...mapGetters('connection', ['connections'])
+    ...mapGetters('connection', ['connections']),
+    isConnectionsEmpty () {
+      return this.connections.length === 0
+    }
   },
   methods: {
-    onResize () {},
-    onChange () {}
   }
 }
 </script>

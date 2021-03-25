@@ -68,7 +68,17 @@ def search_table_metadata(
         )
         yield sd.SearchResult(hit=True, table=table, discovery=discovery)
 
-    if len(results) == 0:
+    if len(results) == 0 or (
+        len(results) == 1
+        and len(
+            [
+                is_match
+                for _, is_match in results[0].items()
+                if is_match is not None
+            ]
+        )
+        == 0
+    ):
         yield sd.SearchResult(hit=False, table=table)
 
 
@@ -96,6 +106,16 @@ def search_table_data(
                 )
                 yield SearchResult(hit=True, table=table, discovery=discovery)
 
-    if len(results) == 0:
+    if len(results) == 0 or (
+        len(results) == 1
+        and len(
+            [
+                is_match
+                for _, is_match in results[0].items()
+                if is_match is not None
+            ]
+        )
+        == 0
+    ):
         yield SearchResult(hit=False, table=table)
 

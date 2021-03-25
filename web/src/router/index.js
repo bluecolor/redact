@@ -36,7 +36,12 @@ const routes = [
     path: '/',
     component: MainLayout,
     children: [
-      { name: 'home', path: '', component: Home },
+      {
+        name: 'home',
+        path: '',
+        component: Home,
+        meta: { title: 'Home' }
+      },
       {
         path: '/settings',
         component: AppSettingsLayout,
