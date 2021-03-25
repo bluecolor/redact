@@ -1,15 +1,8 @@
 <template lang="pug">
 .flex.justify-center
-  .pt-20(class="w-6/12")
-    .empty.bg-white(v-if="isConnectionsEmpty")
-      .text-xl.text-gray-400.text-center There is nothing here!
-        .flex.justify-center.mt-10.w-full()
-          svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
-        .flex.justify-center.mt-10
-          t-button.mt-10.w-full.text-center(tagName="a" href="/")
-            | Create New Conneciton
+  .pt-20(class="w-5/12")
     .flex.w-full.justify-center(v-if="!isConnectionsEmpty")
-      .grid.grid-cols-3.gap-4.w-full()
+      .grid.grid-cols-3.gap-8.w-full()
         quick-connect-card.w-full(v-for="c in connections" :c="c")
         add-connection-card
 </template>

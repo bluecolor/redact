@@ -1,5 +1,5 @@
 <template lang="pug">
-t-card.card
+t-card.card.cursor-pointer.hover-animate
   template(v-slot:header)
     .title.text-center.w-full
       | {{c.name}}
