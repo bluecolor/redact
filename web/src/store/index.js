@@ -18,8 +18,8 @@ import plan from './modules/discovery/plan'
 import rule from './modules/discovery/rule'
 import impexp from './modules/settings/impexp'
 import user from './modules/user'
-import auth from './modules/auth'
 import appsetting from './modules/appsetting'
+import notification from './modules/notification'
 
 Vue.use(Vuex)
 
@@ -46,7 +46,7 @@ export default new Vuex.Store({
     rule,
     impexp,
     user,
-    auth,
-    appsetting
+    appsetting,
+    notification
   }
 })

@@ -11,6 +11,7 @@ from sqlalchemy import (
 from passlib.apps import custom_app_context as pwd_context
 
 from .base import Base
+from app.utils import generate_token
 
 
 class User(Base):
@@ -23,6 +24,13 @@ class User(Base):
     password_hash = Column(String)
 
     disabled = Column(Boolean, default=False)
+
+    api_key = Column(
+        String(40),
+        default=lambda: generate_token(40),
+        unique=True,
+        nullable=True,
+    )
 
     def __init__(self, **kw):
         super().__init__(**kw)
@@ -39,4 +47,7 @@ class User(Base):
         return self.password_hash and pwd_context.verify(
             password, self.password_hash
         )
+
+    def regenerate_api_key(self):
+        self.api_key = generate_token(40)
 

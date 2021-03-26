@@ -15,6 +15,7 @@ class UserOut(Base):
     name: str
     email: Optional[EmailStr]
     username: str
+    api_key: Optional[str]
 
 
 class UserCreateIn(BaseModel):

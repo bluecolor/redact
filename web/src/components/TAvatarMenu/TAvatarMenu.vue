@@ -44,10 +44,14 @@ export default {
         name: 'profile',
         title: 'Profile',
         icon: 'las la-user'
-      }, '-', {
+      }, {
         name: 'signout',
         title: 'Sign out',
-        icon: 'las la-sign-out-alt'
+        icon: 'danger las la-sign-out-alt'
+      }, '-', {
+        name: 'help',
+        title: 'Help',
+        icon: 'las la-life-ring'
       }]
     }
   },

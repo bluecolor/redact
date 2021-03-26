@@ -1,5 +1,5 @@
 <template lang="pug">
-.flex.justify-center.flex-col
+.flex.justify-center.flex-col.edit-user
   t-card
     template(v-slot:default)
       form(autocomplete="off" @submit="onSumbit")
@@ -15,6 +15,11 @@
         .form-item
           t-input-group(label='Password', required)
             t-input(v-model="payload.password" required type="password")
+        .form-item
+          t-input-group(label='API Key', required)
+            .api-key-wrapper.relative
+              t-input.api-key-input#api-key-input(@focus="onCopyApiKey" v-model="payload.api_key" required readonly)
+              .api-sync.icon-btn.las.la-sync-alt(@click="onRegenerateApiKey")
         .form-item.mt-5
           .flex.justify-between.items-center
             .spinner.lds-dual-ring(v-if="isSpinner")
@@ -27,6 +32,7 @@
 </template>
 
 <script>
+/* eslint-disable camelcase */
 import { mapActions } from 'vuex'
 
 export default {
@@ -41,12 +47,32 @@ export default {
         name: '',
         username: '',
         email: '',
-        password: ''
+        password: '',
+        api_key: ''
       }
     }
   },
+  computed: {
+  },
   methods: {
-    ...mapActions('user', ['updateUser', 'getUser']),
+    ...mapActions('user', ['getMe', 'updateUser', 'getUser', 'regenerateApiKey']),
+    onCopyApiKey () {
+      const copyText = document.getElementById('api-key-input')
+      copyText.select()
+      copyText.setSelectionRange(0, 99999)
+      document.execCommand('copy')
+      this.$toasted.success('Copied to clipboard')
+    },
+    onRegenerateApiKey () {
+      let id = +this.id
+      if (this.$route.name === 'profile') {
+        id = this.payload.id
+      }
+      this.regenerateApiKey(id).then(({ api_key }) => {
+        this.payload.api_key = api_key
+        this.$toasted.success('Success. Regerated API key')
+      })
+    },
     onCancel () {
       window.history.back()
     },
@@ -70,10 +96,26 @@ export default {
     }
   },
   created () {
-    this.load()
+    if (this.$route.name) {
+      this.getMe().then(result => {
+        this.payload = { ...result }
+      })
+    } else if (this.id) { this.load() }
   }
 }
 </script>
 
 <style lang="postcss">
+.edit-user .api-sync {
+  position: absolute;
+  right: 10px;
+  bottom: 0.5rem;
+  @apply text-gray-400;
+}
+.edit-user .api-sync:hover {
+  @apply text-gray-600;
+}
+.edit-user .api-key-input {
+  @apply cursor-pointer text-gray-400 hover:bg-green-50;
+}
 </style>

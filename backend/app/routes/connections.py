@@ -26,6 +26,7 @@ def index(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_active_user),
 ):
+    print(context["api_key"])
     return db.query(models.Connection).all()
 
 
@@ -71,10 +72,14 @@ def test_with_id(id: int, db: Session = Depends(get_db)):
     connection = (
         db.query(models.Connection).filter(models.Connection.id == id).first()
     )
-    return ping(connection)
+    try:
+        return ping(connection)
+    except:
+        return False
 
 
 @router.post("/connections/test", response_model=bool)
 def test_with_payload(connection: schemas.ConnectionTestIn):
     conn: models.Connection = models.Connection(**connection.dict())
     return ping(conn)
+

@@ -17,7 +17,7 @@ const errorHandler = error => {
     }
     if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
       console.error('Authorization verification failed')
-      store.dispatch('auth/logout').then(() => {
+      store.dispatch('user/logout').then(() => {
         setTimeout(() => {
           router.push({ path: '/auth/login' })
         }, 1500)

@@ -8,6 +8,7 @@
 
 <script>
 import Navbar from '@/components/Navbar'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
@@ -16,9 +17,26 @@ export default {
   },
   data () {
     return {
+      ws: undefined
     }
   },
-  mounted () {
+  methods: {
+    ...mapActions('notification', ['addNotification'])
+  },
+  created () {
+    const channel = 'ws/notifications'
+    this.ws = new WebSocket(`ws://localhost:8000/api/v1/${channel}`)
+    this.ws.onmessage = ({ data }) => {
+      try {
+        this.addNotification(JSON.parse(data))
+      } catch (e) {
+        console.log(e)
+        console.warn('Unable to parse notification', data)
+      }
+    }
+  },
+  beforeDestroy () {
+    this.ws.close()
   }
 }
 </script>

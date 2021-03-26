@@ -1,5 +1,5 @@
-from fastapi import APIRouter
-from fastapi import Depends, FastAPI, HTTPException, status
+from starlette_context import context
+from fastapi import APIRouter, Depends, Request, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -23,8 +23,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 async def get_current_user(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db),
 ) -> model.User:
+    # todo context["api_key"]
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

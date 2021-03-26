@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 from starlette.requests import Request
 from starlette.responses import Response
+from starlette_context.middleware import ContextMiddleware
 
 from app.app import app
 
@@ -21,6 +22,7 @@ from app.routes import (
     settings,
     auth,
     app_settings,
+    notifications,
 )
 from app.routes.discovery import plan_instances, plans, rules, discoveries
 
@@ -47,6 +49,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+class ApiKeyMiddleWare(ContextMiddleware):
+    async def set_context(self, request: Request) -> dict:
+        r = request.query_params
+        if r["api_key"] is not None:
+            return {"api_key": r["api_key"]}
+
+
+app.add_middleware(ApiKeyMiddleWare)
 
 add_pagination(app)
 

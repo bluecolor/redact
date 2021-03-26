@@ -19,22 +19,36 @@ export default {
   props: ['connectionId'],
   data () {
     return {
-      items: [{ category: true, title: 'Settings' }, {
-        path: '/settings/connections',
-        title: 'Connections',
-        group: 'connections',
-        icon: 'las la-plug'
-      }, {
-        path: '/settings/users',
-        title: 'Users',
-        group: 'users',
-        icon: 'las la-user'
-      }, {
-        path: '/settings/notifications',
-        title: 'Notifications',
-        group: 'notifications',
-        icon: 'las la-bell'
-      }]
+      items: [
+        { category: true, title: 'Profile' },
+        {
+          path: '/settings/profile',
+          title: 'Profile',
+          group: 'profile',
+          icon: 'las la-id-card'
+        },
+        {
+          path: '/settings/preferences',
+          title: 'Preferences',
+          group: 'preferences',
+          icon: 'las la-cog'
+        },
+        { category: true, title: 'System' }, {
+          path: '/settings/connections',
+          title: 'Connections',
+          group: 'connections',
+          icon: 'las la-plug'
+        }, {
+          path: '/settings/users',
+          title: 'Users',
+          group: 'users',
+          icon: 'las la-user'
+        }, {
+          path: '/settings/notifications',
+          title: 'Notifications',
+          group: 'notifications',
+          icon: 'las la-bell'
+        }]
     }
   },
   computed: {

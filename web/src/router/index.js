@@ -47,6 +47,12 @@ const routes = [
         component: AppSettingsLayout,
         children: [
           {
+            name: 'profile',
+            path: 'profile',
+            component: EditUser,
+            meta: { title: 'Profile', group: 'profile' }
+          },
+          {
             name: 'notifications',
             path: 'notifications',
             component: Notifications,

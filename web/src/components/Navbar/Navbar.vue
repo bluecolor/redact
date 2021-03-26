@@ -3,7 +3,7 @@ header
   .w-full.mx-auto.px-5
     .relative.flex.items-center.justify-between.h-12
       .flex.items-center.gap-x-10
-        svg-icon.cursor-pointer.home(@click="onHome" name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-900")
+        svg-icon.cursor-pointer.home(@click="onHome" name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-yellow-600")
         .connection-title.flex.gap-x-3
           router-link.connection.cursor-pointer.text-gray-700(
             :to="`/connections/${connectionId}`"
@@ -12,12 +12,7 @@ header
           .sep(v-if="_title && connectionName") /
           .title.text-gray-500 {{_title}}
       .flex.items-center.pr-2.gap-x-4(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
-        .icon-btn.las.la-bell.danger.relative
-          t-tag(
-            style="color:red;position:absolute;top:-5px;right:-10px;padding-left:0.25rem;padding-right:0.25rem"
-            class="bg-red-100"
-            tag-name="span" variant="badge"
-          ) 13
+        notifications-menu(v-if="!isNotificationsEmpty")
         .icon-btn.las.la-search
         t-icon-dropdown(
           :classes="{icon: 'las la-plug'}"
@@ -34,11 +29,12 @@ import { mapActions, mapGetters } from 'vuex'
 import TAvatarMenu from '@/components/TAvatarMenu'
 import TIconDropdown from '@/components/TIconDropdown'
 import SvgIcon from '@/components/SvgIcon'
+import NotificationsMenu from '@/components/NotificationsMenu'
 
 export default {
   name: 'Navbar',
   components: {
-    TAvatarMenu, TIconDropdown, SvgIcon
+    TAvatarMenu, TIconDropdown, SvgIcon, NotificationsMenu
   },
   data () {
     return {
@@ -58,9 +54,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('auth', ['current_user']),
+    ...mapGetters('user', ['current_user']),
     ...mapGetters('connection', ['connections']),
     ...mapGetters('app', ['connection', 'title']),
+    ...mapGetters('notification', ['notifications']),
     connectionName () {
       return this.connection?.name
     },
@@ -69,6 +66,9 @@ export default {
     },
     _title () {
       return this.title?.text ?? this.$route?.meta?.title
+    },
+    isNotificationsEmpty () {
+      return this.notifications.length === 0
     }
   },
   methods: {

@@ -28,5 +28,11 @@ export default {
   },
   delete (id) {
     return request.delete(`/users/${id}`)
+  },
+  regenerateApiKey (id) {
+    return request.put(`/users/${id}/api-key`)
+  },
+  getMe () {
+    return request.get('/users/me')
   }
 }

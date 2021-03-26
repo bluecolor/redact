@@ -17,6 +17,7 @@ from app.settings.auth import (
     SECRET_KEY,
     JWT_ALGORITHM,
 )
+from app.tasks import notify_login
 
 
 def authenticate_user(db: Session, username: str, password: str):
@@ -57,4 +58,5 @@ async def login(
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
+    notify_login(user)
     return {"access_token": access_token, "token_type": "bearer"}
