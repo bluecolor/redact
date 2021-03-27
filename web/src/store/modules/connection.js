@@ -7,6 +7,7 @@ const CREATE = 'CREATE'
 const SET_ALL = 'SET_ALL'
 const DELETE = 'DELETE'
 const UPDATE = 'UPDATE'
+const SET_STATUS = 'SET_STATUS'
 
 const state = {
   connections: []
@@ -25,7 +26,24 @@ const actions = {
     })
   },
   getConnections ({ commit }) {
-    return api.getAll().then(result => {
+    return api.getAll().then(connections => {
+      const test = ({ id }) => {
+        return new Promise((resolve, reject) => {
+          return api.test(id).then(status => {
+            return resolve({ id, status })
+          }).catch(error => {
+            return reject(error)
+          })
+        })
+      }
+      return Promise.all(_.map(connections, test)).then(results => {
+        const result = _.map(results, ({ id, status }) => {
+          const conn = _.find(connections, { id })
+          return { ...conn, status }
+        })
+        return result
+      })
+    }).then(result => {
       commit(SET_ALL, result)
       return result
     })
@@ -68,6 +86,12 @@ const mutations = {
     const i = _.findIndex(state.connections, { id })
     if (i !== -1) {
       state.connections.splice(i, 1, data)
+    }
+  },
+  [SET_STATUS]: (state, { id, status }) => {
+    const conn = _.find(state.connections, { id })
+    if (conn) {
+      conn.status = status
     }
   }
 }

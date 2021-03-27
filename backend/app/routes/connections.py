@@ -26,7 +26,6 @@ def index(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_active_user),
 ):
-    print(context["api_key"])
     return db.query(models.Connection).all()
 
 

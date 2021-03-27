@@ -16,7 +16,7 @@
       .left.flex
         .footer-item.company © {{year}} Blue
       .right.flex.gap-x-3
-        .footer-item.help.las.la-question.icon-btn
+        .footer-item.help.las.la-question-circle.icon-btn
         .footer-item.bug.las.la-bug.icon-btn
         .footer-item.mail.las.la-envelope.icon-btn
 </template>

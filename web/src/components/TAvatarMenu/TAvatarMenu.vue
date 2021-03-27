@@ -1,5 +1,5 @@
 <template lang="pug">
-.t-avatar-menu(:class="classes.wrapper")
+.t-avatar-menu(v-click-outside="onHide" :class="classes.wrapper")
   button(
     :class="classes.button"
     @click="isOpen = true",
@@ -18,8 +18,13 @@
 <script>
 
 import { v4 as uuidv4 } from 'uuid'
+import { mapActions } from 'vuex'
+import ClickOutside from 'vue-click-outside'
 
 export default {
+  directives: {
+    ClickOutside
+  },
   props: {
     img: { type: String, required: false, default: `https://avatars.dicebear.com/4.5/api/identicon/${uuidv4()}.svg?r=50&m=15` },
     classes: {
@@ -45,6 +50,10 @@ export default {
         title: 'Profile',
         icon: 'las la-user'
       }, {
+        name: 'preferences',
+        title: 'Preferences',
+        icon: 'las la-cog'
+      }, {
         name: 'signout',
         title: 'Sign out',
         icon: 'danger las la-sign-out-alt'
@@ -58,9 +67,19 @@ export default {
   computed: {
   },
   methods: {
+    ...mapActions('user', ['logout']),
+    onHide () {
+      this.isOpen = false
+    },
     onItemClick (i) {
       switch (i.name) {
-        case 'signout': this.$router.push({ path: '/auth/login' })
+        case 'signout':
+          this.logout()
+          this.$router.push({ path: '/auth/login' })
+          break
+        case 'profile':
+          this.$router.push({ path: '/settings/profile' })
+          break
       }
     }
   }

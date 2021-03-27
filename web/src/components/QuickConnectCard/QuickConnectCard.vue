@@ -7,7 +7,7 @@
     template.relative(v-slot:default)
       .flex.justify-center
         svg-icon(name="oracle", addClass="fill-current text-gray-300 w-24 h-24")
-      .status.las.la-circle.text-2xl.h-full(:class="{'text-green-400': status, 'text-red-400': status === false, 'text-gray-400': status===undefined}")
+      .status.las.la-circle.text-2xl.h-full(:class="{'text-green-400': c.status, 'text-red-400': c.status === false, 'text-gray-400': c.status===undefined}")
 </template>
 
 <script>
@@ -19,7 +19,6 @@ export default {
   props: { c: { type: Object, default: () => {} } },
   data () {
     return {
-      status: undefined
     }
   },
   methods: {
@@ -31,12 +30,6 @@ export default {
     }
   },
   created () {
-    const { id } = this.c
-    this.testConnection(id).then(result => {
-      this.status = result
-    }).catch(e => {
-      this.status = false
-    })
   }
 }
 </script>>

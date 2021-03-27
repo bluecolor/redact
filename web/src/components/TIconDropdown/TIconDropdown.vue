@@ -1,5 +1,5 @@
 <template lang="pug">
-.t-icon-menu.relative(:class="cls.wrapper")
+.t-icon-menu.relative(v-click-outside="onHide" :class="cls.wrapper")
   button(
     @click="isOpen = true",
     :class="`${cls.button} ${cls.icon}`"
@@ -17,11 +17,14 @@
 </template>
 
 <script>
-
+import ClickOutside from 'vue-click-outside'
 import TSimpleSpinner from '@/components/loaders'
 import mixin from '@/components/mixin.js'
 
 export default {
+  directives: {
+    ClickOutside
+  },
   mixins: [mixin],
   props: {
     displayProp: { type: String, default: 'name' },
@@ -50,6 +53,9 @@ export default {
     }
   },
   methods: {
+    onHide () {
+      this.isOpen = false
+    },
     onItemClick (item) {
       this.isOpen = false
       if (this.emitValue) {

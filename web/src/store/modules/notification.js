@@ -1,15 +1,36 @@
 /* eslint-disable camelcase */
 
+import _ from 'lodash'
 const ADD = 'ADD'
 const REMOVE = 'REMOVE'
 const CLEAR = 'CLEAR'
 
 const state = {
-  notifications: []
+  notifications: [],
+  icons: {
+    plan_instance_start: 'las la-info-circle',
+    plan_instance_error: 'la-info-circle las la-info-circle',
+    plan_instance_success: 'la-info-circle',
+    login: 'las la-user',
+    logout: 'danger las la-user'
+  }
+}
+
+const withLogin = (n) => {
+  if (n.type === 'login') {
+    const text = `${n.data.name} logged in}`
+    return { ...n, text }
+  }
+  return n
 }
 
 const getters = {
-  notifications: state => state.notifications
+  notifications: state => {
+    return _.map(state.notifications, n => {
+      const icon = state.icons[n.type]
+      return withLogin({ ...n, icon })
+    })
+  }
 }
 
 const actions = {

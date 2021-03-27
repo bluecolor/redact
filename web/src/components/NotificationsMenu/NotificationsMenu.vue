@@ -15,7 +15,6 @@
       .item.flex.px-4.content-center.items-center(:class="(i.disabled ? ' disabled' : '')" @click="onItemClick(i)")
         .icon(v-if="i.icon" :class="i.icon")
         .text-base.block.px-4.py-2.leading-tight {{i.text}}
-    t-simple-spinner(v-if="loading")
     .empty.p-2.text-base(v-if="items.length === 0")
       | {{emptyText}}
     .footer.p-2.text-gray-700.border-t.flex.gap-x-3(class="hover:bg-green-50")
@@ -25,19 +24,13 @@
 
 <script>
 
-import TSimpleSpinner from '@/components/loaders'
 import { mapGetters } from 'vuex'
 
 export default {
   props: {
-    displayProp: { type: String, default: 'name' },
-    valueProp: { type: String, default: 'name' },
-    emitValue: { type: Boolean, default: false },
-    loading: { type: Boolean, default: false },
     emptyText: { ype: String, default: 'No items found' }
   },
   components: {
-    TSimpleSpinner
   },
   data () {
     return {
@@ -50,18 +43,14 @@ export default {
     isNotificationsEmpty () {
       return this.notifications.length === 0
     },
-    items () {
+    items () { // reserved
       return this.notifications
     }
   },
   methods: {
     onItemClick (item) {
       this.isOpen = false
-      if (this.emitValue) {
-        this.$emit('select', item[this.valueProp])
-      } else {
-        this.$emit('select', item)
-      }
+      this.$emit('select', item)
     }
   }
 }

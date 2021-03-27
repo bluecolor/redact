@@ -52,9 +52,8 @@ app.add_middleware(
 
 class ApiKeyMiddleWare(ContextMiddleware):
     async def set_context(self, request: Request) -> dict:
-        r = request.query_params
-        if r["api_key"] is not None:
-            return {"api_key": r["api_key"]}
+        if "api_key" in request.query_params:
+            return {"api_key": request.query_params["api_key"]}
 
 
 app.add_middleware(ApiKeyMiddleWare)

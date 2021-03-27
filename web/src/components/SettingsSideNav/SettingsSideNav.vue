@@ -20,7 +20,7 @@ export default {
   data () {
     return {
       items: [
-        { category: true, title: 'Profile' },
+        { category: true, title: 'User' },
         {
           path: '/settings/profile',
           title: 'Profile',

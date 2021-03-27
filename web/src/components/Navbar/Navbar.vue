@@ -3,7 +3,7 @@ header
   .w-full.mx-auto.px-5
     .relative.flex.items-center.justify-between.h-12
       .flex.items-center.gap-x-10
-        svg-icon.cursor-pointer.home(@click="onHome" name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-yellow-600")
+        svg-icon.cursor-pointer.home(@click="onHome" name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-700")
         .connection-title.flex.gap-x-3
           router-link.connection.cursor-pointer.text-gray-700(
             :to="`/connections/${connectionId}`"
@@ -16,7 +16,7 @@ header
         .icon-btn.las.la-search
         t-icon-dropdown(
           :classes="{icon: 'las la-plug'}"
-          :emitValue="true" :items="connections", displayProp="name", valueProp="id" @select="onSelectConnection")
+          :emitValue="true" :items="connectionsWithIcons", displayProp="name", valueProp="id" @select="onSelectConnection")
         t-icon-dropdown(
           :classes="{icon: 'las la-sliders-h'}"
           :emitValue="true" :items="settings", valueProp="path" @select="onSelectSetting")
@@ -25,6 +25,7 @@ header
 
 <script>
 
+import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 import TAvatarMenu from '@/components/TAvatarMenu'
 import TIconDropdown from '@/components/TIconDropdown'
@@ -60,6 +61,16 @@ export default {
     ...mapGetters('notification', ['notifications']),
     connectionName () {
       return this.connection?.name
+    },
+    connectionsWithIcons () {
+      return _.map(this.connections, c => {
+        const icon = 'las la-circle text-2xl h-full ' + ((status) => {
+          if (status) { return 'text-green-400' }
+          if (status === false) { return 'text-red-400' }
+          if (!status) { return 'text-gray-400' }
+        })(c.status)
+        return { ...c, icon }
+      })
     },
     connectionId () {
       return this.connection?.id
