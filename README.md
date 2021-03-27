@@ -1,6 +1,6 @@
 # DUCK
 
-Online data masking and sensitve data discovery platform.
+Online data masking and sensitve data discovery platform for common rdbms.
 
 ## Supported Databases
 
