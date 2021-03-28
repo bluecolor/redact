@@ -16,10 +16,18 @@
       .left.flex
         .footer-item.company © {{year}} Blue
       .right.flex.gap-x-3
-        .footer-item.help.lab.la-github.icon-btn
-        .footer-item.help.las.la-question-circle.icon-btn
-        .footer-item.bug.las.la-bug.icon-btn
-        .footer-item.mail.las.la-envelope.icon-btn
+        a(href="https://github.com/bluecolor/duck")
+          .footer-item.help.lab.la-github.icon-btn(
+            content="Source code" v-tippy='{ placement : "top" }'
+          )
+        a(href="https://bluecolor.github.io/duck/")
+          .footer-item.help.las.la-question-circle.icon-btn
+        a(href="https://github.com/bluecolor/duck/issues")
+          .footer-item.bug.las.la-bug.icon-btn(
+            content="Issues" v-tippy='{ placement : "top" }'
+          )
+        a(href="https://github.com/bluecolor/duck/issues")
+          .footer-item.mail.las.la-envelope.icon-btn
 </template>
 
 <script>
