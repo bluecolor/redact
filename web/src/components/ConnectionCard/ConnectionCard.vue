@@ -2,8 +2,10 @@
 t-card.card
   template(v-slot:header)
     .flex.justify-between
-      .title
-        | {{c.name}}
+      .title.flex.gap-x-2.items-center
+        .las.la-plug.text-2xl.text-gray-400
+        .text
+          | {{c.name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
           router-link.icon-btn.las.la-pen(:to="`connections/${c.id}`" v-slot="{ navigate }")

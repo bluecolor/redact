@@ -2,8 +2,10 @@
 t-card.card
   template(v-slot:header)
     .flex.justify-between
-      .title
-        | {{p.name}}
+      .title.flex.gap-x-2.items-center
+        .las.la-box.text-2xl.text-gray-400
+        .text
+          | {{p.name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
           .icon-btn.las.la-sync-alt(@click="onReload(p)")

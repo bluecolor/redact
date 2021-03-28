@@ -2,8 +2,10 @@
 t-card.card.plan-instance-card
   template(v-slot:header)
     .flex.justify-between
-      .title
-        | {{p.plan.name}}
+      .title.flex.gap-x-2.items-center
+        .las.la-shipping-fast.text-2xl.text-gray-400
+        .text
+          | {{p.plan.name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
           .icon-btn.las.la-sync-alt(@click="onReload")
