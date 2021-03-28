@@ -17,9 +17,13 @@
         .text-base.block.px-4.py-2.leading-tight {{i.text}}
     .empty.p-2.text-base(v-if="items.length === 0")
       | {{emptyText}}
-    .footer.p-2.text-gray-700.border-t.flex.gap-x-3(class="hover:bg-green-50")
-      .las.la-angle-double-right
-      .text-base.block.leading-tight See all
+    .footer.text-gray-700.border-t.flex.justify-between
+      .see-all.p-2.gap-x-2.flex.border-r.items-center.justify-center(class="w-1/2 hover:bg-green-50")
+        .las.la-angle-double-right(class="text-green-400")
+        .text-base.block.leading-tight See all
+      .clear-all.p-2.gap-x-2.flex.items-center.justify-center(class="w-1/2 hover:bg-red-50")
+        .las.la-broom(class="text-red-400")
+        .text-base.block.leading-tight Clear all
 </template>
 
 <script>

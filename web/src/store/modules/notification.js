@@ -18,7 +18,7 @@ const state = {
 
 const withLogin = (n) => {
   if (n.type === 'login') {
-    const text = `${n.data.name} logged in}`
+    const text = `${n.data.name} logged in`
     return { ...n, text }
   }
   return n
