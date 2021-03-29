@@ -35,6 +35,11 @@ export default {
         group: 'policies',
         icon: 'las la-certificate'
       }, { category: true, title: 'Discovery' }, {
+        path: `/connections/${this.connectionId}/explore`,
+        title: 'Explore',
+        group: 'explore',
+        icon: 'las la-compass'
+      }, {
         path: `/connections/${this.connectionId}/discovery/rules`,
         title: 'Rules',
         group: 'rules',
