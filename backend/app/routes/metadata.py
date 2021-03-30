@@ -19,13 +19,12 @@ def get_tables(
     conn = db.query(models.Connection).get(conn_id)
     return md.get_all_tables(connection=conn, owner=owner)
 
+
 @router.get(
     "/connections/{conn_id}/metadata/object_owners",
     response_model=List[schemas.ObjectOwner],
 )
-def get_object_owners(
-    conn_id: int, db: Session = Depends(get_db)
-):
+def get_object_owners(conn_id: int, db: Session = Depends(get_db)):
     conn = db.query(models.Connection).get(conn_id)
     return md.get_object_owners(connection=conn)
 
@@ -42,3 +41,15 @@ def get_columns(
 ):
     connection = db.query(models.Connection).get(conn_id)
     return md.get_all_tab_cols(connection, owner, table_name)
+
+
+@router.get(
+    "/connections/{conn_id}/metadata/search",
+    response_model=List[schemas.SearchOut],
+)
+def search(
+    conn_id: int, q: str, db: Session = Depends(get_db),
+):
+    connection = db.query(models.Connection).get(conn_id)
+    return md.search(connection, q)[0:10]
+

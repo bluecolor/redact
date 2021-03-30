@@ -9,7 +9,7 @@ t-card.card.plan-instance-card
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
           .icon-btn.las.la-sync-alt(@click="onReload")
-          router-link.icon-btn.las.la-compass(
+          router-link.icon-btn.las.la-map-marker(
             content="Discoveries" v-tippy='{ placement : "top" }'
             :to="`/connections/${p.plan.connection.id}/discovery/plans/${p.plan.id}/instances/${p.id}/discoveries-by-rule`")
           .icon-btn.las.la-stop-circle(

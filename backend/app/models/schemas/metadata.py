@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 from pydantic import BaseModel
 from sqlalchemy.sql.expression import column
 
@@ -27,3 +27,10 @@ class ColumnInOut(Table):
 
 class ObjectOwner(BaseModel):
     name: str
+
+
+class SearchOut(BaseModel):
+    type: str
+    owner: str
+    table_name: str
+    column_name: Optional[str]

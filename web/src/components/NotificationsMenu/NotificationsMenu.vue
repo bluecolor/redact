@@ -11,7 +11,7 @@
   .menu.bg-white(v-if="isOpen")
     .heading.p-2.text-xl.text-gray-700.border-b(class="")
       | Notifications
-    template(v-if="!loading && items.length > 0" v-for="i in items")
+    template(v-if="!isSpinner && items.length > 0" v-for="i in items")
       .item.flex.px-4.content-center.items-center(:class="(i.disabled ? ' disabled' : '')" @click="onItemClick(i)")
         .icon(v-if="i.icon" :class="i.icon")
         .text-base.block.px-4.py-2.leading-tight {{i.text}}

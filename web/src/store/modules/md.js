@@ -33,6 +33,9 @@ const actions = {
   },
   getColumns ({ rootGetters }, { object_schema, object_name }) {
     return api.getColumns(rootGetters['app/connectionId'], object_schema, object_name)
+  },
+  searchMetadata ({ rootGetters }, q) {
+    return api.search(rootGetters['app/connectionId'], q)
   }
 }
 

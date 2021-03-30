@@ -35,6 +35,21 @@ ALL_TAB_COLS = """
     select owner, table_name, column_name, data_type from all_tab_cols
 """
 
+ALL_TABS_AND_COLS = """
+    select 'column' type, owner, table_name, column_name from all_tab_cols
+    union all
+    select 'table' type, owner, table_name, null column_name from all_tables
+"""
+
+
+def all_tabs_and_cols(q: str) -> str:
+    return f"""
+        select *
+        from ({ALL_TABS_AND_COLS}) s
+        where (upper(s.owner||s.table_name||s.column_name) like '%{q.upper()}%') or
+              (upper(s.owner||'.'||s.table_name||'.'||s.column_name) like '%{q.upper()}%')
+    """
+
 
 def all_tables_in_schemas(schemas: List[str]) -> str:
     return f"""{ALL_TABLES} where owner in ({', '.join(["'"+s+"'" for s in schemas]) })"""

@@ -6,6 +6,7 @@ import Connections, { CreateConnection, EditConnection } from '@/pages/appsettin
 import Users, { CreateUser, EditUser } from '@/pages/appsettings/users'
 import Notifications from '@/pages/appsettings/notifications'
 
+import Explore from '@/pages/discovery/explore'
 import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
 import Plans, { CreatePlan, EditPlan } from '@/pages/discovery/plans'
 import PlanInstances, { AllPlanInstances } from '@/pages/discovery/plan-instances'
@@ -191,10 +192,16 @@ const routes = [
           meta: { group: 'categories', title: 'Edit Category' }
         }, {
           name: 'rules',
-          path: 'discovery/rules',
+          path: '/connections/:connectionId/discovery/rules',
           component: Rules,
           props: true,
           meta: { title: 'Rules', group: 'rules' }
+        }, {
+          name: 'explore',
+          path: '/connections/:connectionId/discovery/explore',
+          component: Explore,
+          props: true,
+          meta: { title: 'Explore', group: 'explore' }
         }, {
           name: 'createRule',
           path: '/connections/:connectionId/discovery/rules/create',

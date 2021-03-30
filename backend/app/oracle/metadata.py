@@ -36,3 +36,8 @@ def get_table_packs(
     query = q.all_tables_in_schemas(schemas)
     tables = parse_obj_as(List[s.Table], queryall(connection, query))
     return chunk(tables, pack_count)
+
+
+def search(connection: models.Connection, query: str) -> List[s.SearchOut]:
+    query = q.all_tabs_and_cols(query)
+    return parse_obj_as(List[s.SearchOut], queryall(connection, query))

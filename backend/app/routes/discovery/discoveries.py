@@ -1,6 +1,7 @@
 from sqlalchemy import func
 from typing import List, Optional, Union
 from fastapi import Depends, WebSocket
+from starlette.websockets import WebSocketState
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import outerjoin
 from sqlalchemy.sql.functions import func, mode
@@ -150,6 +151,8 @@ async def plan_runs(
             if msg.get("done"):
                 break
             progress = int(await redis.get(progress_key))
+            if websocket.client_state == WebSocketState.DISCONNECTED:
+                break
             await websocket.send_json(
                 {**msg, "total": total, "progress": progress}
             )
@@ -159,4 +162,12 @@ async def plan_runs(
     )
     address = f"discovery:search:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
     res = await redis.subscribe(address)
-    await asyncio.ensure_future(reader(res[0]))
+    # await asyncio.ensure_future(reader(res[0]))
+    asyncio.create_task(reader(res[0]))
+
+    while True:
+        try:
+            print(await websocket.receive())
+        except Exception:
+            break
+
