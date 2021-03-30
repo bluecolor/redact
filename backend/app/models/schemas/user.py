@@ -16,6 +16,7 @@ class UserOut(Base):
     email: Optional[EmailStr]
     username: str
     api_key: Optional[str]
+    preferences: Optional[str]
 
 
 class UserCreateIn(BaseModel):
@@ -28,3 +29,7 @@ class UserUpdateIn(BaseModel):
     name: Optional[str]
     email: Optional[EmailStr]
     username: Optional[str]
+
+
+class PreferencesIn(BaseModel):
+    preferences: str

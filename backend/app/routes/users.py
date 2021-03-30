@@ -1,3 +1,4 @@
+import json
 from fastapi import Depends
 from typing import List
 from sqlalchemy.orm import Session
@@ -24,6 +25,19 @@ async def create_user(request: UserCreateIn, db: Session = Depends(get_db)):
 async def get_users(db: Session = Depends(get_db)):
     users = db.query(models.User).all()
     return parse_obj_as(List[UserOut], users)
+
+
+@router.put("/users/preferences", tags=["Users"], response_model=UserOut)
+async def set_preferences(
+    payload: dict,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    current_user.preferences = json.dumps(payload["preferences"])
+    db.add(current_user)
+    db.commit()
+    db.refresh(current_user)
+    return schemas.UserOut.from_orm(current_user)
 
 
 @router.get("/users/me", tags=["Users"], response_model=UserOut)
@@ -76,3 +90,4 @@ def destroy(id: int, db: Session = Depends(get_db)):
 @router.get("/users/{id}", response_model=schemas.UserOut)
 def show(id: int, db: Session = Depends(get_db)):
     return schemas.UserOut.from_orm(db.query(models.User).get(id))
+

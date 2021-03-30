@@ -12,6 +12,7 @@ const SET_ALL = 'SET_ALL'
 const SET_PROFILE = 'SET_PROFILE'
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
+const SET_PREFERENCES = 'SET_PREFERENCES'
 
 const state = {
   users: [],
@@ -77,6 +78,12 @@ const actions = {
       commit(UPDATE, result)
       return result
     })
+  },
+  setPreferences ({ commit }, payload) {
+    return api.setPreferences(payload).then(result => {
+      commit(SET_PREFERENCES, result)
+      return result
+    })
   }
 
 }
@@ -106,6 +113,9 @@ const mutations = {
   },
   [SET_PROFILE]: (state, data) => {
     state.current_user = { ...data, ...state.current_user }
+  },
+  [SET_PREFERENCES]: (state, { preferences }) => {
+    state.current_user = { ...state.current_user, preferences }
   },
   [LOGIN]: (state, { access_token }) => {
     state.access_token = access_token

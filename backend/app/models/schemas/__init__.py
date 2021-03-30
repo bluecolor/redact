@@ -1,4 +1,4 @@
-from .user import User, UserOut, UserUpdateIn, UserCreateIn
+from .user import User, UserOut, UserUpdateIn, UserCreateIn, PreferencesIn
 from .connection import (
     Connection,
     ConnectionCreateIn,

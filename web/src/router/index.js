@@ -5,6 +5,7 @@ import Home from '@/pages/Home.vue'
 import Connections, { CreateConnection, EditConnection } from '@/pages/appsettings/connections'
 import Users, { CreateUser, EditUser } from '@/pages/appsettings/users'
 import Notifications from '@/pages/appsettings/notifications'
+import Preferences from '@/pages/appsettings/preferences'
 
 import Explore from '@/pages/discovery/explore'
 import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
@@ -52,6 +53,12 @@ const routes = [
             path: 'profile',
             component: EditUser,
             meta: { title: 'Profile', group: 'profile' }
+          },
+          {
+            name: 'preferences',
+            path: 'preferences',
+            component: Preferences,
+            meta: { title: 'Preferences', group: 'preferences' }
           },
           {
             name: 'notifications',

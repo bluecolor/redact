@@ -7,6 +7,7 @@ from sqlalchemy import (
     Integer,
     String,
     DateTime,
+    Text,
 )
 from passlib.apps import custom_app_context as pwd_context
 
@@ -31,6 +32,8 @@ class User(Base):
         unique=True,
         nullable=True,
     )
+
+    preferences = Column(Text, nullable=True)
 
     def __init__(self, **kw):
         super().__init__(**kw)

@@ -80,6 +80,9 @@ export default {
         case 'profile':
           this.$router.push({ path: '/settings/profile' })
           break
+        case 'preferences':
+          this.$router.push({ path: '/settings/preferences' })
+          break
       }
     }
   }

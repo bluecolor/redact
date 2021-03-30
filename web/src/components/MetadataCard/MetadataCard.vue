@@ -8,11 +8,7 @@ t-card.card
           | {{name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
-          router-link.icon-btn.las.la-pen(:to="`connections/`" v-slot="{ navigate }")
-          .icon-btn.las.la-vial(
-            content="Test connection" v-tippy='{ placement : "top" }'
-          )
-          .icon-btn.las.la-trash-alt.danger.text-center.items-center
+          router-link.icon-btn.las.la-compass(:to="`connections/`" v-slot="{ navigate }")
         .spinner.lds-dual-ring(v-else)
   template(v-slot:default)
     .text-gray-400 {{m.type}}

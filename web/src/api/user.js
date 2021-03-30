@@ -34,5 +34,8 @@ export default {
   },
   getMe () {
     return request.get('/users/me')
+  },
+  setPreferences (payload) {
+    return request.put('/users/preferences', payload)
   }
 }
