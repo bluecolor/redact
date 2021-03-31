@@ -29,7 +29,7 @@ export default {
         show: true,
         position: 'insideLeft',
         distance: 15,
-        formatter: '{b} - {value|{c}}',
+        formatter: '{b}',
         fontSize: 14,
         color: '#fff',
         rich: {
@@ -42,8 +42,24 @@ export default {
           }
         }
       }
+      console.log(labelOption)
 
+      const source = [['count', 'category']]
+      source.push(..._.map(this.discoveries, d => [d.count, d.rule.name]))
+      console.log(source)
       const option = {
+        dataset: { source },
+        visualMap: {
+          orient: 'horizontal',
+          left: 'center',
+          min: 0,
+          max: 100,
+          text: ['High Score', 'Low Score'],
+          dimension: 0,
+          inRange: {
+            color: ['#65B581', '#FFCE34', '#FD665F']
+          }
+        },
         title: {
           left: 10,
           top: 10,
@@ -76,15 +92,19 @@ export default {
         yAxis: {
           type: 'category',
           axisLabel: {
-            inside: true
-          },
-          data: _.map(this.discoveries, d => d.rule.name)
+            show: false
+          }
+          // data: _.map(this.discoveries, d => d.rule.name)
         },
         series: [{
           label: labelOption,
           color: '#60A5FA',
-          data: _.map(this.discoveries, d => d.count),
+          // data: _.map(this.discoveries, d => d.count),
           type: 'bar',
+          encode: {
+            x: 'count',
+            y: 'category'
+          },
           showBackground: true
           // backgroundStyle: {
           //   color: 'rgba(180, 180, 180, 0.2)'
