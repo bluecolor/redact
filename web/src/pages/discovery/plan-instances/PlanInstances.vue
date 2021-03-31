@@ -63,10 +63,6 @@ export default {
   },
   mounted () {
     this.load()
-    // const ws = new WebSocket('ws://localhost:8000/api/v1/ws/plans/instances')
-    // ws.onmessage = (message) => {
-    //   console.log(message)
-    // }
   }
 }
 </script>

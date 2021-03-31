@@ -62,6 +62,7 @@ export default {
     return {
       isSpinner: false,
       ws: undefined,
+      isDestroy: false,
       progressbar: {
         percent: 0,
         clear: function () {
@@ -92,12 +93,14 @@ export default {
   methods: {
     ...mapActions('planInstance', ['deletePlanInstance', 'stopPlanInstance', 'getPlanInstance']),
     onDelete (p) {
+      this.isDestroy = true
       this.isSpinner = true
       this.deletePlanInstance({ id: p.id, planId: p.plan.id }).then(result => {
         this.ws.close()
         this.$toasted.success('Success. Deleted plan run')
         this.$emit('delete', p)
       }).catch(error => {
+        this.isDestroy = false
         console.log(error)
         this.$toasted.error('Error. Failed to delete plan run')
       }).finally(() => {
@@ -159,10 +162,13 @@ export default {
     this.ws.onclose = () => {
       this.searchResult.clear()
       this.progressbar.clear()
-      sync()
+      if (!this.isDestroy) {
+        sync()
+      }
     }
   },
   beforeDestroy () {
+    this.isDestroy = true
     this.ws.close()
   }
 

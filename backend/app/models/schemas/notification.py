@@ -5,6 +5,7 @@ from pydantic import BaseModel, ValidationError, validator
 PLAN_INSTANCE_START = "plan_instance_start"
 PLAN_INSTANCE_ERROR = "plan_instance_error"
 PLAN_INSTANCE_SUCCESS = "plan_instance_success"
+PLAN_INSTANCE_DONE = "plan_instance_done"
 LOGIN = "login"
 LOGOUT = "logout"
 
@@ -12,6 +13,7 @@ notification_types = [
     PLAN_INSTANCE_START,
     PLAN_INSTANCE_ERROR,
     PLAN_INSTANCE_SUCCESS,
+    PLAN_INSTANCE_DONE,
     LOGIN,
     LOGOUT,
 ]

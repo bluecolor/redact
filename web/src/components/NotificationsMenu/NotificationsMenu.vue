@@ -22,13 +22,13 @@
         .las.la-angle-double-right(class="text-green-400")
         .text-base.block.leading-tight See all
       .clear-all.p-2.gap-x-2.flex.items-center.justify-center(class="w-1/2 hover:bg-red-50")
-        .las.la-broom(class="text-red-400")
-        .text-base.block.leading-tight Clear all
+        div.las.la-broom(class="text-red-400")
+        div.text-base.block.leading-tight(@click="onClear") Clear all
 </template>
 
 <script>
 
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   props: {
@@ -52,9 +52,13 @@ export default {
     }
   },
   methods: {
+    ...mapActions('notification', ['clearNotifications']),
     onItemClick (item) {
       this.isOpen = false
       this.$emit('select', item)
+    },
+    onClear () {
+      this.clearNotifications()
     }
   }
 }

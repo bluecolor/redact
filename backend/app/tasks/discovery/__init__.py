@@ -14,6 +14,11 @@ from app.oracle.discovery import search_tables
 from fastapi.encoders import jsonable_encoder
 from app.models.schemas.discovery import SearchResult
 from app.redis import redis_conn as redis
+from app.tasks.notification import (
+    notify_plan_instance_error,
+    notify_plan_instance_start,
+    notify_plan_instance_success,
+)
 
 
 def update_status(p: Union[m.Plan, m.PlanInstance], status: str, db: Session):
@@ -47,6 +52,7 @@ def callback(results, conn_id, plan_id, plan_instance_id):
         update_status(plan_instance, "success", db)
         channel = f"discovery:search:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
         redis.publish(channel, json.dumps({"done": True}))
+        notify_plan_instance_success(plan_instance=plan_instance)
 
 
 @celery_app.task
@@ -70,6 +76,7 @@ def on_chord_error(task_id, conn_id, plan_id, plan_instance_id):
         )
         update_status(plan, "error", db)
         update_status(plan_instance, "error", db)
+        notify_plan_instance_error(plan_instance=plan_instance)
 
     channel = f"discovery:search:connections:{conn_id}:plans:{plan_id}:instances:{plan_instance_id}"
     redis.publish(channel, json.dumps({"done": True}))
@@ -82,6 +89,7 @@ def start(conn_id: int, plan_instance_id: int):
             m.Connection.id == conn_id, m.PlanInstance.id == plan_instance_id
         ).one()
         update_status(plan_instance, "running", db)
+        notify_plan_instance_start(plan_instance=plan_instance)
 
         schemas = json.loads(plan_instance.schemas)
         connection = db.query(m.Connection).get(conn_id)

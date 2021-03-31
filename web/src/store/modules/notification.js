@@ -8,9 +8,10 @@ const CLEAR = 'CLEAR'
 const state = {
   notifications: [],
   icons: {
-    plan_instance_start: 'las la-info-circle',
-    plan_instance_error: 'la-info-circle las la-info-circle',
-    plan_instance_success: 'la-info-circle',
+    plan_instance_start: 'las la-shipping-fast text-blue-400',
+    plan_instance_error: 'la-info-circle las la-shipping-fast text-red-400',
+    plan_instance_success: 'las la-shipping-fast text-green-400',
+    plan_instance_done: 'las la-shipping-fast text-green-400',
     login: 'las la-user',
     logout: 'danger las la-user'
   }
@@ -27,7 +28,7 @@ const withLogin = (n) => {
 const getters = {
   notifications: state => {
     return _.map(state.notifications, n => {
-      const icon = state.icons[n.type]
+      const icon = state.icons[n.type] ?? 'las la-info-circle'
       return withLogin({ ...n, icon })
     })
   }

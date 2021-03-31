@@ -48,6 +48,7 @@ export default {
   },
   data () {
     return {
+      isDestroy: false,
       isSpinner: false,
       isFilter: false,
       title: 'Plan Runs',
@@ -85,10 +86,6 @@ export default {
     if (this.plans.length === 0) {
       this.getPlans()
     }
-    // const ws = new WebSocket('ws://localhost:8000/api/v1/ws/plans/instances')
-    // ws.onmessage = (message) => {
-    //   console.log(message)
-    // }
   }
 }
 </script>
