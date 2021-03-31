@@ -1,4 +1,11 @@
 site_name: Duck
+markdown_extensions:
+    - admonition
+    - pymdownx.details
+    - pymdownx.superfences
+    - markdown.extensions.attr_list
+    - markdown.extensions.def_list
+    - pymdownx.tasklist
 dev_addr: 127.0.0.1:8001
 theme:
     name: material

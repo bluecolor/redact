@@ -1,17 +1,16 @@
 # Duck
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Duck is an online data masking, redaction and sensitive data discovery platform
+that leverages and extends the existing capabilities of common database management systems.
 
-## Commands
+## Supported Databases
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+- [x] Oracle
+- [ ] SQLServer
+- [ ] PostgreSQL
+- [ ] MySQL
 
-## Project layout
+## LICENCE
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+[Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+![licence](https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-nd.png)
