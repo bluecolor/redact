@@ -83,6 +83,9 @@ export default {
         case 'preferences':
           this.$router.push({ path: '/settings/preferences' })
           break
+        case 'help':
+          window.location = 'https://bluecolor.github.io/duck/'
+          break
       }
     }
   }
