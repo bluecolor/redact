@@ -29,13 +29,16 @@ export default {
         show: true,
         position: 'insideLeft',
         distance: 15,
-        formatter: '{b} {value|{c}}',
+        formatter: '{b} - {value|{c}}',
         fontSize: 14,
         color: '#fff',
         rich: {
           value: {
+            alignSelf: '',
+            textAlign: 'right',
             fontSize: 14,
-            color: '#FCA5A5'
+            fontWeight: 600,
+            color: '#fff'
           }
         }
       }
