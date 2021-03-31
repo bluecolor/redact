@@ -32,7 +32,7 @@ export default {
     emitValue: { type: Boolean, default: false },
     loading: { type: Boolean, default: false },
     items: { type: Array, default: () => [] },
-    emptyText: { ype: String, default: 'No items found' }
+    emptyText: { type: String, default: 'No items found' }
   },
   components: {
     TSimpleSpinner

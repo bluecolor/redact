@@ -1,5 +1,6 @@
 <template lang="pug">
 header
+  search-box(v-if="isSearchBox" @hide="isSearchBox=false")
   .w-full.mx-auto.px-5
     .relative.flex.items-center.justify-between.h-12
       .flex.items-center.gap-x-10
@@ -13,7 +14,7 @@ header
           .title.text-gray-500 {{_title}}
       .flex.items-center.pr-2.gap-x-4(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
         notifications-menu(v-if="!isNotificationsEmpty")
-        .icon-btn.las.la-search
+        .icon-btn.las.la-search(@click="isSearchBox=true")
         t-icon-dropdown(
           :classes="{icon: 'las la-plug'}"
           :emitValue="true" :items="connectionsWithIcons", displayProp="name", valueProp="id" @select="onSelectConnection")
@@ -31,14 +32,16 @@ import TAvatarMenu from '@/components/TAvatarMenu'
 import TIconDropdown from '@/components/TIconDropdown'
 import SvgIcon from '@/components/SvgIcon'
 import NotificationsMenu from '@/components/NotificationsMenu'
+import SearchBox from '@/components/SearchBox'
 
 export default {
   name: 'Navbar',
   components: {
-    TAvatarMenu, TIconDropdown, SvgIcon, NotificationsMenu
+    TAvatarMenu, TIconDropdown, SvgIcon, NotificationsMenu, SearchBox
   },
   data () {
     return {
+      isSearchBox: false,
       settings: [{
         path: '/settings/connections',
         icon: 'las la-plug',
