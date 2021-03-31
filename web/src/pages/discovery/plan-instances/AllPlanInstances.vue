@@ -16,9 +16,9 @@
               .las.la-filter.cursor-pointer(@click="isFilter=!isFilter" :class="{'text-blue-500': isFilter}")
             .spinner.lds-dual-ring(v-else)
           .is-filter.flex.flex-col.gap-y-2(v-if="isFilter")
-            t-datepicker(v-model="date" placeholder="Pick a date")
+            t-datepicker(v-model="filters.created_on" placeholder="Pick a date")
             t-select(
-              v-model="planId"
+              v-model.number="filters.plan_id"
               placeholder="Select plan"
               :options="plans",
               value-attribute='id',
@@ -26,7 +26,7 @@
               @input="onPlanSelect"
             )
             t-select(
-              v-model="status"
+              v-model="filters.status"
               placeholder="Select status"
               :options="statuses",
               value-attribute='id',
@@ -53,14 +53,24 @@ export default {
       isFilter: false,
       title: 'Plan Runs',
       planInstances: [],
-      date: undefined,
-      status: undefined,
       statuses: [
         { id: 'running', name: 'Running' },
         { id: 'success', name: 'Success' },
         { id: 'error', name: 'Error' }
       ],
-      planId: undefined
+      filters: {
+        plan_id: undefined,
+        created_on: undefined,
+        status: undefined
+      }
+    }
+  },
+  watch: {
+    filters: {
+      deep: true,
+      handler () {
+        this.getAllPlanInstances(this.filters)
+      }
     }
   },
   computed: {

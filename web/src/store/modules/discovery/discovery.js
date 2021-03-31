@@ -12,6 +12,9 @@ const actions = {
   getDiscoveriesGroupByRule ({ rootGetters }, { planId, planInstanceId }) {
     return api.getAllGroupByRule(rootGetters['app/connectionId'], planId, planInstanceId)
   },
+  getDiscoveriesGroupBySchema ({ rootGetters }, { planId, planInstanceId }) {
+    return api.getAllGroupBySchema(rootGetters['app/connectionId'], planId, planInstanceId)
+  },
   getDiscoveries ({ rootGetters }, { planId, planInstanceId, query }) {
     return api.getAll(rootGetters['app/connectionId'], planId, planInstanceId, query)
   },

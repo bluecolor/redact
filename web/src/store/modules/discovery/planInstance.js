@@ -20,8 +20,8 @@ const actions = {
   getPlanInstancesByPlan ({ rootGetters }, planId) {
     return api.getAllByPlan(rootGetters['app/connectionId'], planId)
   },
-  getAllPlanInstances ({ commit, rootGetters }) {
-    return api.getAll(rootGetters['app/connectionId']).then(result => {
+  getAllPlanInstances ({ commit, rootGetters }, params) {
+    return api.getAll(rootGetters['app/connectionId'], params).then(result => {
       commit(SET_PLAN_INSTANCES, result)
       return result
     })

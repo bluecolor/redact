@@ -21,6 +21,37 @@ import asyncio
 
 
 @router.get(
+    "/connections/{conn_id}/discovery/plans/{plan_id}/instances/{plan_instance_id}/discoveries/group-by-schema",
+    tags=["Discoveries"],
+    response_model=List[s.DiscoveryGroupBySchemaOut],
+)
+async def get_discoveries_group_by_schema(
+    conn_id: int,
+    plan_id: int,
+    plan_instance_id: int,
+    db: Session = Depends(get_db),
+):
+    disvcoveries = (
+        db.query(models.Discovery.schema_name, func.count())
+        .outerjoin(models.PlanInstance)
+        .outerjoin(models.Plan)
+        .outerjoin(models.Connection)
+        .filter(
+            models.PlanInstance.id == plan_instance_id,
+            models.Plan.id == plan_id,
+            models.Connection.id == conn_id,
+        )
+        .group_by(models.Discovery.schema_name)
+        .all()
+    )
+    _disvcoveries = [
+        s.DiscoveryGroupBySchemaOut(schema_name=d[0], count=d[1])
+        for d in disvcoveries
+    ]
+    return parse_obj_as(List[s.DiscoveryGroupBySchemaOut], _disvcoveries)
+
+
+@router.get(
     "/connections/{conn_id}/discovery/plans/{plan_id}/instances/{plan_instance_id}/discoveries/group-by-rule",
     tags=["Discoveries"],
     response_model=List[s.DiscoveryGroupByRuleOut],
@@ -57,7 +88,6 @@ async def get_discoveries_group_by_rule(
     )
 
     rules = plan_instance.plan.rules
-    print(rules)
 
     def get_rule(id):
         for r in rules:

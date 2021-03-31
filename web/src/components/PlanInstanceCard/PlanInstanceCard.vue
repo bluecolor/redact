@@ -9,9 +9,11 @@ t-card.card.plan-instance-card
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
           .icon-btn.las.la-sync-alt(@click="onReload")
-          router-link.icon-btn.las.la-map-marker(
+          t-icon-dropdown(
+            @select="onMenuItem"
             content="Discoveries" v-tippy='{ placement : "top" }'
-            :to="`/connections/${p.plan.connection.id}/discovery/plans/${p.plan.id}/instances/${p.id}/discoveries-by-rule`")
+            :classes="{icon: 'las la-map-marker'}"
+            :emitValue="false" :items="menu", valueProp="value")
           .icon-btn.las.la-stop-circle(
             v-if="p.status==='running'"
             content="Stop" v-tippy='{ placement : "top" }'
@@ -45,7 +47,9 @@ t-card.card.plan-instance-card
               class="hover:underline"
               :to="`/connections/${p.plan.connection.id}/discovery/plans/${p.plan.id}/instances/${p.id}/discoveries-by-rule`")
               | {{p.discoveries.length}} discoveries
-      k-progress.progressbar(v-if="showProgressbar" :percent="progressbar.percent")
+      k-progress.progressbar(v-if="showProgressbar" :percent="progressbar.percent"
+        color="#60A5FA"
+      )
 </template>
 
 <script>
@@ -53,16 +57,27 @@ t-card.card.plan-instance-card
 import { mapActions } from 'vuex'
 import { dateMixin } from '@/mixins'
 import KProgress from 'k-progress'
+import TIconDropdown from '@/components/TIconDropdown'
 
 export default {
   mixins: [dateMixin],
   props: { p: { type: Object, default: () => {} } },
-  components: { KProgress },
+  components: { KProgress, TIconDropdown },
   data () {
     return {
       isSpinner: false,
       ws: undefined,
       isDestroy: false,
+      menu: [
+        { name: 'Discoveries by schema', value: 'by-schema', icon: 'las la-map-marker text-green-400' },
+        { name: 'Discoveries by rule', value: 'by-rule', icon: 'las la-map-marker text-blue-400' },
+        {
+          name: 'Dashboard',
+          value: 'dashboard',
+          icon: 'las la-chart-bar text-yellow-400',
+          path: `/connections/${this.p.plan.connection_id}/discovery/plans/${this.p.plan.id}/instances/${this.p.id}/dashboard`
+        }
+      ],
       progressbar: {
         percent: 0,
         clear: function () {
@@ -92,6 +107,11 @@ export default {
   },
   methods: {
     ...mapActions('planInstance', ['deletePlanInstance', 'stopPlanInstance', 'getPlanInstance']),
+    onMenuItem ({ value, path }) {
+      if (path) {
+        this.$router.push({ path })
+      }
+    },
     onDelete (p) {
       this.isDestroy = true
       this.isSpinner = true
@@ -145,8 +165,8 @@ export default {
       const { data } = message
       try {
         const { done, hit, table, total, progress } = JSON.parse(data)
-        this.progressbar.percent = parseInt((progress * 100 / total).toFixed(2))
-        if (done || this.progressbar.percent > 100) {
+        this.progressbar.percent = Math.min(100, parseInt((progress * 100 / total).toFixed(2)))
+        if (done || this.progressbar.percent >= 100) {
           sync()
           this.searchResult.clear()
         } else {

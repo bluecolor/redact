@@ -87,11 +87,24 @@ def stop(conn_id: int, plan_id: int, id: int, db: Session = Depends(get_db)):
     tags=["PlanInstances"],
     response_model=List[s.PlanInstanceOut],
 )
-async def get_all(conn_id: int, db: Session = Depends(get_db)):
+async def get_all(
+    conn_id: int,
+    plan_id: Optional[int] = None,
+    created_on: Optional[str] = None,  # todo
+    status: Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+
+    filters: List = [models.Plan.connection_id == conn_id]
+    if plan_id:
+        filters.append(models.PlanInstance.plan_id == plan_id)
+    if status:
+        filters.append(models.PlanInstance.status == status)
+
     plan_instances = (
         db.query(models.PlanInstance)
         .outerjoin(models.Plan)
-        .filter(models.Plan.connection_id == conn_id)
+        .filter(*filters)
         .order_by(models.PlanInstance.created_on.desc())
         .all()
     )

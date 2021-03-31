@@ -11,7 +11,7 @@ import Explore from '@/pages/discovery/explore'
 import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
 import Plans, { CreatePlan, EditPlan } from '@/pages/discovery/plans'
 import PlanInstances, { AllPlanInstances } from '@/pages/discovery/plan-instances'
-import Discoveries, { DiscoveriesGroupByRule, DiscoveriesForRule } from '@/pages/discovery/discoveries'
+import Discoveries, { DiscoveryDashboard, DiscoveriesGroupByRule, DiscoveriesForRule } from '@/pages/discovery/discoveries'
 
 import Policies, {
   CreatePolicy,
@@ -269,6 +269,12 @@ const routes = [
           component: DiscoveriesForRule,
           props: true,
           meta: { title: 'Discoveries for Rule', group: 'planInstances' }
+        }, {
+          name: 'discoveriesDashboard',
+          path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/dashboard',
+          component: DiscoveryDashboard,
+          props: true,
+          meta: { title: 'Discovery Dashboard', group: 'planInstances' }
         }]
       }
     ]

@@ -15,6 +15,11 @@ class DiscoveryGroupByRuleOut(Base):
     count: int
 
 
+class DiscoveryGroupBySchemaOut(BaseModel):
+    schema_name: str
+    count: int
+
+
 class SearchResult(BaseModel):
     hit: bool
     table: Optional[Table]

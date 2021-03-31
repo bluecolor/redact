@@ -10,5 +10,6 @@ from .discovery import (
     Discovery,
     DiscoveryOut,
     DiscoveryGroupByRuleOut,
+    DiscoveryGroupBySchemaOut,
     SearchResult,
 )
