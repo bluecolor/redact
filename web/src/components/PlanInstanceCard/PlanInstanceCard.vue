@@ -143,7 +143,7 @@ export default {
       try {
         const { done, hit, table, total, progress } = JSON.parse(data)
         this.progressbar.percent = parseInt((progress * 100 / total).toFixed(2))
-        if (done) {
+        if (done || this.progressbar.percent > 100) {
           sync()
           this.searchResult.clear()
         } else {

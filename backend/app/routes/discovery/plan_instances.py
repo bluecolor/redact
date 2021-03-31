@@ -92,6 +92,7 @@ async def get_all(conn_id: int, db: Session = Depends(get_db)):
         db.query(models.PlanInstance)
         .outerjoin(models.Plan)
         .filter(models.Plan.connection_id == conn_id)
+        .order_by(models.PlanInstance.created_on.desc())
         .all()
     )
     return parse_obj_as(List[s.PlanInstanceOut], plan_instances)
@@ -111,6 +112,7 @@ async def get_by_plan(
             models.Plan.connection_id == conn_id,
             models.PlanInstance.plan_id == plan_id,
         )
+        .order_by(models.PlanInstance.created_on.desc())
         .all()
     )
     return parse_obj_as(List[s.PlanInstanceOut], plan_instances)
