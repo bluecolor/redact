@@ -9,6 +9,11 @@ t-card.card
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
           .icon-btn-.cursor-pointer.text-2xl.las.la-expand(:class="color" @click="onSample")
+          t-icon-dropdown(
+            :classes="{icon: 'las la-ellipsis-v'}"
+            :emitValue="true" :items="menu", valueProp="value"
+            @select="onMenuItemClick"
+          )
         .spinner.lds-dual-ring(v-else)
   template(v-slot:default)
     .flex
@@ -22,18 +27,52 @@ t-card.card
 <script>
 import _ from 'lodash'
 import { mapActions } from 'vuex'
+import TIconDropdown from '@/components/TIconDropdown'
 
 /* eslint-disable camelcase */
 export default {
   props: { m: { type: Object, default: () => {} } },
+  components: { TIconDropdown },
   data () {
     return {
       isSpinner: false,
       sample: [],
-      info: {}
+      info: {},
+      menu: [
+        {
+          name: 'Apply expression',
+          value: 'apply-expression',
+          icon: 'las la-stamp',
+          disabled: !this.hasPolicy
+        },
+        {
+          name: 'Add to policy',
+          value: 'add-column',
+          icon: 'las la-plus',
+          disabled: !this.hasPolicy
+        },
+        {
+          name: 'Remove from policy',
+          value: 'drop-column',
+          icon: 'las la-minus',
+          disabled: !this.hasExpression
+        },
+        {
+          name: 'Create policy',
+          value: 'create-policy',
+          icon: 'las la-certificate',
+          disabled: this.hasPolicy
+        }
+      ]
     }
   },
   computed: {
+    hasExpression () {
+      return this.info?.expressions?.length > 0
+    },
+    hasPolicy () {
+      return this.info?.policies?.length > 0
+    },
     isSampleEmpty () {
       return this.sample?.length === 0
     },
@@ -94,13 +133,14 @@ export default {
       } else if (this.m.type === 'table') {
         this.fetchColumns()
       }
-    }
+    },
+    onMenuItemClick () {}
   },
   created () {
     const { owner: schema_name, table_name, column_name } = this.m
     this.isSpinner = true
     this.askRedactionInfo({ schema_name, table_name, column_name }).then(result => {
-      console.log(result)
+      this.info = result
     }).finally(() => { this.isSpinner = false })
   }
 }
