@@ -29,7 +29,8 @@ export default {
   data () {
     return {
       isSpinner: false,
-      sample: []
+      sample: [],
+      info: {}
     }
   },
   computed: {
@@ -66,6 +67,7 @@ export default {
   },
   methods: {
     ...mapActions('md', ['getColumnSample', 'getColumns']),
+    ...mapActions('redaction', ['askRedactionInfo']),
     fetchColumnSample () {
       const { owner: schema_name, table_name, column_name } = this.m
       this.isSpinner = true
@@ -93,6 +95,13 @@ export default {
         this.fetchColumns()
       }
     }
+  },
+  created () {
+    const { owner: schema_name, table_name, column_name } = this.m
+    this.isSpinner = true
+    this.askRedactionInfo({ schema_name, table_name, column_name }).then(result => {
+      console.log(result)
+    }).finally(() => { this.isSpinner = false })
   }
 }
 </script>>

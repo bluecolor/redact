@@ -34,4 +34,5 @@ export default {
 .add-conn-card:hover .la-plus {
   @apply text-gray-500;
 }
+
 </style>

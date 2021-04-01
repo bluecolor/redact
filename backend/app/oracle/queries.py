@@ -99,12 +99,16 @@ def redaction_policies_for_tables(tables: List[ms.Table]) -> str:
     return f"{REDACTION_POLICIES} where {' or '.join(filters)}"
 
 
-def redaction_expressions(object_owner: str = None, object_name: str = None):
+def redaction_expressions(
+    object_owner: str = None, object_name: str = None, column_name: str = None
+):
     filters = []
     if object_owner:
         filters.append(f"object_owner = '{object_owner}'")
     if object_name:
         filters.append(f"object_name = '{object_name}'")
+    if column_name:
+        filters.append(f"column_name = '{column_name}'")
     if len(filters) == 0:
         return REDACTION_EXPRESSIONS
 
@@ -132,13 +136,15 @@ def redaction_expression(name: str) -> str:
 
 
 def redaction_columns(
-    object_owner: str = None, object_name: str = None
+    object_owner: str = None, object_name: str = None, column_name: str = None
 ) -> str:
     filters = []
     if object_owner:
         filters.append(f"object_owner = '{object_owner}'")
     if object_name:
         filters.append(f"object_name = '{object_name}'")
+    if column_name:
+        filters.append(f"object_name = '{column_name}'")
     if len(filters) == 0:
         return REDACTION_COLUMNS
 

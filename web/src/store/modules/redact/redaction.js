@@ -9,8 +9,11 @@ const getters = {
 }
 
 const actions = {
-  askRedactionColumns ({ commit, rootGetters }, payload) {
+  askRedactionColumns ({ rootGetters }, payload) {
     return api.askColumns(rootGetters['app/connectionId'], payload)
+  },
+  askRedactionInfo ({ rootGetters }, params) {
+    return api.askInfo(rootGetters['app/connectionId'], params)
   }
 }
 

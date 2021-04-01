@@ -247,8 +247,9 @@ def get_expressions(
     connection: models.Connection,
     object_owner: Optional[str] = None,
     object_name: Optional[str] = None,
+    column_name: Optional[str] = None,
 ) -> List[s.ExpressionOut]:
-    query = q.redaction_expressions(object_owner, object_name)
+    query = q.redaction_expressions(object_owner, object_name, column_name)
     return parse_obj_as(List[s.ExpressionOut], queryall(connection, query))
 
 
@@ -266,8 +267,9 @@ def get_columns(
     connection: models.Connection,
     object_owner: Optional[str] = None,
     object_name: Optional[str] = None,
+    column_name: Optional[str] = None,
 ) -> List[s.ColumnOut]:
-    query = q.redaction_columns(object_owner, object_name)
+    query = q.redaction_columns(object_owner, object_name, column_name)
     return parse_obj_as(List[s.ColumnOut], queryall(connection, query))
 
 
