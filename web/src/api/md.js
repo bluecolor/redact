@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import request from './request'
+import qs from 'qs'
 
 export default {
   getObjectSchemas (connId) {
@@ -14,5 +15,9 @@ export default {
   },
   search (connId, q) {
     return request.get(`/connections/${connId}/metadata/search?q=${encodeURI(q)}`)
+  },
+  getColumnSample (connId, params) {
+    const q = qs.stringify(params)
+    return request.get(`/connections/${connId}/metadata/columns/sample?${q}`)
   }
 }

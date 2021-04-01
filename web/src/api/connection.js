@@ -25,6 +25,12 @@ export default {
   update (payload) {
     const { id } = payload
     return request.put(`/connections/${id}`, payload)
+  },
+  getSchemasWithPayload (payload) {
+    return request.post('/connections/schemas', payload)
+  },
+  getSchemas (id) {
+    return request.get(`/connections/${id}/schemas`, id)
   }
 
 }

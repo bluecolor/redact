@@ -53,3 +53,19 @@ def search(
     connection = db.query(models.Connection).get(conn_id)
     return md.search(connection, q)[0:10]
 
+
+@router.get(
+    "/connections/{conn_id}/metadata/columns/sample",
+    response_model=List[dict],
+)
+def get_col_sample_data(
+    conn_id: int,
+    schema_name: str,
+    table_name: str,
+    column_name: str,
+    db: Session = Depends(get_db),
+):
+    connection = db.query(models.Connection).get(conn_id)
+    return md.get_col_sample_data(
+        connection, schema_name, table_name, column_name
+    )

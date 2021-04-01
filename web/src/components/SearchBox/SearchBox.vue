@@ -6,9 +6,12 @@
       .search-icon.icon-btn.las.la-search(v-if="!isSearching")
       .spinner.search-icon.icon-btn.lds-dual-ring(v-if="isSearching")
     div(v-if="items.length > 0" style='display: flex; align-items: center; line-height: 120%; width: 100%; user-select: none; min-height: 0px; font-size: 14px;')
-      .flex.flex-col.pt-2.w-full
-        template(v-for="i in items")
-          .w-full.item.flex.px-4.content-center.items-center(class="hover:bg-gray-200 cursor-pointer")
+      .flex.flex-col.pt-2.w-full.result-list
+        template(v-for="(i, idx) in items")
+          .w-full.item.flex.px-4.content-center.items-center(
+            @click="onMenuItem"
+            :class="'hover:bg-gray-200 cursor-pointer ' + 'result-item-'+idx"
+          )
             .text-2xl.text-gray-400(v-if="i.icon" :class="i.icon")
             .text-base.block.px-4.py-2.leading-tight {{i.name}}
     footer(style='flex-shrink: 0;')
@@ -30,37 +33,37 @@ export default {
       static: [{
         path: '/',
         name: 'Home',
-        type: 'static',
+        type: 'menu',
         icon: 'las la-home',
         tags: ['home', 'index', 'menu']
       }, {
         path: '/settings/connections',
         name: 'Settings',
-        type: 'static',
+        type: 'menu',
         icon: 'las la-sliders-h',
         tags: ['settings', 'users', 'connections', 'profile', 'prefenreces']
       }, {
         path: '/settings/connections',
-        type: 'static',
+        type: 'menu',
         name: 'Connections',
         icon: 'las la-plug',
         tags: ['connections']
       }, {
         path: '/settings/users',
         name: 'Users',
-        type: 'static',
+        type: 'menu',
         icon: 'las la-user',
         tags: ['users']
       }, {
         path: '/settings/profile',
         name: 'Profile',
-        type: 'static',
+        type: 'menu',
         icon: 'las la-id-card',
         tags: ['profile']
       }, {
         path: '/settings/preferences',
         name: 'Preferences',
-        type: 'static',
+        type: 'menu',
         icon: 'las la-cog',
         tags: ['preferences']
       }]
@@ -88,11 +91,21 @@ export default {
     onHide () {
       this.$emit('hide')
     },
-    onMenuItem ({ path }) {
-      if (path) {
+    onMenuItem ({ type, name, path }) {
+      if (type === 'menu' && path) {
         this.$router.push({ path })
-        this.$emit('hide')
       }
+      try {
+        this.$router.push({
+          name: 'explore',
+          query: {
+            t: new Date().getTime()
+          },
+          params: { connectionId: this.connectionId, s: name }
+        })
+      } catch (e) {
+      }
+      this.$emit('hide')
     },
     search (q) {
       if (!q?.length) {
@@ -134,7 +147,8 @@ export default {
               path: '/explore/x',
               name: fullName(r),
               type: r.type,
-              icon: icon(r)
+              icon: icon(r),
+              object: r
             }
           }))
         }).finally(() => { this.isSearching = false })

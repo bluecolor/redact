@@ -1,5 +1,6 @@
 from typing import List
 from fastapi import Depends
+from sqlalchemy import schema
 from sqlalchemy.orm import Session
 import app.models.orm as models
 from app.models.orm.connection import Connection
@@ -7,6 +8,7 @@ import app.models.schemas as schemas
 from .base import router
 from app.database import get_db
 from app.oracle import ping
+from app.oracle import metadata as md
 from .base import get_current_active_user
 
 
@@ -69,7 +71,7 @@ def destroy(id: int, db: Session = Depends(get_db)):
 @router.get("/connections/{id}/test", response_model=bool)
 def test_with_id(id: int, db: Session = Depends(get_db)):
     connection = (
-        db.query(models.Connection).filter(models.Connection.id == id).first()
+        db.query(models.Connection).filter(models.Connection.id == id).one()
     )
     try:
         return ping(connection)
@@ -81,4 +83,18 @@ def test_with_id(id: int, db: Session = Depends(get_db)):
 def test_with_payload(connection: schemas.ConnectionTestIn):
     conn: models.Connection = models.Connection(**connection.dict())
     return ping(conn)
+
+
+@router.post("/connections/schemas", response_model=List[schemas.SchemaOut])
+def get_schemas_with_payload(connection: schemas.ConnectionTestIn):
+    conn: models.Connection = models.Connection(**connection.dict())
+    return md.get_schemas(conn)
+
+
+@router.post(
+    "/connections/{id}/schemas", response_model=List[schemas.SchemaOut]
+)
+def get_schemas(id: int, db: Session = Depends(get_db)):
+    connection = db.query(models.Connection).get(id)
+    return md.get_schemas(connection)
 

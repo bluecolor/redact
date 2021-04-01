@@ -8,23 +8,42 @@ t-card.card
           | {{name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
-          router-link.icon-btn.las.la-compass(:to="`connections/`" v-slot="{ navigate }")
+          .icon-btn-.cursor-pointer.text-2xl.las.la-expand(:class="color" @click="onSample")
         .spinner.lds-dual-ring(v-else)
   template(v-slot:default)
-    .text-gray-400 {{m.type}}
-    | {{fullName}}
+    .flex
+      .start.flex.flex-col.gap-y-2
+        .text-gray-400 {{m.type}}
+        .full-name {{fullName}}
+        .sample.flex.gap-1.flex-wrap(v-if="!isSampleEmpty")
+          t-tag.p-1.overflow-ellipsis(v-for="s in sample" tag-name="span" variant="badge") {{s}}
 </template>
 
 <script>
+import _ from 'lodash'
+import { mapActions } from 'vuex'
+
 /* eslint-disable camelcase */
 export default {
   props: { m: { type: Object, default: () => {} } },
   data () {
     return {
-      isSpinner: false
+      isSpinner: false,
+      sample: []
     }
   },
   computed: {
+    isSampleEmpty () {
+      return this.sample?.length === 0
+    },
+    color () {
+      const { type } = this.m
+      switch (type) {
+        case 'column': return 'text-blue-400 hover:text-blue-600'
+        case 'table': return 'text-red-400 hover:text-red-600'
+      }
+      return 'text-gray-200'
+    },
     icon () {
       const { type } = this.m
       switch (type) {
@@ -46,6 +65,34 @@ export default {
     }
   },
   methods: {
+    ...mapActions('md', ['getColumnSample', 'getColumns']),
+    fetchColumnSample () {
+      const { owner: schema_name, table_name, column_name } = this.m
+      this.isSpinner = true
+      this.getColumnSample({ schema_name, table_name, column_name }).then(result => {
+        this.sample = _.map(result, r => r[column_name.toLowerCase()])
+      }).finally(() => {
+        this.isSpinner = false
+      })
+    },
+    fetchColumns () {
+      const { owner: object_schema, table_name: object_name } = this.m
+      this.isSpinner = true
+      this.getColumns({ object_schema, object_name }).then(result => {
+        this.sample = _.map(result, r => r.column_name)
+      }).finally(() => { this.isSpinner = false })
+    },
+    onSample () {
+      if (!this.isSampleEmpty) {
+        this.sample = []
+        return
+      }
+      if (this.m.type === 'column') {
+        this.fetchColumnSample()
+      } else if (this.m.type === 'table') {
+        this.fetchColumns()
+      }
+    }
   }
 }
 </script>>

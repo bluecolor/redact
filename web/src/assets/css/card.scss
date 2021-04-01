@@ -1,6 +1,7 @@
 .card {
   .actions {
-    .icon-btn {
+    .icon-btn,
+    .icon-btn- {
       visibility: hidden;
     }
   }
@@ -9,7 +10,8 @@
       @apply border-blue-600;
     }
     .actions {
-      .icon-btn {
+      .icon-btn,
+      .icon-btn- {
         visibility: visible;
       }
     }

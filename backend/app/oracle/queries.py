@@ -31,6 +31,11 @@ ALL_OBJECT_OWNERS = """
     select username as name from all_users
 """
 
+ALL_SCHEMAS = """
+    select username as name from all_users
+"""
+
+
 ALL_TAB_COLS = """
     select owner, table_name, column_name, data_type from all_tab_cols
 """
@@ -42,13 +47,19 @@ ALL_TABS_AND_COLS = """
 """
 
 
-def all_tabs_and_cols(q: str) -> str:
-    return f"""
+def all_tabs_and_cols(q: str, schemas: List[str] = []) -> str:
+    query = f"""
         select *
         from ({ALL_TABS_AND_COLS}) s
         where (upper(s.owner||s.table_name||s.column_name) like '%{q.upper()}%') or
               (upper(s.owner||'.'||s.table_name||'.'||s.column_name) like '%{q.upper()}%')
     """
+
+    if len(schemas) > 0:
+        filters = ", ".join([f"'{s}'" for s in schemas])
+        return f"""select * from ({query}) where owner in ({filters})"""
+
+    return query
 
 
 def all_tables_in_schemas(schemas: List[str]) -> str:
@@ -158,6 +169,10 @@ def all_object_owners() -> str:
     return ALL_OBJECT_OWNERS
 
 
+def all_schemas() -> str:
+    return ALL_SCHEMAS
+
+
 def columns_like(*, schema, table_name=None, expression) -> str:
     if table_name is None:
         return f"""
@@ -169,3 +184,10 @@ def columns_like(*, schema, table_name=None, expression) -> str:
         select table_name, column_name from all_tab_cols where
         owner = '{schema}' and table_name = '{table_name}' and regexp_like(column_name, '{expression}', 'i')
     """
+
+
+def column_sample(schema_name: str, table_name: str, column_name: str) -> str:
+    return f"""select {column_name} from (
+        select {column_name} from {schema_name}.{table_name} order by dbms_random.random)
+        where rownum < 10"""
+

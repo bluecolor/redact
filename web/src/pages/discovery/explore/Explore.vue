@@ -24,6 +24,7 @@ import SvgIcon from '@/components/SvgIcon'
 import MetadataCard from '@/components/MetadataCard'
 
 export default {
+  props: ['connectionId', 's'],
   components: {
     SvgIcon, MetadataCard
   },
@@ -37,23 +38,32 @@ export default {
   watch: {
     search (q) {
       if (q.length >= 3) {
-        this.isSpinner = true
-        this.searchMetadata(q).then(result => {
-          this.items = result
-        }).finally(() => {
-          this.isSpinner = false
-        })
+        this.doSearch(q)
       }
+    },
+    s (q) {
+      this.doSearch(q)
     }
   },
   computed: {
     isEmpty () { return this.items.length === 0 }
   },
   methods: {
-    ...mapActions('md', ['searchMetadata'])
+    ...mapActions('md', ['searchMetadata']),
+    doSearch (q) {
+      this.isSpinner = true
+      this.searchMetadata(q).then(result => {
+        this.items = result
+      }).finally(() => {
+        this.isSpinner = false
+      })
+    }
   },
   created () {
     this.load = _.debounce(this.searchMetadata, 300)
+    if (this.s) {
+      this.doSearch(this.s)
+    }
   }
 }
 </script>

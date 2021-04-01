@@ -10,6 +10,7 @@ class Connection(Base):
     host: str
     port: int
     service: str
+    options: Optional[str]
 
 
 class ConnectionCreateIn(BaseModel):
@@ -19,6 +20,7 @@ class ConnectionCreateIn(BaseModel):
     host: str
     port: int
     service: str
+    options: Optional[str]
 
 
 class ConnectionUpdateIn(BaseModel):
@@ -28,6 +30,7 @@ class ConnectionUpdateIn(BaseModel):
     service: Optional[str]
     username: Optional[str]
     password: Optional[str]
+    options: Optional[str]
 
 
 class ConnectionTestIn(BaseModel):

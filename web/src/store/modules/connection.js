@@ -65,6 +65,12 @@ const actions = {
       commit(UPDATE, result)
       return result
     })
+  },
+  getSchemasWithPayload ({ commit }, payload) {
+    return api.getSchemasWithPayload(payload)
+  },
+  getSchemas ({ commit }, id) {
+    return api.getSchemas(id)
   }
 }
 

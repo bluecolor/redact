@@ -1,5 +1,5 @@
 <template lang="pug">
-.flex.justify-center.flex-col
+.flex.justify-center.flex-col(:class="{'pb-64': options.search.isFocus}")
   t-card
     template(v-slot:default)
       form(autocomplete="off" @submit="onCreate")
@@ -21,6 +21,16 @@
         .form-item
           t-input-group(label='Password', required)
             t-input(v-model="payload.password" required type="password")
+        .form-item
+          t-input-group(label='Schemas in search', required)
+            t-rich-select(v-model="payload.options.search.schemas" required
+              :options="options.search.schemas"
+              valueAttribute="name"
+              textAttribute="name"
+              multiple
+              @focus="onSearchSchemasFocus",
+              @blur="onSearchSchemasBlur"
+            )
         .form-item.mt-5
           .flex.justify-between.items-center
             simple-spinner(v-if="isSpinner")
@@ -54,7 +64,12 @@ export default {
         port: 1521,
         service: 'orcl',
         username: '',
-        password: ''
+        password: '',
+        options: {
+          search: {
+            schemas: []
+          }
+        }
       }
     }
   },
@@ -63,7 +78,8 @@ export default {
     onCreate (e) {
       e.preventDefault()
       this.isSpinner = true
-      this.createConnection(this.payload).then(() => {
+      const options = JSON.stringify(this.payload.options)
+      this.createConnection({ ...this.payload, options }).then(() => {
         this.$toast.success('Success Connection created')
       }).finally(() => {
         this.isSpinner = false

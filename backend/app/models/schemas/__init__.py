@@ -5,7 +5,14 @@ from .connection import (
     ConnectionUpdateIn,
     ConnectionTestIn,
 )
-from .metadata import Table, Column, ObjectOwner, SearchOut
+from .metadata import (
+    Table,
+    Column,
+    ObjectOwner,
+    SearchOut,
+    SchemaOut,
+    ColumnIn,
+)
 from .discovery import Rule
 from .settings import ExportIn
 from .auth import TokenOut

@@ -42,7 +42,6 @@ export default {
           }
         }
       }
-      console.log(labelOption)
 
       const source = [['count', 'category']]
       source.push(..._.map(this.discoveries, d => [d.count, d.rule.name]))

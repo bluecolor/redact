@@ -10,6 +10,7 @@ from sqlalchemy import (
     Integer,
     String,
     DateTime,
+    Text,
 )
 from passlib.apps import custom_app_context as pwd_context
 
@@ -29,11 +30,11 @@ class Connection(Base):
     service = Column(String(100))
     username = Column(String(255))
     encrypted_password = Column(String)
+    options = Column(Text)
 
     categories = relationship("Category", back_populates="connection")
     plans = relationship("Plan", back_populates="connection")
     rules = relationship("Rule", back_populates="connection")
-
 
     def __init__(self, **kw):
         super().__init__(**kw)

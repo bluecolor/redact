@@ -36,6 +36,9 @@ const actions = {
   },
   searchMetadata ({ rootGetters }, q) {
     return api.search(rootGetters['app/connectionId'], q)
+  },
+  getColumnSample ({ rootGetters }, params) {
+    return api.getColumnSample(rootGetters['app/connectionId'], params)
   }
 }
 

@@ -95,7 +95,22 @@ export default {
     },
     onHome () {
       this.$router.push({ path: '/' })
+    },
+    onKeyDown (e) {
+      if (e.key === 'Escape') {
+        this.isSearchBox = false
+        return
+      }
+      if (e.ctrlKey && e.key === 'm') {
+        this.isSearchBox = !this.isSearchBox
+      }
     }
+  },
+  mounted () {
+    document.addEventListener('keydown', this.onKeyDown)
+  },
+  destroyed () {
+    document.removeEventListener('keydown', this.onKeyDown)
   },
   created () {
     this.getConnections()

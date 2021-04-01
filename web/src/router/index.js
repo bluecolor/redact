@@ -207,7 +207,9 @@ const routes = [
           name: 'explore',
           path: '/connections/:connectionId/discovery/explore',
           component: Explore,
-          props: true,
+          props: route => ({
+            ...route.params
+          }),
           meta: { title: 'Explore', group: 'explore' }
         }, {
           name: 'createRule',

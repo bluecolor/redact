@@ -29,6 +29,10 @@ class ObjectOwner(BaseModel):
     name: str
 
 
+class SchemaOut(BaseModel):
+    name: str
+
+
 class SearchOut(BaseModel):
     type: str
     owner: str

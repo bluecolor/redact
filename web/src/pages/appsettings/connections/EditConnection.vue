@@ -1,5 +1,5 @@
 <template lang="pug">
-.flex.justify-center.flex-col
+.flex.justify-center.flex-col(:class="{'pb-64': options.search.isFocus}")
   t-card
     template(v-slot:default)
       form(autocomplete="off" @submit="onSubmit")
@@ -21,6 +21,15 @@
         .form-item
           t-input-group(label='Password', required)
             t-input(v-model="payload.password" required type="password")
+        t-input-group(label='Schemas in search', required)
+          t-rich-select(v-model="payload.options.search.schemas"
+            :options="options.search.schemas"
+            valueAttribute="name"
+            textAttribute="name"
+            multiple
+            @focus="onSearchSchemasFocus",
+            @blur="onSearchSchemasBlur"
+          )
         .form-item.mt-5
           .flex.justify-between.items-center
             t-simple-spinner(v-if="isSpinner")
@@ -48,16 +57,27 @@ export default {
   },
   data () {
     return {
-      isPageLoader: false,
       isSpinner: false,
       isValid: false,
+      options: {
+        search: {
+          isFocus: false,
+          isSpinner: false,
+          schemas: []
+        }
+      },
       payload: {
         name: '',
         host: '',
         port: undefined,
         service: '',
         username: '',
-        password: ''
+        password: '',
+        options: {
+          search: {
+            schemas: []
+          }
+        }
       }
     }
   },
@@ -71,7 +91,8 @@ export default {
     onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
-      this.updateConnection(this.payload).then(() => {
+      const options = JSON.stringify(this.payload.options)
+      this.updateConnection({ ...this.payload, options }).then(() => {
         this.$toasted.success('Success. Connection updated')
       }).catch(error => {
         console.log(error)
@@ -80,33 +101,32 @@ export default {
         this.isSpinner = false
       })
     },
-    loadConnection (c) {
-      if (_.isObject(c)) {
-        this.payload = { ...c }
-        return c
-      } else {
-        const connection = _.find(this.connections, { c })
-        if (connection) {
-          this.payload = { ...connection }
-          return connection
+    loadConnection (connection) {
+      let options = this.payload.options
+      try {
+        options = JSON.parse(connection.options) ?? {}
+        options = _.extend(this.payload.options, options)
+        if (!_.isEmpty(options?.search?.schemas)) {
+          this.options.search.schemas = _.map(options?.search?.schemas, s => ({ name: s }))
         }
+      } catch (e) {
+        console.log(e)
       }
+      this.payload = { ...this.payload, ...connection, options }
+      return connection
     }
   },
   mounted () {
-    this.isPageLoader = true
+    this.isSpinner = true
     const id = +this.id
-    if (!this.loadConnection(id)) {
-      this.isPageLoader = true
-      this.getConnection(id).then(result => {
-        this.loadConnection(result)
-      }).catch(error => {
-        console.log(error)
-        this.$toasted.error('Failed to find connection')
-      }).finally(() => {
-        this.isPageLoader = false
-      })
-    }
+    this.getConnection(id).then(result => {
+      this.loadConnection(result)
+    }).catch(error => {
+      console.log(error)
+      this.$toasted.error('Failed to find connection')
+    }).finally(() => {
+      this.isSpinner = false
+    })
   }
 }
 </script>

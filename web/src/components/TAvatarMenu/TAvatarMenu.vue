@@ -87,6 +87,7 @@ export default {
           window.location = 'https://bluecolor.github.io/duck/'
           break
       }
+      this.isOpen = false
     }
   }
 }
