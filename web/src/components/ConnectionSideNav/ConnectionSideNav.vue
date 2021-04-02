@@ -15,11 +15,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  props: ['connectionId'],
   data () {
     return {
-      items: [{ category: true, title: 'Redaction' }, {
+    }
+  },
+  computed: {
+    ...mapGetters('app', ['connectionId']),
+    items () {
+      return [{ category: true, title: 'Redaction' }, {
         path: `/connections/${this.connectionId}/expressions`,
         title: 'Expressions',
         group: 'expressions',
@@ -61,9 +67,7 @@ export default {
         group: 'export-import',
         icon: 'las la-share'
       }]
-    }
-  },
-  computed: {
+    },
     routeName () {
       return this.$route.name
     },

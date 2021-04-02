@@ -87,7 +87,9 @@ export default {
   },
   methods: {
     ...mapActions('connection', ['getConnections']),
+    ...mapActions('connection', ['setConnection']),
     onSelectConnection (id) {
+      this.setConnection(id)
       this.$router.push(`/connections/${id}`)
     },
     onSelectSetting (path) {

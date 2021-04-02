@@ -79,6 +79,11 @@ export default {
       })
     },
     onRun (plan) {
+      if (plan.status === 'running') {
+        this.$toasted.info(`Plan "${plan.name}" is already running`)
+        return
+      }
+
       const { id } = plan
       this.isSpinner = true
       this.runPlan(id).then(({ id }) => {

@@ -66,6 +66,12 @@ export default {
       ]
     }
   },
+  watch: {
+    m: {
+      deep: true,
+      handler () { this.sample = [] }
+    }
+  },
   computed: {
     hasExpression () {
       return this.info?.expressions?.length > 0

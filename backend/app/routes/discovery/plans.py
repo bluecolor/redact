@@ -122,7 +122,11 @@ def run(conn_id: int, id: int, db: Session = Depends(get_db)):
     db.add(plan_instance)
     db.commit()
     db.refresh(plan_instance)
-    start_plan.delay(conn_id, plan_instance.id)
+    task_id = start_plan.delay(conn_id, plan_instance.id)
+    plan_instance.task_id = str(task_id)
+    db.add(plan_instance)
+    db.commit()
+    db.refresh(plan_instance)
     return s.PlanInstanceOut.from_orm(plan_instance)
 
 

@@ -1,3 +1,4 @@
+import signal
 from sqlalchemy import func
 from typing import List, Optional, Union
 from fastapi import Depends
@@ -11,6 +12,7 @@ from arq.connections import ArqRedis, create_pool
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page, Params
 from pydantic import parse_obj_as
+from app.celery import celery_app
 
 
 @router.delete(
@@ -62,6 +64,8 @@ def get_one(
 def stop(conn_id: int, plan_id: int, id: int, db: Session = Depends(get_db)):
     plan_instance = (
         db.query(models.PlanInstance)
+        .outerjoin(models.Plan)
+        .outerjoin(models.Connection)
         .filter(
             models.Plan.id == plan_id,
             models.Connection.id == conn_id,
@@ -72,8 +76,10 @@ def stop(conn_id: int, plan_id: int, id: int, db: Session = Depends(get_db)):
     if plan_instance is None:
         return None
 
-    if plan_instance.job_id is not None:
-        ...
+    if plan_instance.task_id is not None:
+        celery_app.control.revoke(
+            plan_instance.task_id, terminate=True, signal=signal.SIGKILL
+        )
 
     plan_instance.status = "stopped"
     db.add(plan_instance)
