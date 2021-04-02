@@ -14,7 +14,7 @@
   .login-footer
     .flex.justify-between.items-center.h-full.pl-3.pr-3
       .left.flex
-        .footer-item.company © {{year}} Blue
+        .footer-item.company © {{year}} SCF & Blue
       .right.flex.gap-x-3
         a(href="https://github.com/bluecolor/duck")
           .footer-item.help.lab.la-github.icon-btn(
