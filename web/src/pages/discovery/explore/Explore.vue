@@ -5,12 +5,13 @@
       .flex.gap-x-5
         t-input(v-model="search" placeholder="Search")
     .flex.justify-center.mt-5.w-full()
-      .empty.flex.flex-col.justify-between.gap-y-6(v-if="isEmpty")
+      .loader(v-if="isLoading")
+      .empty.flex.flex-col.justify-between.gap-y-6(v-if="isEmpty && !isLoading")
         .flex.justify-center.mt-10.w-full
           svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
         .text.text-center.text-gray-400
           | Start typing to search database
-      .flex.justify-center.w-full(v-else)
+      .flex.justify-center.w-full(v-if="!isEmpty && !isLoading")
         .body.w-full.flex.items-center.flex-col
           .gap-y-3.flex.flex-col.w-full
             metadata-card(v-for="m in items" :m="m")
@@ -30,6 +31,7 @@ export default {
   },
   data () {
     return {
+      isLoading: false,
       isSpinner: false,
       search: '',
       items: []
@@ -51,11 +53,11 @@ export default {
   methods: {
     ...mapActions('md', ['searchMetadata']),
     doSearch (q) {
-      this.isSpinner = true
+      this.isLoading = true
       this.searchMetadata(q).then(result => {
         this.items = result
       }).finally(() => {
-        this.isSpinner = false
+        this.isLoading = false
       })
     }
   },
