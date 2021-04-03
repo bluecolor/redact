@@ -58,12 +58,11 @@ export default {
     onSumbit (e) {
       e.preventDefault()
       this.isSpinner = true
-      const { connectionId } = this
-      this.createExpression({ connectionId, ...this.payload }).then(() => {
+      this.createExpression(this.payload).then(() => {
         this.$toasted.success('Success. Expression created')
       }).catch(error => {
         console.log(error)
-        this.$toasted.success('Error. Failed to create expression')
+        this.$toasted.error('Error. Failed to create expression')
       }).finally(() => {
         this.isSpinner = false
       })

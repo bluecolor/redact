@@ -23,8 +23,8 @@ const actions = {
       return result
     })
   },
-  createExpression ({ commit }, params) {
-    return api.create(params).then(result => {
+  createExpression ({ commit, rootGetters }, params) {
+    return api.create(rootGetters['app/connectionId'], params).then(result => {
       commit(CREATE, result)
       return result
     })

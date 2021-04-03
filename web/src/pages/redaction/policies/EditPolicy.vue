@@ -155,6 +155,7 @@ export default {
     ...mapActions('policy', ['updatePolicy', 'getPolicy']),
     ...mapActions('category', ['getCategories']),
     calculateColumns () {
+      console.log(this.columns)
       switch (+this.payload.action) {
         case 1: // add column
           this.calculatedColumns = _.chain(this.columns).map(c => c.column_name)
@@ -167,6 +168,7 @@ export default {
           this.calculatedColumns = _.map(this.redColumns, c => c.column_name)
           break
       }
+      console.log(this.calculatedColumns)
     },
     onSubmit (e) {
       e.preventDefault()
@@ -183,7 +185,7 @@ export default {
     onCancel () { window.history.back() },
     loadColumns () {
       const { object_schema, object_name } = this.payload
-      this.getColumns({ object_schema, object_name })
+      return this.getColumns({ object_schema, object_name })
     }
   },
   created () {
@@ -192,18 +194,22 @@ export default {
       action, column_name, policy_name, object_name, object_owner
     } = this.$route.query
     const promises = [
-      this.getPolicy({ policy_name, object_name, object_owner })
+      this.getPolicy({ policy_name, object_name, object_owner }),
+      this.getColumns({ object_schema: object_owner, object_name })
     ]
     _.isEmpty(this.functionTypes) && promises.push(this.getFunctionTypes())
     _.isEmpty(this.functionParameters) && promises.push(this.getFunctionParameters())
     _.isEmpty(this.actions) && promises.push(this.getActions())
 
-    Promise.all(promises).then(([policy]) => {
+    Promise.all(promises).then(([policy, columns]) => {
       const { object_owner, ...p } = policy
       this.payload = { ...this.payload, object_schema: object_owner, ...p, action, column_name }
       this.schemas.push(object_owner)
       this.tables.push(object_name)
-      this.columns.push(column_name)
+      this.columns = columns
+      if (column_name) {
+        this.columns.push(column_name)
+      }
     }).finally(() => {
       this.isSpinner = false
     })

@@ -15,7 +15,7 @@ t-card.card
   template(v-slot:default)
     .flex.justify-between
       .start.flex.flex-col.gap-y-2
-        .expression-name.overflow-ellipsis {{c.policy_expression.policy_expression_name}}
+        .expression-name.overflow-ellipsis {{policy_expression_name}}
         .description.text-gray-400.overflow-ellipsis {{c.description}}
       .end.flex.flex-col.justify-between
         .function-type {{c.function_type_name}}
@@ -34,6 +34,11 @@ export default {
       isSpinner: false
     }
   },
+  computed: {
+    policy_expression_name () {
+      return this.c.policy_expression?.policy_expression_name
+    }
+  },
   methods: {
     ...mapActions('category', ['deleteCategory']),
     onDelete (c) {
@@ -46,6 +51,8 @@ export default {
         this.$toast.error('Error. Failed to delete category')
       }).finally(() => { this.isSpinner = false })
     }
+  },
+  created () {
   }
 }
 </script>
