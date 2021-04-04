@@ -155,7 +155,6 @@ export default {
     ...mapActions('policy', ['updatePolicy', 'getPolicy']),
     ...mapActions('category', ['getCategories']),
     calculateColumns () {
-      console.log(this.columns)
       switch (+this.payload.action) {
         case 1: // add column
           this.calculatedColumns = _.chain(this.columns).map(c => c.column_name)
@@ -168,7 +167,6 @@ export default {
           this.calculatedColumns = _.map(this.redColumns, c => c.column_name)
           break
       }
-      console.log(this.calculatedColumns)
     },
     onSubmit (e) {
       e.preventDefault()
@@ -207,9 +205,6 @@ export default {
       this.schemas.push(object_owner)
       this.tables.push(object_name)
       this.columns = columns
-      if (column_name) {
-        this.columns.push(column_name)
-      }
     }).finally(() => {
       this.isSpinner = false
     })

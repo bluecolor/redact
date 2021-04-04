@@ -302,6 +302,11 @@ def create_policy_expression(
 
 
 def apply_policy_expr_to_col(connection: models.Connection, payload: dict):
+    callproc(
+        connection,
+        "dbms_redact.apply_policy_expr_to_col",
+        {**payload, "policy_expression_name": None},
+    )
     callproc(connection, "dbms_redact.apply_policy_expr_to_col", payload)
 
 
