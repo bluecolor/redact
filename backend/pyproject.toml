@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "duck"
+name = "app"
 version = "0.4.0"
 description = "Data Redaction Application"
 authors = ["Leo Sussan <leosussan@gmail.com>"]
@@ -75,3 +75,10 @@ use_parentheses = true
 include_trailing_comma = true
 force_grid_wrap = 0
 known_third_party = ["alembic", "arq", "fastapi", "pydantic", "sentry_sdk", "sqlalchemy", "sqlalchemy_utils", "starlette"]
+
+packages = [
+    { include="app", from="." }
+]
+
+[tool.poetry.scripts]
+duck = 'app.cli:duck'

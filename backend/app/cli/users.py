@@ -37,3 +37,4 @@ def users():
 
 
 users.add_command(add)
+users.add_command(list)
