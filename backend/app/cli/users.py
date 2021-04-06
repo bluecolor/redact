@@ -1,3 +1,4 @@
+from typing import List
 import logging
 import click
 from app.database import get_db
@@ -20,6 +21,14 @@ def add(name, email, username, password):
         db.add(user)
         db.commit()
         print("User created")
+
+
+@click.command("list")
+def list():
+    for db in get_db():
+        users: List[model.User] = db.query(model.User).all()
+        for user in users:
+            print(f"{user.username} - {user.name}")
 
 
 @click.group()
