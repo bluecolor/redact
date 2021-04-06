@@ -8,9 +8,6 @@ t-card.card
           | {{p.policy_name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
-          router-link.icon-btn.las.la-code(
-            content="Apply expression" v-tippy='{ placement : "top" }'
-            :to="`policies/columns?policy_name=${encodeURI(p.policy_name)}&object_owner=${encodeURI(p.object_owner)}&object_name=${encodeURI(p.object_name)}`")
           router-link.icon-btn.las.la-columns(
             content="Policy columns" v-tippy='{ placement : "top" }'
             :to="`policies/columns?policy_name=${encodeURI(p.policy_name)}&object_owner=${encodeURI(p.object_owner)}&object_name=${encodeURI(p.object_name)}`")

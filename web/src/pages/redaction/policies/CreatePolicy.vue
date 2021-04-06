@@ -18,7 +18,7 @@
               @input="onOwnerSelect"
             )
         .form-item
-          t-input-group(label='Tables')
+          t-input-group(label='Table')
             t-select(
               v-model="payload.object_name"
               placeholder="Select table"
@@ -29,7 +29,7 @@
               @input="onTableSelect"
             )
         .form-item
-          t-input-group(label='Columns')
+          t-input-group(label='Column')
             t-select(
               v-model="payload.column_name"
               placeholder="Select column"

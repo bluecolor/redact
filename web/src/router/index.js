@@ -22,7 +22,7 @@ import Expressions, {
   ApplyExpressionToColumn as EApplyExpressionToColumn,
   CreateExpression, EditExpression
 } from '@/pages/redaction/expressions'
-import Categories, { EditCategory, CreateCategory } from '@/pages/redaction/categories'
+import Categories, { EditCategory, CreateCategory, AddColumnToCategory } from '@/pages/redaction/categories'
 import Login from '@/pages/auth'
 import SettingsLayout from '@/pages/settings'
 import ExportImportLayout, { Export, Import } from '@/pages/settings/export-import'
@@ -198,6 +198,12 @@ const routes = [
           component: EditCategory,
           meta: { group: 'categories', title: 'Edit Category' }
         }, {
+          name: 'addColumnToCategory',
+          path: '/connections/:connectionId/categories/:id/add-column',
+          props: true,
+          component: AddColumnToCategory,
+          meta: { group: 'categories', title: 'Add to Category' }
+        }, {
           name: 'rules',
           path: '/connections/:connectionId/discovery/rules',
           component: Rules,
@@ -289,14 +295,5 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
-// const __proto__ = Object.getPrototypeOf(router)
-// const _push = __proto__.push
-// __proto__.push = function push (...args) {
-//   return _push.call(this, ...args)
-//     .catch(error => {
-//       if (error.name !== 'NavigationDuplicated') throw error
-//     })
-// }
 
 export default router

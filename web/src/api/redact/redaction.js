@@ -8,5 +8,11 @@ export default {
   },
   askInfo (connId, params) {
     return request.get(`/connections/${connId}/redact/ask/info?${qs.stringify(params)}`)
+  },
+  askPolicy (connId, params) {
+    return request.get(`/connections/${connId}/redact/ask/policy?${qs.stringify(params)}`)
+  },
+  askExpression (connId, params) {
+    return request.get(`/connections/${connId}/redact/ask/expression?${qs.stringify(params)}`)
   }
 }

@@ -14,6 +14,12 @@ const actions = {
   },
   askRedactionInfo ({ rootGetters }, params) {
     return api.askInfo(rootGetters['app/connectionId'], params)
+  },
+  askRedactionPolicy ({ rootGetters }, params) {
+    return api.askPolicy(rootGetters['app/connectionId'], params)
+  },
+  askRedactionExpression ({ rootGetters }, params) {
+    return api.askExpression(rootGetters['app/connectionId'], params)
   }
 }
 

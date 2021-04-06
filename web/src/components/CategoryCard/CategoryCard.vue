@@ -8,6 +8,8 @@ t-card.card
           | {{c.name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
+          router-link.icon-btn.las.la-plus(
+            :to="`categories/${c.id}/add-column`")
           router-link.icon-btn.las.la-pen(
             :to="`categories/${c.id}`")
           .icon-btn.las.la-trash-alt.danger(@click="onDelete(c)")

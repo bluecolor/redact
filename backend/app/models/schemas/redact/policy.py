@@ -19,6 +19,7 @@ class PolicyCreateIn(BaseModel):
     column_name: str
     policy_name: str
     function_type: int
+    function_parameters: Optional[str]
     expression: str
 
 

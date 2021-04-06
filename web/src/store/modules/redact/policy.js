@@ -35,7 +35,6 @@ const actions = {
   },
   createPolicy ({ commit, rootGetters }, payload) {
     return api.create(rootGetters['app/connectionId'], payload).then(result => {
-      commit(CREATE, result)
       return result
     })
   },

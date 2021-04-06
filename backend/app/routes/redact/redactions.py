@@ -45,6 +45,46 @@ def ask_columns(
 
 
 @router.get(
+    "/connections/{conn_id}/redact/ask/policy", response_model=dict,  # todo
+)
+def ask_policy(
+    conn_id: int,
+    schema_name: str,
+    table_name: str,
+    db: Session = Depends(get_db),
+):
+    connection = db.query(models.Connection).get(conn_id)
+    policies = redact.get_policies(connection, schema_name, table_name)
+
+    if len(policies) > 0:
+        return {"policy": policies[0]}
+
+    return {"policy": None}
+
+
+@router.get(
+    "/connections/{conn_id}/redact/ask/expression",
+    response_model=dict,  # todo
+)
+def ask_expression(
+    conn_id: int,
+    schema_name: str,
+    table_name: str,
+    column_name: str,
+    db: Session = Depends(get_db),
+):
+    connection = db.query(models.Connection).get(conn_id)
+    expressions = redact.get_expressions(
+        connection, schema_name, table_name, column_name
+    )
+
+    if len(expressions) > 0:
+        return {"expression": expressions[0]}
+
+    return {"expression": None}
+
+
+@router.get(
     "/connections/{conn_id}/redact/ask/info", response_model=dict,  # todo
 )
 def ask_redaction_info(

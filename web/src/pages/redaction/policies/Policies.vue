@@ -1,6 +1,7 @@
 <template lang="pug">
 .policies-container
-  .bg-white.empty.w-full(v-if="isPoliciesEmpty")
+  .loader.text-gray-600(v-if="isLoading")
+  .bg-white.empty.w-full(v-if="!isLoading && isPoliciesEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
     .flex.justify-center.mt-10.w-full()
       svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
@@ -18,23 +19,24 @@
 <script>
 /* eslint-disable camelcase */
 
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 import PolicyCard from '@/components/PolicyCard'
+import { loaderMixin } from '@/mixins'
 
 export default {
+  mixins: [loaderMixin],
   props: ['connectionId'],
   components: {
     SvgIcon, PolicyCard
   },
   data () {
     return {
-      isSpinner: false,
-      title: 'Policies'
+      title: 'Policies',
+      policies: []
     }
   },
   computed: {
-    ...mapGetters('policy', ['policies']),
     isPoliciesEmpty () {
       return this.policies.length === 0
     }
@@ -42,11 +44,13 @@ export default {
   methods: {
     ...mapActions('policy', ['getPolicies']),
     load () {
-      this.isSpinner = true
-      this.getPolicies().finally(() => { this.isSpinner = false })
+      this.startLoader()
+      this.getPolicies().then(result => {
+        this.policies = result
+      }).finally(this.stopLoader)
     }
   },
-  mounted () {
+  created () {
     this.load()
   }
 }

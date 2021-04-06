@@ -28,7 +28,7 @@
               td.overflow-ellipsis(:class='props.tdClass')
                 | {{ props.row.function_type }}
               td.flex.gap-x-5(:class='props.tdClass')
-                .row-action-btn.icon-btn.las.la-pen
+                .row-action-btn.icon-btn.las.la-pen(@click="onEditColumn(props.row)")
                 .row-action-btn.icon-btn.danger.las.la-trash-alt(@click="onDropColumn(props.row)")
 
 </template>
@@ -94,6 +94,11 @@ export default {
           this.redColumns = result
         })
         .finally(() => { this.isSpinner = false })
+    },
+    onEditColumn ({ column_name }) {
+      const query = { action: 4, column_name, ...this.$route.query }
+      const path = `/connections/${this.connectionId}/policies/edit?${qs.stringify(query)}`
+      this.$router.push({ path })
     },
     onDropColumn ({ column_name }) {
       const query = { action: 2, column_name, ...this.$route.query }
