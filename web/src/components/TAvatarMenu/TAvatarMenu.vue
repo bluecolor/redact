@@ -53,7 +53,7 @@ export default {
         name: 'preferences',
         title: 'Preferences',
         icon: 'las la-cog'
-      }, {
+      }, '-', {
         name: 'signout',
         title: 'Sign out',
         icon: 'danger las la-sign-out-alt'
@@ -61,6 +61,10 @@ export default {
         name: 'help',
         title: 'Help',
         icon: 'las la-life-ring'
+      }, {
+        name: 'about',
+        title: 'About',
+        icon: 'las la-feather-alt'
       }]
     }
   },
