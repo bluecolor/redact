@@ -3,7 +3,13 @@
 import sys
 from typing import Optional
 
+if not sys.warnoptions:
+    import warnings
+
+    warnings.simplefilter("ignore")
+
 sys.path.extend(["./"])
+
 
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from starlette.datastructures import Secret
@@ -11,7 +17,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 from starlette.requests import Request
 from starlette_context.middleware import ContextMiddleware
-from . import static
+
 
 from app.app import app
 
@@ -40,12 +46,10 @@ from app.routes.redact import (
 app.include_router(router, prefix="/api/v1")
 
 
-origins = [
-    "http://localhost:8082",
-]
+origins = ["http://localhost:8082", "http://127.0.0.1:8082"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex="http://localhost:.*",
+    allow_origin_regex="^http://localhost:.*$|^http://127(?:\.[0-9]+){0,2}\.[0-9]+:.*$",
     # allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
@@ -62,6 +66,8 @@ class ApiKeyMiddleWare(ContextMiddleware):
 app.add_middleware(ApiKeyMiddleWare)
 
 add_pagination(app)
+
+from . import static
 
 if __name__ == "__main__":
     import uvicorn

@@ -2,8 +2,8 @@ from .base import config
 from starlette.datastructures import CommaSeparatedStrings, Secret
 
 
-PORT = config("DUCK_PORT", default="0.0.0.0")
-HOST = config("DUCK_HOST", cast=int, default=8000)
+PORT = config("DUCK_PORT", cast=int, default=8000)
+HOST = config("DUCK_HOST", default="localhost")
 
 SQLALCHEMY_DATABASE_URI = config(
     "SQLALCHEMY_DATABASE_URI",
@@ -33,9 +33,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES = config(
 
 MAIL_HOST: str = config("DUCK_MAIL_HOST", default="redis://localhost:6379/0")
 MAIL_PORT: int = config("DUCK_MAIL_PORT", cast=int, default=465)
-MAIL_USERNAME: str = config("DUCK_MAIL_USERNAME")
-MAIL_PASSWORD: str = config("DUCK_MAIL_PASSWORD")
-MAIL_FROM: str = config("DUCK_MAIL_FROM", "duck@bluecolor.io")
+MAIL_USERNAME: str = config("DUCK_MAIL_USERNAME", default="")
+MAIL_PASSWORD: str = config("DUCK_MAIL_PASSWORD", default="")
+MAIL_FROM: str = config("DUCK_MAIL_FROM", default="duck@bluecolor.io")
 
 
 REDIS_URL: str = config(

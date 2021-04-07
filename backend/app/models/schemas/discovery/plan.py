@@ -5,7 +5,7 @@ from app.models.schemas import connection
 from .base import Base
 from .rule import Rule
 from .base import Plan
-from app.settings.discovery import SAMPLE_SIZE, WORKER_COUNT
+from app.settings import SAMPLE_SIZE, WORKER_COUNT
 
 
 class PlanOut(Plan):

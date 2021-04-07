@@ -2,7 +2,8 @@ from celery.result import allow_join_result
 from typing import List, Union
 import json
 from celery import group, chord
-from sqlalchemy_utils import models
+
+# from sqlalchemy_utils import models
 from sqlalchemy.orm import Session
 from app.celery import celery_app
 from app.database import get_db

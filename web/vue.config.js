@@ -5,6 +5,7 @@ const vueSrc = './src'
 
 module.exports = {
   runtimeCompiler: true,
+  assetsDir: 'public',
   css: {
     requireModuleExtension: true
   },

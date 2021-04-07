@@ -1,8 +1,19 @@
-.la, .las {
+.la,
+.las {
   font-family: 'Line Awesome Free';
   font-weight: 900;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   height: inherit !important;
+  line-height: 1 !important;
+}
+
+.la,
+.lab,
+.lad,
+.lal,
+.lar,
+.las {
+  line-height: 1 !important;
 }
