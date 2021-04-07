@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "reduck"
-version = "0.5.9"
+version = "0.5.11"
 description = "Data Redaction Application"
-authors = ["Leo Sussan <leosussan@gmail.com>"]
+authors = ["Ceyhun Kerti <ceyhun.kerti@bluecolor.io>"]
 packages = [
     { include="app", from="." }
 ]
