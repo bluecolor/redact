@@ -7,6 +7,9 @@ packages = [
     { include="app", from="." }
 ]
 include=["app/public"]
+readme="README.md"
+repository="https://github.com/bluecolor/duck"
+licence="CC BY-NC-SA 4.0"
 
 [tool.poetry.dependencies]
 python = "^3.8"
