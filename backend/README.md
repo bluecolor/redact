@@ -2,14 +2,6 @@
 
 Online data masking and sensitve data discovery platform for common rdbms.
 
-## Supported Databases
-
-- [x] Oracle
-- [ ] SQLServer
-- [ ] PostgreSQL
-- [ ] MySQL
-
-
 ## Commands
 `duck --help`
 

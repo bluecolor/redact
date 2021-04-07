@@ -18,9 +18,7 @@ from fastapi_pagination import add_pagination
 from starlette.requests import Request
 from starlette_context.middleware import ContextMiddleware
 
-
 from app.app import app
-
 from app.routes import (
     router,
     connections,
@@ -32,7 +30,6 @@ from app.routes import (
     notifications,
 )
 from app.routes.discovery import plan_instances, plans, rules, discoveries
-
 from app.routes.redact import (
     expressions,
     policies,

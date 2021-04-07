@@ -2,12 +2,8 @@
 
 Online data masking and sensitve data discovery platform for common rdbms.
 
-## Supported Databases
-
-- [x] Oracle
-- [ ] SQLServer
-- [ ] PostgreSQL
-- [ ] MySQL
+## Documentation
+[https://bluecolor.github.io/duck/](https://bluecolor.github.io/duck/)
 
 ## LICENCE
 

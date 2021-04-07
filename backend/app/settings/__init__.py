@@ -31,7 +31,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = config(
     "DUCK_ACCESS_TOKEN_EXPIRE_MINUTES", cast=int, default=(7 * 24 * 60),
 )
 
-MAIL_HOST: str = config("DUCK_MAIL_HOST", default="redis://localhost:6379/0")
+MAIL_HOST: str = config("DUCK_MAIL_HOST", default="")
 MAIL_PORT: int = config("DUCK_MAIL_PORT", cast=int, default=465)
 MAIL_USERNAME: str = config("DUCK_MAIL_USERNAME", default="")
 MAIL_PASSWORD: str = config("DUCK_MAIL_PASSWORD", default="")
