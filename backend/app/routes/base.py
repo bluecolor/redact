@@ -9,7 +9,7 @@ from app.database import get_db
 import app.models.orm as model
 
 
-from app.settings.auth import (
+from app.settings import (
     SECRET_KEY,
     JWT_ALGORITHM,
     ACCESS_TOKEN_EXPIRE_MINUTES,

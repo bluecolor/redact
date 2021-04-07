@@ -15,7 +15,7 @@ from sqlalchemy import (
 from passlib.apps import custom_app_context as pwd_context
 
 from .base import Base
-from app.settings.globals import FERNET_KEY
+from app.settings import FERNET_KEY
 
 fernet = Fernet(str.encode(FERNET_KEY))
 

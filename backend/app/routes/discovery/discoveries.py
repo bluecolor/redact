@@ -14,8 +14,7 @@ from app.oracle import redact
 from pydantic import parse_obj_as
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page, Params
-from app.settings.celery import REDIS_URL
-from app.settings.redis import REDIS_PUBSUB_TIMEOUT
+from app.settings import REDIS_URL, REDIS_PUBSUB_TIMEOUT
 import aioredis
 import asyncio
 

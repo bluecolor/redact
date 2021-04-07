@@ -33,7 +33,7 @@ def list():
 
 @click.group()
 def users():
-    """Delete config commands"""
+    """User commands"""
 
 
 users.add_command(add)

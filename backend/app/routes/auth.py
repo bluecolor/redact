@@ -12,7 +12,7 @@ from app.database import get_db
 import app.models.orm as models
 import app.models.schemas as schemas
 from pydantic import parse_obj_as
-from app.settings.auth import (
+from app.settings import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     SECRET_KEY,
     JWT_ALGORITHM,
