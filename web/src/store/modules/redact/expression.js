@@ -17,8 +17,9 @@ const getters = {
 }
 
 const actions = {
-  getExpressions ({ commit }, connectionId) {
-    return api.getAll(connectionId).then(result => {
+  getExpressions ({ commit, rootGetters }, connectionId) {
+    const connId = connectionId ?? rootGetters['app/connectionId']
+    return api.getAll(connId).then(result => {
       commit(SET_ALL, result)
       return result
     })

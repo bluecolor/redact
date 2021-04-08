@@ -23,9 +23,14 @@ export default {
   watch: {
   },
   methods: {
+    ...mapActions('app', ['setConnection']),
     ...mapActions('notification', ['addNotification'])
   },
   created () {
+    const { connectionId } = this.$route.params
+    if (connectionId) {
+      this.setConnection(+connectionId)
+    }
     const channel = 'ws/notifications'
     this.ws = new WebSocket(`ws://localhost:8000/api/v1/${channel}`)
     this.ws.onmessage = ({ data }) => {

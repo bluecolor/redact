@@ -25,7 +25,8 @@ import {
   TToggle,
   TDialog,
   TCheckboxGroup,
-  TAlert
+  TAlert,
+  TModal
 } from 'vue-tailwind/dist/components'
 import VueTippy, { TippyComponent } from 'vue-tippy'
 
@@ -48,6 +49,7 @@ const settings = {
   TToggle,
   TDialog,
   TCheckboxGroup,
+  TModal,
   't-alert': {
     component: TAlert,
     props: {

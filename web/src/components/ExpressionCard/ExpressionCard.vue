@@ -8,11 +8,13 @@ t-card.card
           | {{e.policy_expression_name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
-          router-link.icon-btn.las.la-stamp(
+          router-link.icon-btn.las.la-magic(
             content="Apply to column" v-tippy='{ placement : "top" }'
             :to="`expressions/${encodeURI(e.policy_expression_name)}/apply-to-column`"
           )
-          router-link.icon-btn.las.la-pen(:to="`expressions/${encodeURI(e.policy_expression_name)}`")
+          router-link.icon-btn.las.la-pen(
+            content="Edit" v-tippy='{ placement : "top" }'
+            :to="`expressions/${encodeURI(e.policy_expression_name)}`")
           .icon-btn.las.la-trash-alt.danger(@click="onDelete(e)")
         .spinner.lds-dual-ring(v-else)
   template(v-slot:default)

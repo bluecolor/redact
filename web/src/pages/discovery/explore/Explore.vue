@@ -62,7 +62,7 @@ export default {
     }
   },
   created () {
-    this.load = _.debounce(this.searchMetadata, 300)
+    this.doSearch = _.debounce(this.doSearch, 300)
     if (this.s) {
       this.doSearch(this.s)
     }

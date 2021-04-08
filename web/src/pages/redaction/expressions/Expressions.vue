@@ -1,5 +1,15 @@
 <template lang="pug">
-div
+.flex.flex-col.gap-y-3
+  .toolbar.flex.flex-col.gap-y-2.p-3.w-full.bg-gray-50.rounded-md
+    .flex.flex-row.gap-x-3.items-center
+      .start.w-full
+        t-input.w-full(placeholder="Search" v-model="search" autofocus)
+      .end.actions
+        router-link.icon-btn.las.la-magic(
+          content="Apply any expression" v-tippy='{ placement : "top" }'
+          :to="`expressions/apply`"
+        )
+
   .bg-white.empty.w-full(v-if="isExpressionsEmpty")
     .text-xl.text-gray-400.text-center There is nothing here!
     .flex.justify-center.mt-10.w-full()
@@ -28,6 +38,7 @@ export default {
   },
   data () {
     return {
+      search: '',
       isSpinner: false,
       title: 'Connections'
     }

@@ -1,16 +1,19 @@
 /* eslint-disable camelcase */
 
 import _ from 'lodash'
+import api from '@/api/app'
 
 const SET_CONNECTION = 'SET_CONNECTION'
 const SET_TITLE = 'SET_TITLE'
+const SET_VERSION = 'SET_VERSION'
 
 const state = {
   connectionId: undefined,
   title: {
     isLoading: false,
     text: undefined
-  }
+  },
+  version: undefined
 }
 
 const getters = {
@@ -27,6 +30,12 @@ const actions = {
   },
   setTitle ({ commit }, title) {
     commit(SET_TITLE, title)
+  },
+  getVersion ({ commit }) {
+    return api.getVersion().then(result => {
+      commit(SET_VERSION, result)
+      return result
+    })
   }
 }
 
@@ -36,6 +45,9 @@ const mutations = {
   },
   [SET_TITLE]: (state, title) => {
     state.title = title
+  },
+  [SET_VERSION]: (state, data) => {
+    state.version = data
   }
 }
 

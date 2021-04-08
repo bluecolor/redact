@@ -1,5 +1,6 @@
 <template lang="pug">
 .t-avatar-menu(v-click-outside="onHide" :class="classes.wrapper")
+  about-modal(v-if="isAbout" :visible="isAbout" @closed="isAbout=false")
   button(
     :class="classes.button"
     @click="isOpen = true",
@@ -20,8 +21,12 @@
 import { v4 as uuidv4 } from 'uuid'
 import { mapActions } from 'vuex'
 import ClickOutside from 'vue-click-outside'
+import AboutModal from '@/components/AboutModal'
 
 export default {
+  components: {
+    AboutModal
+  },
   directives: {
     ClickOutside
   },
@@ -44,6 +49,7 @@ export default {
   },
   data () {
     return {
+      isAbout: false,
       isOpen: false,
       items: [{
         name: 'profile',
@@ -89,6 +95,10 @@ export default {
           break
         case 'help':
           window.location = 'https://bluecolor.github.io/duck/'
+          break
+        case 'about':
+          this.isAbout = true
+          console.log(this.isAbout)
           break
       }
       this.isOpen = false

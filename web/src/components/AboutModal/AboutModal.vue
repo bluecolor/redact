@@ -1,0 +1,68 @@
+<template lang="pug">
+t-modal(header='About' v-model="v" @closed="onClose")
+  .flex.flex-col.gap-y-3
+    t-alert.alert(v-if="hasNewVersion" variant="warning" show :dismissible="false")
+      a(href="https://pypi.org/project/reduck/") New version exists {{pypi.info.version}}. Click here.
+    .body.flex.flex-col.justify-center
+      p
+        |Duck, sensitive data masking and discovery tool.
+      p
+        | Version: <span class="font-medium">{{version}}</span>
+  template(v-slot:footer='')
+    .flex.justify-end
+      .spinner.lds-dual-ring(v-if="isSpinner")
+      t-button(v-else type='button' @click="onClose")
+        | Ok
+</template>
+
+<script>
+import axios from 'axios'
+import { mapActions } from 'vuex'
+
+export default {
+  name: 'AboutModal',
+  props: { visible: { type: Boolean, default: false } },
+  data () {
+    return {
+      v: this.visible,
+      version: undefined,
+      isSpinner: false,
+      pypi: {}
+    }
+  },
+  computed: {
+    newVersion () {
+      return this.pypi?.info?.version
+    },
+    hasNewVersion () {
+      return (this.newVersion && this.newVersion > this.version)
+    }
+  },
+  methods: {
+    ...mapActions('app', ['getVersion']),
+    onClose () {
+      this.$emit('closed')
+    },
+    getPackageInfo () {
+      return new Promise((resolve) => {
+        return axios.get('https://pypi.org/pypi/reduck/json').then(response => {
+          this.version = response.data
+          return resolve(response.data)
+        }).catch(error => {
+          console.log(error)
+          resolve({})
+        })
+      })
+    }
+  },
+  created () {
+    this.isSpinner = true
+    Promise.all([this.getVersion(), this.getPackageInfo()]).then(([{ version }, p]) => {
+      this.pypi = p
+      this.version = version
+    }).finally(() => {
+      this.isSpinner = false
+    })
+  }
+}
+</script>

@@ -11,7 +11,7 @@ t-card.card
           .icon-btn-.cursor-pointer.text-2xl.las.la-expand(:class="color" @click="onSample")
           t-icon-dropdown(
             :classes="{icon: 'las la-ellipsis-v'}"
-            :emitValue="true" :items="menu", valueProp="value"
+            :items="menu", valueProp="value"
             @select="onMenuItemClick"
           )
         .spinner.lds-dual-ring(v-else)
@@ -25,8 +25,9 @@ t-card.card
 </template>
 
 <script>
+import qs from 'qs'
 import _ from 'lodash'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import TIconDropdown from '@/components/TIconDropdown'
 
 /* eslint-disable camelcase */
@@ -37,33 +38,7 @@ export default {
     return {
       isSpinner: false,
       sample: [],
-      info: {},
-      menu: [
-        {
-          name: 'Apply expression',
-          value: 'apply-expression',
-          icon: 'las la-stamp',
-          disabled: !this.hasPolicy
-        },
-        {
-          name: 'Add to policy',
-          value: 'add-column',
-          icon: 'las la-plus',
-          disabled: !this.hasPolicy
-        },
-        {
-          name: 'Remove from policy',
-          value: 'drop-column',
-          icon: 'las la-minus',
-          disabled: !this.hasExpression
-        },
-        {
-          name: 'Create policy',
-          value: 'create-policy',
-          icon: 'las la-certificate',
-          disabled: this.hasPolicy
-        }
-      ]
+      info: {}
     }
   },
   watch: {
@@ -73,6 +48,57 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('app', ['connectionId']),
+    menu () {
+      return [
+        {
+          name: 'Apply expression',
+          value: 'apply-expression',
+          icon: 'las la-stamp',
+          disabled: !this.hasExpression,
+          path: (() => {
+            const { owner: schema_name, table_name, column_name } = this.m
+            const params = { schema_name, table_name, column_name }
+            return `/connections/${this.connectionId}/expressions/apply?${qs.stringify(params)}`
+          })()
+        },
+        {
+          name: 'Add to policy',
+          value: 'add-column',
+          icon: 'las la-plus',
+          disabled: this.hasExpression,
+          path: (() => {
+            const { owner: object_owner, table_name: object_name, column_name } = this.m
+            if (this.info?.policies[0]) {
+              const { policy_name } = this.info.policies[0]
+              const params = { policy_name, object_owner, object_name, column_name, action: 1 }
+              return `/connections/${this.connectionId}/policies/edit?${qs.stringify(params)}`
+            }
+          })()
+        },
+        {
+          name: 'Remove from policy',
+          value: 'drop-column',
+          icon: 'las la-minus',
+          disabled: !this.hasExpression,
+          path: (() => {
+            const { owner: object_owner, table_name: object_name, column_name } = this.m
+            console.log(this.info?.policies[0])
+            if (this.info?.policies[0]) {
+              const { policy_name } = this.info.policies[0]
+              const params = { policy_name, object_owner, object_name, column_name, action: 2 }
+              return `/connections/${this.connectionId}/policies/edit?${qs.stringify(params)}`
+            }
+          })()
+        },
+        {
+          name: 'Create policy',
+          value: 'create-policy',
+          icon: 'las la-certificate',
+          disabled: this.hasPolicy
+        }
+      ]
+    },
     hasExpression () {
       return this.info?.expressions?.length > 0
     },
@@ -140,13 +166,17 @@ export default {
         this.fetchColumns()
       }
     },
-    onMenuItemClick () {}
+    onMenuItemClick ({ path }) {
+      if (!path) { return }
+      this.$router.push({ path })
+    }
   },
   created () {
     const { owner: schema_name, table_name, column_name } = this.m
     this.isSpinner = true
     this.askRedactionInfo({ schema_name, table_name, column_name }).then(result => {
       this.info = result
+      console.log(this.info)
     }).finally(() => { this.isSpinner = false })
   }
 }

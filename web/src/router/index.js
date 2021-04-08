@@ -19,6 +19,7 @@ import Policies, {
   Columns as RedactionColumns
 } from '@/pages/redaction/policies'
 import Expressions, {
+  ApplyExpression,
   ApplyExpressionToColumn as EApplyExpressionToColumn,
   CreateExpression, EditExpression
 } from '@/pages/redaction/expressions'
@@ -161,6 +162,12 @@ const routes = [
           props: true,
           component: Expressions,
           meta: { group: 'expressions', title: 'Expressions' }
+        }, {
+          name: 'applyExpression',
+          path: '/connections/:connectionId/expressions/apply',
+          props: true,
+          component: ApplyExpression,
+          meta: { group: 'expressions', title: 'Apply an Expression' }
         }, {
           name: 'createExpression',
           path: '/connections/:connectionId/expressions/create',

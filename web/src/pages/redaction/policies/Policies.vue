@@ -50,7 +50,7 @@ export default {
       }).finally(this.stopLoader)
     }
   },
-  created () {
+  mounted () {
     this.load()
   }
 }

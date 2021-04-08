@@ -28,6 +28,7 @@ from app.routes import (
     auth,
     app_settings,
     notifications,
+    application,
 )
 from app.routes.discovery import plan_instances, plans, rules, discoveries
 from app.routes.redact import (

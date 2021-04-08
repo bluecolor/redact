@@ -13,3 +13,4 @@ class SettingOut(Base):
     name: Optional[str]
     value: Optional[str]
     description: Optional[str]
+
