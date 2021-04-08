@@ -60,6 +60,8 @@ export default {
     Promise.all([this.getVersion(), this.getPackageInfo()]).then(([{ version }, p]) => {
       this.pypi = p
       this.version = version
+    }).catch(e => {
+      console.log(e)
     }).finally(() => {
       this.isSpinner = false
     })

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import MainLayout, { ConnectionLayout, SettingsLayout as AppSettingsLayout } from '@/layouts'
 import Home from '@/pages/Home.vue'
-import Connections, { CreateConnection, EditConnection } from '@/pages/appsettings/connections'
+import Connections, { Vendors, CreateConnection, EditConnection } from '@/pages/appsettings/connections'
 import Users, { CreateUser, EditUser } from '@/pages/appsettings/users'
 import Notifications from '@/pages/appsettings/notifications'
 import Preferences from '@/pages/appsettings/preferences'
@@ -66,6 +66,12 @@ const routes = [
             path: 'notifications',
             component: Notifications,
             meta: { title: 'Notifications', group: 'notifications' }
+          },
+          {
+            name: 'vendors',
+            path: 'connections/vendors',
+            component: Vendors,
+            meta: { title: 'Select Database Type', group: 'connections' }
           },
           {
             name: 'createConnection',
