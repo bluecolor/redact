@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "reduck"
-version = "0.5.12"
+version = "0.5.13"
 description = "Data Redaction Application"
 authors = ["Ceyhun Kerti <ceyhun.kerti@bluecolor.io>"]
 packages = [
@@ -12,8 +12,7 @@ repository="https://github.com/bluecolor/duck"
 license="CC BY-NC-SA 4.0"
 documentation="https://bluecolor.github.io/duck/"
 keywords=["redaction", "masking"]
-maintainer="Ceyhun Kerti"
-maintainer_email="ceyhun.kerti@bluecolor.io"
+
 
 [tool.poetry.dependencies]
 python = "^3.8"
