@@ -7,10 +7,11 @@ header
         svg-icon.cursor-pointer.home(@click="onHome" name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-700")
         .connection-title.flex.gap-x-3
           router-link.connection.cursor-pointer.text-gray-700(
+            v-if="isConnectionLayout"
             :to="`/connections/${connectionId}`"
             class="hover:text-gray-900 hover:font-black"
           ) {{connectionName}}
-          .sep(v-if="_title && connectionName") /
+          .sep(v-if="isConnectionLayout && _title && connectionName") /
           .title.text-gray-500 {{_title}}
       .flex.items-center.pr-2.gap-x-4(class='sm:static sm:inset-auto sm:ml-6 sm:pr-0')
         notifications-menu(v-if="!isNotificationsEmpty")
@@ -62,6 +63,9 @@ export default {
     ...mapGetters('connection', ['connections']),
     ...mapGetters('app', ['connection', 'title']),
     ...mapGetters('notification', ['notifications']),
+    isConnectionLayout () {
+      return this.$route.path.startsWith('/connections')
+    },
     connectionName () {
       return this.connection?.name
     },
@@ -87,7 +91,7 @@ export default {
   },
   methods: {
     ...mapActions('connection', ['getConnections']),
-    ...mapActions('connection', ['setConnection']),
+    ...mapActions('app', ['setConnection']),
     onSelectConnection (id) {
       this.setConnection(id)
       this.$router.push(`/connections/${id}`)

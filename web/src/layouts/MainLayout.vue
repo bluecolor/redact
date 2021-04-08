@@ -20,6 +20,8 @@ export default {
       ws: undefined
     }
   },
+  watch: {
+  },
   methods: {
     ...mapActions('notification', ['addNotification'])
   },

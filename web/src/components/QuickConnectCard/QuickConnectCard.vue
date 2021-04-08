@@ -23,9 +23,11 @@ export default {
   },
   methods: {
     ...mapActions('connection', ['testConnection']),
+    ...mapActions('app', ['setConnection']),
     onNav () {
       const { id } = this.c
-      const path = `/connections/${id}/expressions`
+      const path = `/connections/${id}`
+      this.setConnection(id)
       this.$router.push({ path })
     }
   },

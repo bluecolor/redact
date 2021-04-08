@@ -26,6 +26,11 @@ export default {
     ...mapGetters('app', ['connectionId']),
     items () {
       return [{ category: true, title: 'Redaction' }, {
+        path: `/connections/${this.connectionId}/policies`,
+        title: 'Policies',
+        group: 'policies',
+        icon: 'las la-certificate'
+      }, {
         path: `/connections/${this.connectionId}/expressions`,
         title: 'Expressions',
         group: 'expressions',
@@ -35,11 +40,6 @@ export default {
         title: 'Categories',
         group: 'categories',
         icon: 'las la-tag'
-      }, {
-        path: `/connections/${this.connectionId}/policies`,
-        title: 'Policies',
-        group: 'policies',
-        icon: 'las la-certificate'
       }, { category: true, title: 'Discovery' }, {
         path: `/connections/${this.connectionId}/discovery/explore`,
         title: 'Explore',

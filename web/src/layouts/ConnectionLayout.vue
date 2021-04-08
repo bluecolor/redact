@@ -1,13 +1,18 @@
 <template lang="pug">
-.flex.justify-center
-  .connection-layout(class="w-10/12")
-    connection-side-nav.left-nav(:connectionId="connectionId")
-    .content.pb-10
-      router-view
+.w-full
+  t-alert.alert(v-if="!connectionSuccess" variant="danger" show)
+      | Not connected! Some of the features will not work.
+      | Please check connection to database.
+  .flex.justify-center
+    .connection-layout(class="w-10/12")
+      connection-side-nav.left-nav(:connectionId="connectionId")
+      .content.pb-10
+        router-view
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import _ from 'lodash'
+import { mapActions, mapGetters } from 'vuex'
 import ConnectionSideNav from '@/components/ConnectionSideNav'
 
 export default {
@@ -15,15 +20,31 @@ export default {
   components: {
     ConnectionSideNav
   },
+  data () {
+    return { connectionSuccess: true }
+  },
   methods: {
-    ...mapActions('app', ['setConnection'])
+    ...mapActions('app', ['setConnection']),
+    checkConnection (id) {
+      const conn = _.find(this.connections, { id })
+      if (conn && conn.status === false) {
+        this.connectionSuccess = false
+      } else {
+        this.connectionSuccess = true
+      }
+    }
+  },
+  computed: {
+    ...mapGetters('connection', ['connections'])
   },
   watch: {
     connectionId (id) {
-      this.setConnection(id)
+      this.setConnection(+id)
+      this.checkConnection(+id)
     }
   },
-  created () {
+  mounted () {
+    this.checkConnection(+this.connectionId)
     this.setConnection(+this.connectionId)
   }
 
@@ -39,5 +60,11 @@ export default {
 }
 .connection-layout .content {
   @apply w-6/12;
+}
+</style>
+
+<style scoped>
+.alert {
+  border-radius: 0px;
 }
 </style>

@@ -106,7 +106,7 @@ const routes = [
         path: '/connections/:connectionId',
         props: true,
         component: ConnectionLayout,
-        redirect: '/connections/:connectionId/expressions',
+        redirect: '/connections/:connectionId/policies',
         children: [{
           path: '/connections/:connectionId/settings',
           props: true,

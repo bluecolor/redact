@@ -3,7 +3,7 @@
 - Make sure you have `python 3.8^`
 - Create a virtual environment with:
 ```sh
-virtualenv --python python3.8 venv
+virtualenv venv
 ```
 - Activate the virtual environment
 ```sh
