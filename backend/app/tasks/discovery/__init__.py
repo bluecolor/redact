@@ -1,19 +1,16 @@
 from celery.result import allow_join_result
 from typing import List, Union
 import json
-from celery import group, chord
+from celery import chord
 
-# from sqlalchemy_utils import models
 from sqlalchemy.orm import Session
 from app.celery import celery_app
 from app.database import get_db
-from app.models.orm import plan_instance
-from app.oracle.metadata import get_table_packs
+from app.vendor.oracle.metadata import get_table_packs
 from app.models.schemas import Table, Rule
 import app.models.orm as m
-from app.oracle.discovery import search_tables
+from app.vendor.oracle.discovery import search_tables
 from fastapi.encoders import jsonable_encoder
-from app.models.schemas.discovery import SearchResult
 from app.redis import redis_conn as redis
 from app.tasks.notification import (
     notify_plan_instance_error,

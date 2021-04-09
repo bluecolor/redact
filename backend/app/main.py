@@ -23,7 +23,6 @@ from app.routes import (
     router,
     connections,
     users,
-    metadata,
     settings,
     auth,
     app_settings,
@@ -31,7 +30,8 @@ from app.routes import (
     application,
 )
 from app.routes.discovery import plan_instances, plans, rules, discoveries
-from app.routes.redact import (
+from app.routes.oracle import metadata
+from app.routes.oracle.redact import (
     expressions,
     policies,
     functions,

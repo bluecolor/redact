@@ -1,20 +1,18 @@
 import json
 import tempfile
-from typing import List, Optional
 from fastapi import Depends
 from sqlalchemy.orm import Session
 import app.models.orm as models
-from app.models.orm.category import Category
 import app.models.schemas as s
-from app.models.schemas.redact import CategoryOut
+from app.models.schemas.oracle.redact import CategoryOut
 from app.models.schemas.discovery import PlanOut, RuleOut
 from .base import router
 from app.database import get_db
-from app.oracle import redact
+from app.vendor.oracle import redact
 from fastapi.responses import FileResponse
 import pydash
 from fastapi.encoders import jsonable_encoder
-from fastapi import FastAPI, File, UploadFile
+from fastapi import File, UploadFile
 
 
 @router.post("/connections/{conn_id}/settings/export")

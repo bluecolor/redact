@@ -12,8 +12,8 @@ from sqlalchemy import (
 from sqlalchemy.orm.base import attribute_str
 
 from .base import Base
-from app.models.schemas.redact.base import Expression
-from app.oracle import redact
+from app.models.schemas.oracle.redact.base import Expression
+from app.vendor.oracle import redact
 
 
 class Category(Base):

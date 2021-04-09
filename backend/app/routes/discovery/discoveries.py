@@ -10,7 +10,7 @@ import app.models.orm as models
 import app.models.schemas.discovery as s
 from .base import router
 from app.database import get_db
-from app.oracle import redact
+from app.vendor.oracle import redact
 from pydantic import parse_obj_as
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page, Params

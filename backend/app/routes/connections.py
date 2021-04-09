@@ -1,14 +1,11 @@
 from typing import List
 from fastapi import Depends
-from sqlalchemy import schema
 from sqlalchemy.orm import Session
 import app.models.orm as models
-from app.models.orm.connection import Connection
 import app.models.schemas as schemas
 from .base import router
 from app.database import get_db
-from app.oracle import ping
-from app.oracle import metadata as md
+from app.vendor.oracle import ping, metadata as md
 from .base import get_current_active_user
 
 
