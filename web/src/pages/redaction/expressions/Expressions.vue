@@ -1,6 +1,6 @@
 <template lang="pug">
-.flex.flex-col.gap-y-3
-  .toolbar.flex.flex-col.gap-y-2.p-3.w-full.bg-gray-50.rounded-md
+.flex.flex-col.gap-y-4
+  .toolbar.flex.flex-col.w-full.rounded-md
     .flex.flex-row.gap-x-3.items-center
       .start.w-full
         t-input.w-full(placeholder="Search" v-model="search" autofocus)
