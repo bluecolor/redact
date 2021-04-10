@@ -16,6 +16,7 @@ from passlib.apps import custom_app_context as pwd_context
 
 from .base import Base
 from app.settings import FERNET_KEY
+from app.vendors import vendors
 
 fernet = Fernet(str.encode(FERNET_KEY))
 
@@ -25,9 +26,10 @@ class Connection(Base):
     __table_args__ = {"extend_existing": True}
 
     name = Column(String(255), unique=True)
+    vendor = Column(String(50))
     host = Column(String(255))
     port = Column(Integer)
-    service = Column(String(100))
+    database = Column(String(100))
     username = Column(String(255))
     encrypted_password = Column(String)
     options = Column(Text)
@@ -54,7 +56,7 @@ class Connection(Base):
     @property
     def dsn(self):
         port = f":{self.port}" if self.port else ""
-        return f"{self.host}{port}/{self.service}"
+        return f"{self.host}{port}/{self.database}"
 
     def verify_password(self, password):
         return (
@@ -62,3 +64,8 @@ class Connection(Base):
             and fernet.encrypt(str.encode(password)) == self.encrypted_password
         )
 
+    def get_vendor(self):
+        return vendors[self.vendor](self)
+
+    def ping(self):
+        return self.get_vendor().ping()

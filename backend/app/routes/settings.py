@@ -8,7 +8,6 @@ from app.models.schemas.oracle.redact import CategoryOut
 from app.models.schemas.discovery import PlanOut, RuleOut
 from .base import router
 from app.database import get_db
-from app.vendor.oracle import redact
 from fastapi.responses import FileResponse
 import pydash
 from fastapi.encoders import jsonable_encoder

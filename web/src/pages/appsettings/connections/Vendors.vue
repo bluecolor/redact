@@ -16,19 +16,22 @@ export default {
       items: [{
         name: 'Oracle',
         icon: 'oracle',
-        path: ''
+        path: '/settings/connections/oracle/create'
       }, {
         name: 'SQL Server',
         icon: 'sqlserver',
-        path: ''
+        path: '',
+        disabled: true
       }, {
         name: 'MySQL',
         icon: 'mysql',
-        path: ''
+        path: '',
+        disabled: true
       }, {
         name: 'PostgreSQL',
         icon: 'postgresql',
-        path: ''
+        path: '',
+        disabled: true
       }]
     }
   },

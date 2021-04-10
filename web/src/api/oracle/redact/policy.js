@@ -5,33 +5,33 @@ import qs from 'qs'
 export default {
 
   getAll (connId, q) {
-    return request.get(`/connections/${connId}/redact/policies?${qs.stringify(q)}`)
+    return request.get(`/connections/oracle/${connId}/redact/policies?${qs.stringify(q)}`)
   },
   getOwners (connId) {
-    return request.get(`/connections/${connId}/redact/policies/owners`)
+    return request.get(`/connections/oracle/${connId}/redact/policies/owners`)
   },
   getTables (connId, owner) {
-    return request.get(`/connections/${connId}/redact/policies/owners/${encodeURI(owner)}/tables`)
+    return request.get(`/connections/oracle/${connId}/redact/policies/owners/${encodeURI(owner)}/tables`)
   },
   getOne (connId, q) {
-    return request.get(`/connections/${connId}/redact/policies/one?${qs.stringify(q)}`)
+    return request.get(`/connections/oracle/${connId}/redact/policies/one?${qs.stringify(q)}`)
   },
   update (connId, payload) {
-    return request.put(`/connections/${connId}/redact/policies`, payload)
+    return request.put(`/connections/oracle/${connId}/redact/policies`, payload)
   },
   create (connId, payload) {
-    return request.post(`/connections/${connId}/redact/policies`, payload)
+    return request.post(`/connections/oracle/${connId}/redact/policies`, payload)
   },
   delete (connId, payload) {
-    return request.delete(`/connections/${connId}/redact/policies?${qs.stringify(payload)}`)
+    return request.delete(`/connections/oracle/${connId}/redact/policies?${qs.stringify(payload)}`)
   },
   enable (connId, payload) {
-    return request.put(`/connections/${connId}/redact/policies/enable`, payload)
+    return request.put(`/connections/oracle/${connId}/redact/policies/enable`, payload)
   },
   disable (connId, payload) {
-    return request.put(`/connections/${connId}/redact/policies/disable`, payload)
+    return request.put(`/connections/oracle/${connId}/redact/policies/disable`, payload)
   },
   askTables (connId, payload) {
-    return request.post(`/connections/${connId}/redact/policies/ask/tables`, payload)
+    return request.post(`/connections/oracle/${connId}/redact/policies/ask/tables`, payload)
   }
 }

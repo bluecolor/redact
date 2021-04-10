@@ -18,6 +18,8 @@ from fastapi_pagination import add_pagination
 from starlette.requests import Request
 from starlette_context.middleware import ContextMiddleware
 
+from app.vendors import oracle
+
 from app.app import app
 from app.routes import (
     router,
@@ -30,15 +32,7 @@ from app.routes import (
     application,
 )
 from app.routes.discovery import plan_instances, plans, rules, discoveries
-from app.routes.oracle import metadata
-from app.routes.oracle.redact import (
-    expressions,
-    policies,
-    functions,
-    columns,
-    categories,
-    redactions,
-)
+from app.routes import metadata, oracle
 
 
 app.include_router(router, prefix="/api/v1")

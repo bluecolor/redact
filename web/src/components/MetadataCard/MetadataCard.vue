@@ -57,7 +57,7 @@ export default {
           icon: 'las la-stamp',
           disabled: !this.hasExpression,
           path: (() => {
-            const { owner: schema_name, table_name, column_name } = this.m
+            const { schema_name, table_name, column_name } = this.m
             const params = { schema_name, table_name, column_name }
             return `/connections/${this.connectionId}/expressions/apply?${qs.stringify(params)}`
           })()
@@ -68,8 +68,8 @@ export default {
           icon: 'las la-plus',
           disabled: this.hasExpression,
           path: (() => {
-            const { owner: object_owner, table_name: object_name, column_name } = this.m
-            if (this.info?.policies[0]) {
+            const { schema_name: object_owner, table_name: object_name, column_name } = this.m
+            if (this.info?.policies?.length > 0) {
               const { policy_name } = this.info.policies[0]
               const params = { policy_name, object_owner, object_name, column_name, action: 1 }
               return `/connections/${this.connectionId}/policies/edit?${qs.stringify(params)}`
@@ -82,8 +82,7 @@ export default {
           icon: 'las la-minus',
           disabled: !this.hasExpression,
           path: (() => {
-            const { owner: object_owner, table_name: object_name, column_name } = this.m
-            console.log(this.info?.policies[0])
+            const { schema_name: object_owner, table_name: object_name, column_name } = this.m
             if (this.info?.policies[0]) {
               const { policy_name } = this.info.policies[0]
               const params = { policy_name, object_owner, object_name, column_name, action: 2 }
@@ -129,18 +128,18 @@ export default {
       return column_name ?? table_name
     },
     fullName () {
-      const { type, owner, table_name, column_name } = this.m
+      const { type, schema_name, table_name, column_name } = this.m
       if (type === 'column') {
-        return `${owner}.${table_name}.${column_name}`
+        return `${schema_name}.${table_name}.${column_name}`
       }
-      return `${owner}.${table_name}`
+      return `${schema_name}.${table_name}`
     }
   },
   methods: {
     ...mapActions('md', ['getColumnSample', 'getColumns']),
     ...mapActions('redaction', ['askRedactionInfo']),
     fetchColumnSample () {
-      const { owner: schema_name, table_name, column_name } = this.m
+      const { schema_name, table_name, column_name } = this.m
       this.isSpinner = true
       this.getColumnSample({ schema_name, table_name, column_name }).then(result => {
         this.sample = _.map(result, r => r[column_name.toLowerCase()])
@@ -149,7 +148,7 @@ export default {
       })
     },
     fetchColumns () {
-      const { owner: object_schema, table_name: object_name } = this.m
+      const { schema_name: object_schema, table_name: object_name } = this.m
       this.isSpinner = true
       this.getColumns({ object_schema, object_name }).then(result => {
         this.sample = _.map(result, r => r.column_name)
@@ -172,11 +171,10 @@ export default {
     }
   },
   created () {
-    const { owner: schema_name, table_name, column_name } = this.m
+    const { schema_name, table_name, column_name } = this.m
     this.isSpinner = true
     this.askRedactionInfo({ schema_name, table_name, column_name }).then(result => {
       this.info = result
-      console.log(this.info)
     }).finally(() => { this.isSpinner = false })
   }
 }

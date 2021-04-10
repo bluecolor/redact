@@ -5,7 +5,6 @@ import app.models.orm as models
 import app.models.schemas as schemas
 from .base import router
 from app.database import get_db
-from app.vendor.oracle import ping, metadata as md
 from .base import get_current_active_user
 
 
@@ -57,12 +56,10 @@ def update(
 
 @router.delete("/connections/{id}", response_model=schemas.Connection)
 def destroy(id: int, db: Session = Depends(get_db)):
-    connection = (
-        db.query(models.Connection).filter(models.Connection.id == id).one()
-    )
-    db.delete(connection)
+    conn = db.query(models.Connection).filter(models.Connection.id == id).one()
+    db.delete(conn)
     db.commit()
-    return schemas.Connection.from_orm(connection)
+    return schemas.Connection.from_orm(conn)
 
 
 @router.get("/connections/{id}/test", response_model=bool)
@@ -71,26 +68,29 @@ def test_with_id(id: int, db: Session = Depends(get_db)):
         db.query(models.Connection).filter(models.Connection.id == id).one()
     )
     try:
-        return ping(connection)
-    except:
+        return connection.ping()
+    except Exception as e:
+        print(e)
         return False
 
 
 @router.post("/connections/test", response_model=bool)
 def test_with_payload(connection: schemas.ConnectionTestIn):
     conn: models.Connection = models.Connection(**connection.dict())
-    return ping(conn)
+    try:
+        return conn.ping()
+    except Exception as e:
+        print(e)
+        return False
 
 
-@router.post("/connections/schemas", response_model=List[schemas.SchemaOut])
+@router.post("/connections/schemas", response_model=List[schemas.Schema])
 def get_schemas_with_payload(connection: schemas.ConnectionTestIn):
     conn: models.Connection = models.Connection(**connection.dict())
     return md.get_schemas(conn)
 
 
-@router.post(
-    "/connections/{id}/schemas", response_model=List[schemas.SchemaOut]
-)
+@router.post("/connections/{id}/schemas", response_model=List[schemas.Schema])
 def get_schemas(id: int, db: Session = Depends(get_db)):
     connection = db.query(models.Connection).get(id)
     return md.get_schemas(connection)

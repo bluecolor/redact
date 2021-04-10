@@ -25,8 +25,8 @@ export default {
     ...mapActions('connection', ['testConnection']),
     ...mapActions('app', ['setConnection']),
     onNav () {
-      const { id } = this.c
-      const path = `/connections/${id}`
+      const { id, vendor } = this.c
+      const path = `/connections/${vendor}/${id}`
       this.setConnection(id)
       this.$router.push({ path })
     }

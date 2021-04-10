@@ -6,10 +6,8 @@ from celery import chord
 from sqlalchemy.orm import Session
 from app.celery import celery_app
 from app.database import get_db
-from app.vendor.oracle.metadata import get_table_packs
 from app.models.schemas import Table, Rule
 import app.models.orm as m
-from app.vendor.oracle.discovery import search_tables
 from fastapi.encoders import jsonable_encoder
 from app.redis import redis_conn as redis
 from app.tasks.notification import (

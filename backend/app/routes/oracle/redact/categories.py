@@ -8,17 +8,18 @@ import app.models.schemas.oracle.redact as s
 from .base import router
 from app.database import get_db
 from pydantic import parse_obj_as
-from app.vendor.oracle import redact
+from app.vendors.oracle import Oracle
 
 
 @router.get(
-    "/connections/{conn_id}/categories",
+    "/connections/oracle/{conn_id}/categories",
     tags=["Categories"],
     response_model=List[s.CategoryOut],
 )
 def get_all(conn_id: int, db: Session = Depends(get_db)):
-    connection = connection = db.query(models.Connection).get(conn_id)
-    expressions = redact.get_expressions(connection)
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    expressions = oracle.get_expressions()
 
     def get_expression(policy_expression_name):
         for e in expressions:
@@ -37,13 +38,14 @@ def get_all(conn_id: int, db: Session = Depends(get_db)):
 
 
 @router.get(
-    "/connections/{conn_id}/categories/{id}",
+    "/connections/oracle/{conn_id}/categories/{id}",
     tags=["Categories"],
     response_model=s.CategoryOut,
 )
 def get_one(conn_id: int, id: int, db: Session = Depends(get_db)):
-    connection = connection = db.query(models.Connection).get(conn_id)
-    expressions = redact.get_expressions(connection)
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    expressions = oracle.get_expressions()
 
     def get_expression(policy_expression_name):
         for e in expressions:
@@ -65,7 +67,7 @@ def get_one(conn_id: int, id: int, db: Session = Depends(get_db)):
 
 
 @router.post(
-    "/connections/{conn_id}/categories",
+    "/connections/oracle/{conn_id}/categories",
     tags=["Categories"],
     response_model=s.CategoryOut,
 )
@@ -77,16 +79,17 @@ def create(
     db.add(new_category)
     db.commit()
     db.refresh(new_category)
+    oracle: Oracle = new_category.connection.get_vendor()
 
-    policy_expression = redact.get_expression(
-        new_category.connection, new_category.policy_expression_name
+    policy_expression = oracle.get_expression(
+        new_category.policy_expression_name
     )
     new_category.policy_expression = policy_expression
     return s.CategoryOut.from_orm(new_category)
 
 
 @router.put(
-    "/connections/{conn_id}/categories/{id}",
+    "/connections/oracle/{conn_id}/categories/{id}",
     tags=["Categories"],
     response_model=s.CategoryOut,
 )
@@ -110,7 +113,8 @@ def update(
 
 
 @router.delete(
-    "/connections/{conn_id}/categories/{id}", response_model=s.CategoryOut,
+    "/connections/oracle/{conn_id}/categories/{id}",
+    response_model=s.CategoryOut,
 )
 def delete(conn_id: int, id: int, db: Session = Depends(get_db)):  # reserved
     category = db.query(models.Category).get(id)

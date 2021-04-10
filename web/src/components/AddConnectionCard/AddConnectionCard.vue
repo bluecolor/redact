@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     onNav () {
-      const path = '/settings/connections/create'
+      const path = '/settings/connections/vendors'
       this.$router.push({ path })
     }
   }

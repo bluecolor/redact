@@ -1,6 +1,6 @@
 <template lang="pug">
-.cursor-pointer.hover-animate(@click="onNav")
-  t-card
+.cursor-pointer.vendor-card(@click="onNav" :class="{'hover-animate': !v.disabled, 'disabled': v.disabled}")
+  t-card.card
     template(v-slot:header)
       .title.text-center.w-full
         | {{v.name}}
@@ -10,20 +10,24 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 
 export default {
   components: { SvgIcon },
   props: { v: { type: Object, default: () => {} } },
   methods: {
-    ...mapActions('app', ['setConnection']),
     onNav () {
       const { path } = this.v
-      this.$router.push({ path })
+      if (path) { this.$router.push({ path }) }
     }
   },
   created () {
   }
 }
 </script>>
+
+<style scoped lang="postcss">
+.vendor-card.disabled .card{
+  @apply bg-gray-100;
+}
+</style>

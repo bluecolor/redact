@@ -33,9 +33,9 @@ const routes = [
     path: '/connections/oracle/:connectionId',
     props: true,
     component: OracleLayout,
-    redirect: '/connections/:connectionId/policies',
+    redirect: '/connections/oracle/:connectionId/policies',
     children: [{
-      path: '/connections/:connectionId/settings',
+      path: '/connections/oracle/:connectionId/settings',
       props: true,
       component: SettingsLayout,
       redirect: '/connections/oracle/:connectionId/settings/export-import',

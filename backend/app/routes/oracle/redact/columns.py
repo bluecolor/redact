@@ -6,11 +6,11 @@ import app.models.schemas.oracle.redact as s
 import app.models.schemas.metadata as ms
 from .base import router
 from app.database import get_db
-from app.vendor.oracle import redact
 
 
 @router.get(
-    "/connections/{conn_id}/redact/columns", response_model=List[s.ColumnOut],
+    "/connections/oracle/{conn_id}/redact/columns",
+    response_model=List[s.ColumnOut],
 )
 def get_all(
     conn_id: int,

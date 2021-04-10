@@ -4,10 +4,9 @@ from sqlalchemy.orm import Session
 import app.models.orm as models
 import app.models.schemas.oracle.redact as s
 import app.models.schemas.metadata as ms
-from app.vendor.oracle.queries import redaction_columns
+from app.vendors.oracle.oracle import Oracle
 from .base import router
 from app.database import get_db
-from app.vendor.oracle import redact
 import pydash
 
 
@@ -54,8 +53,9 @@ def ask_policy(
     table_name: str,
     db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    policies = redact.get_policies(connection, schema_name, table_name)
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    policies = oracle.get_policies(schema_name, table_name)
 
     if len(policies) > 0:
         return {"policy": policies[0]}
@@ -74,10 +74,9 @@ def ask_expression(
     column_name: str,
     db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    expressions = redact.get_expressions(
-        connection, schema_name, table_name, column_name
-    )
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    expressions = oracle.get_expressions(schema_name, table_name, column_name)
 
     if len(expressions) > 0:
         return {"expression": expressions[0]}
@@ -96,14 +95,13 @@ def ask_redaction_info(
     column_name: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    expressions = redact.get_expressions(
-        connection, schema_name, table_name, column_name
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    expressions = oracle.get_expressions(schema_name, table_name, column_name)
+    redaction_columns = oracle.get_expressions(
+        schema_name, table_name, column_name
     )
-    redaction_columns = redact.get_expressions(
-        connection, schema_name, table_name, column_name
-    )
-    policies = redact.get_policies(connection, schema_name, table_name)
+    policies = oracle.get_policies(schema_name, table_name)
 
     return {
         "expressions": expressions,

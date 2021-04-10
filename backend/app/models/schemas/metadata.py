@@ -1,40 +1,26 @@
-from typing import Optional, Union
+from typing import Optional
 from pydantic import BaseModel
-from sqlalchemy.sql.expression import column
 
 
-class Table(BaseModel):
-    owner: str
+class Schema(BaseModel):
+    schema_name: str
+
+
+class Table(Schema):
     table_name: str
-
-
-class DataStore(Table):
-    type: Optional[str]
 
 
 class Column(Table):
     column_name: str
-    data_type: str
+    data_type: Optional[str]
 
 
 class ColumnIn(Table):
     column_name: str
 
 
-class ColumnInOut(Table):
-    column_name: str
-
-
-class ObjectOwner(BaseModel):
-    name: str
-
-
-class SchemaOut(BaseModel):
-    name: str
-
-
-class SearchOut(BaseModel):
+class MetadataOut(BaseModel):
     type: str
-    owner: str
+    schema_name: str
     table_name: str
     column_name: Optional[str]

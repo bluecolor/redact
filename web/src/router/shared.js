@@ -5,6 +5,8 @@ import Users, { CreateUser, EditUser } from '@/pages/appsettings/users'
 import Notifications from '@/pages/appsettings/notifications'
 import Preferences from '@/pages/appsettings/preferences'
 
+import { connectionRoutes as oracleConnectionRoutes } from './oracle'
+
 const routes = [
   {
     path: '/settings',
@@ -38,7 +40,9 @@ const routes = [
         path: 'connections',
         component: Connections,
         meta: { title: 'Connections', group: 'connections' }
-      }, {
+      },
+      ...oracleConnectionRoutes,
+      {
         name: 'users',
         path: 'users',
         component: Users,

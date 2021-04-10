@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import app.models.schemas.metadata as ms
 
 
@@ -26,11 +26,6 @@ ALL_TABLES = """
     select owner, table_name from all_tables
 """
 
-
-ALL_OBJECT_OWNERS = """
-    select username as name from all_users
-"""
-
 ALL_SCHEMAS = """
     select username as name from all_users
 """
@@ -41,18 +36,46 @@ ALL_TAB_COLS = """
 """
 
 ALL_TABS_AND_COLS = """
-    select 'column' type, owner, table_name, column_name from all_tab_cols
+    select 'column' type, owner schema_name, table_name, column_name from all_tab_cols
     union all
-    select 'table' type, owner, table_name, null column_name from all_tables
+    select 'table' type, owner schema_name, table_name, null column_name from all_tables
 """
 
 
-def all_tabs_and_cols(q: str, schemas: List[str] = []) -> str:
+def tables(schema_name: Optional[str] = None) -> str:
+    if not schema_name:
+        return ALL_TABLES
+
+    return f"{ALL_TABLES} where owner = '{schema_name}'"
+
+
+def schemas() -> str:
+    return ALL_SCHEMAS
+
+
+def columns(schema_name: str = Optional[None], table_name: str = None):
+    filters = []
+    if schema_name:
+        filters.append(f"owner = '{schema_name}'")
+    if table_name:
+        filters.append(f"table_name = '{table_name}'")
+
+    if len(filters) == 0:
+        return ALL_TAB_COLS
+
+    return f"{ALL_TAB_COLS} where {' and '.join(filters)}"
+
+
+def tables_in_schemas(schemas: List[str]) -> str:
+    return f"""{ALL_TABLES} where owner in ({', '.join(["'"+s+"'" for s in schemas]) })"""
+
+
+def tables_and_columns_in_schemas(q: str, schemas: List[str] = []) -> str:
     query = f"""
         select *
         from ({ALL_TABS_AND_COLS}) s
-        where (upper(s.owner||s.table_name||s.column_name) like '%{q.upper()}%') or
-              (upper(s.owner||'.'||s.table_name||'.'||s.column_name) like '%{q.upper()}%')
+        where (upper(s.schema_name||s.table_name||s.column_name) like '%{q.upper()}%') or
+              (upper(s.schema_name||'.'||s.table_name||'.'||s.column_name) like '%{q.upper()}%')
     """
 
     if len(schemas) > 0:
@@ -62,8 +85,10 @@ def all_tabs_and_cols(q: str, schemas: List[str] = []) -> str:
     return query
 
 
-def all_tables_in_schemas(schemas: List[str]) -> str:
-    return f"""{ALL_TABLES} where owner in ({', '.join(["'"+s+"'" for s in schemas]) })"""
+def sample(schema_name: str, table_name: str, column_name: str) -> str:
+    return f"""select {column_name} from (
+        select {column_name} from {schema_name}.{table_name} order by dbms_random.random)
+        where rownum < 10"""
 
 
 def redaction_policy_owners() -> str:
@@ -151,34 +176,6 @@ def redaction_columns(
     return f"{REDACTION_COLUMNS} where {' and '.join(filters)}"
 
 
-def all_tables(owner: str = None) -> str:
-    if not owner:
-        return ALL_TABLES
-
-    return f"{ALL_TABLES} where owner = '{owner}'"
-
-
-def all_tab_cols(owner: str = None, table_name: str = None):
-    filters = []
-    if owner:
-        filters.append(f"owner = '{owner}'")
-    if table_name:
-        filters.append(f"table_name = '{table_name}'")
-
-    if len(filters) == 0:
-        return ALL_TAB_COLS
-
-    return f"{ALL_TAB_COLS} where {' and '.join(filters)}"
-
-
-def all_object_owners() -> str:
-    return ALL_OBJECT_OWNERS
-
-
-def all_schemas() -> str:
-    return ALL_SCHEMAS
-
-
 def columns_like(*, schema, table_name=None, expression) -> str:
     if table_name is None:
         return f"""
@@ -190,10 +187,4 @@ def columns_like(*, schema, table_name=None, expression) -> str:
         select table_name, column_name from all_tab_cols where
         owner = '{schema}' and table_name = '{table_name}' and regexp_like(column_name, '{expression}', 'i')
     """
-
-
-def column_sample(schema_name: str, table_name: str, column_name: str) -> str:
-    return f"""select {column_name} from (
-        select {column_name} from {schema_name}.{table_name} order by dbms_random.random)
-        where rownum < 10"""
 

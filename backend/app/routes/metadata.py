@@ -6,7 +6,7 @@ from app.models.orm.connection import Connection
 import app.models.schemas as schemas
 from app.routes.base import router
 from app.database import get_db
-from app.vendor.oracle import metadata as md
+from app.vendors.base import Vendor
 
 
 @router.get(
@@ -21,8 +21,8 @@ def get_tables(
 
 
 @router.get(
-    "/connections/{conn_id}/metadata/object_owners",
-    response_model=List[schemas.ObjectOwner],
+    "/connections/{conn_id}/metadata/schemas",
+    response_model=List[schemas.Schema],
 )
 def get_object_owners(conn_id: int, db: Session = Depends(get_db)):
     conn = db.query(models.Connection).get(conn_id)
@@ -45,13 +45,14 @@ def get_columns(
 
 @router.get(
     "/connections/{conn_id}/metadata/search",
-    response_model=List[schemas.SearchOut],
+    response_model=List[schemas.MetadataOut],
 )
 def search(
     conn_id: int, q: str, db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    return md.search(connection, q)[0:10]
+    conn = db.query(models.Connection).get(conn_id)
+    vendor: Vendor = conn.get_vendor()
+    return vendor.search(q)[0:10]
 
 
 @router.get(

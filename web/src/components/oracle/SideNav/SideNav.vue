@@ -26,43 +26,43 @@ export default {
     ...mapGetters('app', ['connectionId']),
     items () {
       return [{ category: true, title: 'Redaction' }, {
-        path: `/connections/${this.connectionId}/policies`,
+        path: `/connections/oracle/${this.connectionId}/policies`,
         title: 'Policies',
         group: 'policies',
         icon: 'las la-certificate'
       }, {
-        path: `/connections/${this.connectionId}/expressions`,
+        path: `/connections/oracle/${this.connectionId}/expressions`,
         title: 'Expressions',
         group: 'expressions',
         icon: 'las la-code'
       }, {
-        path: `/connections/${this.connectionId}/categories`,
+        path: `/connections/oracle/${this.connectionId}/categories`,
         title: 'Categories',
         group: 'categories',
         icon: 'las la-tag'
       }, { category: true, title: 'Discovery' }, {
-        path: `/connections/${this.connectionId}/discovery/explore`,
+        path: `/connections/oracle/${this.connectionId}/discovery/explore`,
         title: 'Explore',
         group: 'explore',
         icon: 'las la-compass'
       }, {
-        path: `/connections/${this.connectionId}/discovery/rules`,
+        path: `/connections/oracle/${this.connectionId}/discovery/rules`,
         title: 'Rules',
         group: 'rules',
         icon: 'las la-ruler'
       }, {
-        path: `/connections/${this.connectionId}/discovery/plans`,
+        path: `/connections/oracle/${this.connectionId}/discovery/plans`,
         title: 'Plans',
         group: 'plans',
         icon: 'las la-box'
       }, {
-        path: `/connections/${this.connectionId}/discovery/plans/instances`,
+        path: `/connections/oracle/${this.connectionId}/discovery/plans/instances`,
         title: 'Plan Runs',
         group: 'planInstances',
         icon: 'las la-shipping-fast'
       }, { category: true, title: 'Settings' },
       {
-        path: `/connections/${this.connectionId}/settings/export-import`,
+        path: `/connections/oracle/${this.connectionId}/settings/export-import`,
         title: 'Export/Import',
         group: 'export-import',
         icon: 'las la-share'

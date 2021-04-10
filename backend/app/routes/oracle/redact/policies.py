@@ -6,12 +6,13 @@ import app.models.schemas.oracle.redact as s
 import app.models.schemas.metadata as ms
 from .base import router
 from app.database import get_db
-from app.vendor.oracle import redact
 import pydash
+from app.vendors.oracle import Oracle
 
 
 @router.get(
-    "/connections/{conn_id}/redact/policies/one", response_model=s.PolicyOut,
+    "/connections/oracle/{conn_id}/redact/policies/one",
+    response_model=s.PolicyOut,
 )
 def get_one(
     conn_id: int,
@@ -20,47 +21,49 @@ def get_one(
     policy_name: str,
     db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    return redact.get_policy(
-        connection, object_owner, object_name, policy_name
-    )
+    conn = db.query(models.Connection).get(conn_id)
+    return conn.get_policy(object_owner, object_name, policy_name)
 
 
 @router.get(
-    "/connections/{conn_id}/redact/policies/owners",
-    response_model=List[ms.ObjectOwner],
+    "/connections/oracle/{conn_id}/redact/policies/owners",
+    response_model=List[ms.Schema],
 )
 def get_owners(
     conn_id: int, db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    return redact.get_policy_owners(connection)
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    return oracle.get_policy_owners()
 
 
 @router.get(
-    "/connections/{conn_id}/redact/policies/owners/{owner}/tables",
+    "/connections/oracle/{conn_id}/redact/policies/owners/{owner}/tables",
     response_model=List[ms.Table],
 )
 def get_tables(
     conn_id: int, owner: str, db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    return redact.get_policy_tables(connection, owner)
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    return oracle.get_policy_tables(owner)
 
 
 @router.post(
-    "/connections/{conn_id}/redact/policies", response_model=bool,
+    "/connections/oracle/{conn_id}/redact/policies", response_model=bool,
 )
 def create(
     policy: s.PolicyCreateIn, conn_id: int, db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    redact.add_policy(connection, policy.dict())
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    oracle.add_policy(policy.dict())
     return True
 
 
 @router.get(
-    "/connections/{conn_id}/redact/policies", response_model=List[s.PolicyOut],
+    "/connections/oracle/{conn_id}/redact/policies",
+    response_model=List[s.PolicyOut],
 )
 def get_all(
     conn_id: int,
@@ -68,12 +71,13 @@ def get_all(
     object_name: Optional[str] = None,
     db: Session = Depends(get_db),
 ) -> List[s.PolicyOut]:
-    connection = db.query(models.Connection).get(conn_id)
-    return redact.get_policies(connection, object_owner, object_name)
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    return oracle.get_policies(object_owner, object_name)
 
 
 @router.delete(
-    "/connections/{conn_id}/redact/policies", response_model=bool,
+    "/connections/oracle/{conn_id}/redact/policies", response_model=bool,
 )
 def delete(
     conn_id: int,
@@ -82,60 +86,66 @@ def delete(
     policy_name: str,
     db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
+    conn = db.query(models.Connection).get(conn_id)
     policy = dict(
         object_schema=object_schema,
         object_name=object_name,
         policy_name=policy_name,
     )
-    redact.drop_policy(connection, policy)
+    oracle: Oracle = conn.get_vendor()
+    oracle.drop_policy(policy)
     return True
 
 
 @router.put(
-    "/connections/{conn_id}/redact/policies/enable", response_model=bool,
+    "/connections/oracle/{conn_id}/redact/policies/enable",
+    response_model=bool,
 )
 def enable(
     policy: s.PolicyEnableIn, conn_id: int, db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    redact.enable_policy(connection, policy.dict())
+    conn = db.query(models.Connection).get(conn_id)
+
+    oracle: Oracle = conn.get_vendor()
+    oracle.enable_policy(policy.dict())
     return True
 
 
 @router.put(
-    "/connections/{conn_id}/redact/policies/disable", response_model=bool,
+    "/connections/oracle/{conn_id}/redact/policies/disable",
+    response_model=bool,
 )
 def disable(
     policy: s.PolicyEnableIn, conn_id: int, db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    redact.disable_policy(connection, policy.dict())
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    oracle.disable_policy(policy.dict())
     return True
 
 
 @router.put(
-    "/connections/{conn_id}/redact/policies", response_model=bool,
+    "/connections/oracle/{conn_id}/redact/policies", response_model=bool,
 )
 def update(
     policy: s.PolicyUpdateIn, conn_id: int, db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    redact.alter_policy(connection, policy.dict())
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    oracle.alter_policy(policy.dict())
     return True
 
 
 @router.post(
-    "/connections/{conn_id}/redact/policies/ask/tables",
+    "/connections/oracle/{conn_id}/redact/policies/ask/tables",
     response_model=List[s.PolicyTableAnswer],
 )
 def ask_tables(
     tables: List[ms.Table], conn_id: int, db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    policies: List[s.PolicyOut] = redact.get_policies_for_tables(
-        connection, tables
-    )
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    policies: List[s.PolicyOut] = oracle.get_policies_for_tables(tables)
     answers: List[s.PolicyTableAnswer] = []
     for t in tables:
         answer = s.PolicyTableAnswer(table=t)
