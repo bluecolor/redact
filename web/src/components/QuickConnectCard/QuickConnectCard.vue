@@ -6,7 +6,7 @@
         | {{c.name}}
     template.relative(v-slot:default)
       .flex.justify-center
-        svg-icon(name="oracle", addClass="fill-current text-gray-300 w-24 h-24")
+        svg-icon(:name="icon", addClass="fill-current text-gray-300 w-24 h-24")
       .status.las.la-circle.text-2xl.h-full(:class="{'text-green-400': c.status, 'text-red-400': c.status === false, 'text-gray-400': c.status===undefined}")
 </template>
 
@@ -21,12 +21,20 @@ export default {
     return {
     }
   },
+  computed: {
+    icon () {
+      switch (this.c.vendor) {
+        case 'mssql': return 'sqlserver'
+      }
+      return this.c.vendor
+    }
+  },
   methods: {
     ...mapActions('connection', ['testConnection']),
     ...mapActions('app', ['setConnection']),
     onNav () {
       const { id, vendor } = this.c
-      const path = `/connections/${vendor}/${id}`
+      const path = `/connections/${id}/${vendor}`
       this.setConnection(id)
       this.$router.push({ path })
     }

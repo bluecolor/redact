@@ -8,7 +8,7 @@ class Connection(Base):
     username: str
     host: str
     port: int
-    service: str
+    database: str
 
 
 class Plan(Base):

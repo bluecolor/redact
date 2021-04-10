@@ -11,7 +11,7 @@ from app.vendors.oracle import Oracle
 
 
 @router.get(
-    "/connections/oracle/{conn_id}/redact/policies/one",
+    "/connections/{conn_id}/oracle/redact/policies/one",
     response_model=s.PolicyOut,
 )
 def get_one(
@@ -26,7 +26,7 @@ def get_one(
 
 
 @router.get(
-    "/connections/oracle/{conn_id}/redact/policies/owners",
+    "/connections/{conn_id}/oracle/redact/policies/owners",
     response_model=List[ms.Schema],
 )
 def get_owners(
@@ -38,7 +38,7 @@ def get_owners(
 
 
 @router.get(
-    "/connections/oracle/{conn_id}/redact/policies/owners/{owner}/tables",
+    "/connections/{conn_id}/oracle/redact/policies/owners/{owner}/tables",
     response_model=List[ms.Table],
 )
 def get_tables(
@@ -50,7 +50,7 @@ def get_tables(
 
 
 @router.post(
-    "/connections/oracle/{conn_id}/redact/policies", response_model=bool,
+    "/connections/{conn_id}/oracle/redact/policies", response_model=bool,
 )
 def create(
     policy: s.PolicyCreateIn, conn_id: int, db: Session = Depends(get_db),
@@ -62,7 +62,7 @@ def create(
 
 
 @router.get(
-    "/connections/oracle/{conn_id}/redact/policies",
+    "/connections/{conn_id}/oracle/redact/policies",
     response_model=List[s.PolicyOut],
 )
 def get_all(
@@ -77,7 +77,7 @@ def get_all(
 
 
 @router.delete(
-    "/connections/oracle/{conn_id}/redact/policies", response_model=bool,
+    "/connections/{conn_id}/oracle/redact/policies", response_model=bool,
 )
 def delete(
     conn_id: int,
@@ -98,7 +98,7 @@ def delete(
 
 
 @router.put(
-    "/connections/oracle/{conn_id}/redact/policies/enable",
+    "/connections/{conn_id}/oracle/redact/policies/enable",
     response_model=bool,
 )
 def enable(
@@ -112,7 +112,7 @@ def enable(
 
 
 @router.put(
-    "/connections/oracle/{conn_id}/redact/policies/disable",
+    "/connections/{conn_id}/oracle/redact/policies/disable",
     response_model=bool,
 )
 def disable(
@@ -125,7 +125,7 @@ def disable(
 
 
 @router.put(
-    "/connections/oracle/{conn_id}/redact/policies", response_model=bool,
+    "/connections/{conn_id}/oracle/redact/policies", response_model=bool,
 )
 def update(
     policy: s.PolicyUpdateIn, conn_id: int, db: Session = Depends(get_db),
@@ -137,7 +137,7 @@ def update(
 
 
 @router.post(
-    "/connections/oracle/{conn_id}/redact/policies/ask/tables",
+    "/connections/{conn_id}/oracle/redact/policies/ask/tables",
     response_model=List[s.PolicyTableAnswer],
 )
 def ask_tables(

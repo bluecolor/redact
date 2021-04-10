@@ -1,7 +1,7 @@
 import {
   CreateConnection,
   EditConnection
-} from '@/pages/oracle/connections'
+} from '@/pages/vendors/oracle/connections'
 
 import { OracleLayout } from '@/layouts'
 
@@ -9,17 +9,17 @@ import Policies, {
   CreatePolicy,
   EditPolicy,
   Columns as RedactionColumns
-} from '@/pages/oracle/redaction/policies'
+} from '@/pages/vendors/oracle/redaction/policies'
 import Expressions, {
   ApplyExpression,
   ApplyExpressionToColumn as EApplyExpressionToColumn,
   CreateExpression, EditExpression
-} from '@/pages/oracle/redaction/expressions'
+} from '@/pages/vendors/oracle/redaction/expressions'
 
-import Categories, { EditCategory, CreateCategory, AddColumnToCategory } from '@/pages/oracle/redaction/categories'
-import ExportImportLayout, { Export, Import } from '@/pages/oracle/settings/export-import'
+import Categories, { EditCategory, CreateCategory, AddColumnToCategory } from '@/pages/vendors/oracle/redaction/categories'
+import ExportImportLayout, { Export, Import } from '@/pages/vendors/oracle/settings/export-import'
 
-import SettingsLayout from '@/pages/oracle/settings'
+import SettingsLayout from '@/pages/vendors/oracle/settings'
 
 import Explore from '@/pages/discovery/explore'
 import Rules, { CreateRule, EditRule } from '@/pages/discovery/rules'
@@ -30,29 +30,29 @@ import Discoveries, { DiscoveryDashboard, DiscoveriesGroupByRule, DiscoveriesFor
 const routes = [
   {
     name: 'oracleLayout',
-    path: '/connections/oracle/:connectionId',
+    path: '/connections/:connectionId/oracle',
     props: true,
     component: OracleLayout,
-    redirect: '/connections/oracle/:connectionId/policies',
+    redirect: '/connections/:connectionId/oracle/policies',
     children: [{
-      path: '/connections/oracle/:connectionId/settings',
+      path: '/connections/:connectionId/oracle/settings',
       props: true,
       component: SettingsLayout,
-      redirect: '/connections/oracle/:connectionId/settings/export-import',
+      redirect: '/connections/:connectionId/oracle/settings/export-import',
       children: [{
-        path: '/connections/oracle/:connectionId/settings/export-import',
+        path: '/connections/:connectionId/oracle/settings/export-import',
         props: true,
         component: ExportImportLayout,
-        redirect: '/connections/oracle/:connectionId/settings/export-import/export',
+        redirect: '/connections/:connectionId/oracle/settings/export-import/export',
         children: [{
           name: 'exportSettings',
-          path: '/connections/oracle/:connectionId/settings/export-import/export',
+          path: '/connections/:connectionId/oracle/settings/export-import/export',
           props: true,
           component: Export,
           meta: { group: 'export-import', title: 'Export' }
         }, {
           name: 'importSettings',
-          path: '/connections/oracle/:connectionId/settings/export-import/import',
+          path: '/connections/:connectionId/oracle/settings/export-import/import',
           props: true,
           component: Import,
           meta: { group: 'export-import', title: 'Import' }
@@ -60,91 +60,91 @@ const routes = [
       }]
     }, {
       name: 'redactionColumns',
-      path: '/connections/oracle/:connectionId/policies/columns',
+      path: '/connections/:connectionId/oracle/policies/columns',
       props: true,
       component: RedactionColumns,
       meta: { group: 'policies', title: 'Policy Columns' }
     }, {
       name: 'policies',
-      path: '/connections/oracle/:connectionId/policies',
+      path: '/connections/:connectionId/oracle/policies',
       props: true,
       component: Policies,
       meta: { group: 'policies', title: 'Policies' }
     }, {
       name: 'editPolicy',
-      path: '/connections/oracle/:connectionId/policies/edit',
+      path: '/connections/:connectionId/oracle/policies/edit',
       props: true,
       component: EditPolicy,
       meta: { group: 'policies', title: 'Edit Policy' }
     }, {
       name: 'createPolicy',
-      path: '/connections/oracle/:connectionId/policies/create',
+      path: '/connections/:connectionId/oracle/policies/create',
       props: true,
       component: CreatePolicy,
       meta: { group: 'policies', title: 'Create Policy' }
     }, {
       name: 'expressions',
-      path: '/connections/oracle/:connectionId/expressions',
+      path: '/connections/:connectionId/oracle/expressions',
       props: true,
       component: Expressions,
       meta: { group: 'expressions', title: 'Expressions' }
     }, {
       name: 'applyExpression',
-      path: '/connections/oracle/:connectionId/expressions/apply',
+      path: '/connections/:connectionId/oracle/expressions/apply',
       props: true,
       component: ApplyExpression,
       meta: { group: 'expressions', title: 'Apply an Expression' }
     }, {
       name: 'createExpression',
-      path: '/connections/oracle/:connectionId/expressions/create',
+      path: '/connections/:connectionId/oracle/expressions/create',
       props: true,
       component: CreateExpression,
       meta: { group: 'expressions', title: 'Create Expression' }
     }, {
       name: 'editExpression',
-      path: '/connections/oracle/:connectionId/expressions/:policy_expression_name',
+      path: '/connections/:connectionId/oracle/expressions/:policy_expression_name',
       props: true,
       component: EditExpression,
       meta: { group: 'expressions', title: 'Edit Expression' }
     }, {
       name: 'eApplyExpressionToColumn',
-      path: '/connections/oracle/:connectionId/expressions/:policy_expression_name/apply-to-column',
+      path: '/connections/:connectionId/oracle/expressions/:policy_expression_name/apply-to-column',
       props: true,
       component: EApplyExpressionToColumn,
       meta: { group: 'expressions', title: 'Apply Expression' }
     }, {
       name: 'categories',
-      path: '/connections/oracle/:connectionId/categories',
+      path: '/connections/:connectionId/oracle/categories',
       props: true,
       component: Categories,
       meta: { group: 'categories', title: 'Categories' }
     }, {
       name: 'createCategory',
-      path: '/connections/oracle/:connectionId/categories/create',
+      path: '/connections/:connectionId/oracle/categories/create',
       props: true,
       component: CreateCategory,
       meta: { group: 'categories', title: 'Create Category' }
     }, {
       name: 'editCategory',
-      path: '/connections/oracle/:connectionId/categories/:id',
+      path: '/connections/:connectionId/oracle/categories/:id',
       props: true,
       component: EditCategory,
       meta: { group: 'categories', title: 'Edit Category' }
     }, {
       name: 'addColumnToCategory',
-      path: '/connections/oracle/:connectionId/categories/:id/add-column',
+      path: '/connections/:connectionId/oracle/categories/:id/add-column',
       props: true,
       component: AddColumnToCategory,
       meta: { group: 'categories', title: 'Add to Category' }
     }, {
       name: 'rules',
-      path: '/connections/oracle/:connectionId/discovery/rules',
+      path: '/connections/:connectionId/oracle/discovery/rules',
       component: Rules,
       props: true,
       meta: { title: 'Rules', group: 'rules' }
     }, {
       name: 'explore',
-      path: '/connections/oracle/:connectionId/discovery/explore',
+      path: '/connections/:connectionId/oracle/discovery/explore',
       component: Explore,
       props: route => ({
         ...route.params
@@ -152,31 +152,31 @@ const routes = [
       meta: { title: 'Explore', group: 'explore' }
     }, {
       name: 'createRule',
-      path: '/connections/oracle/:connectionId/discovery/rules/create',
+      path: '/connections/:connectionId/oracle/discovery/rules/create',
       component: CreateRule,
       props: true,
       meta: { title: 'Create Rule', group: 'rules' }
     }, {
       name: 'editRule',
-      path: '/connections/oracle/:connectionId/discovery/rules/:id',
+      path: '/connections/:connectionId/oracle/discovery/rules/:id',
       component: EditRule,
       props: true,
       meta: { title: 'Edit Rule', group: 'rules' }
     }, {
       name: 'plans',
-      path: '/connections/oracle/:connectionId/discovery/plans',
+      path: '/connections/:connectionId/oracle/discovery/plans',
       component: Plans,
       props: true,
       meta: { title: 'Plans', group: 'plans' }
     }, {
       name: 'createPlan',
-      path: '/connections/oracle/:connectionId/discovery/plans/create',
+      path: '/connections/:connectionId/oracle/discovery/plans/create',
       component: CreatePlan,
       props: true,
       meta: { title: 'Create Plan', group: 'plans' }
     }, {
       name: 'planInstances',
-      path: '/connections/oracle/:connectionId/discovery/plans/:planId/instances',
+      path: '/connections/:connectionId/oracle/discovery/plans/:planId/instances',
       component: PlanInstances,
       props: true,
       meta: { title: 'Plan Runs', group: 'planInstances' }
@@ -222,13 +222,13 @@ const routes = [
 
 const connectionRoutes = [{
   name: 'createOracleConnection',
-  path: 'connections/oracle/create',
+  path: 'connections/create/oracle',
   component: CreateConnection,
   meta: { title: 'Create Oracle Connection', group: 'connections' }
 },
 {
   name: 'editOracleConnection',
-  path: 'connections/oracle/:id',
+  path: 'connections/:id/oracle',
   component: EditConnection,
   props: true,
   meta: { title: 'Edit Oracle Connection', group: 'connections' }

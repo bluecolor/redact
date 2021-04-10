@@ -4,7 +4,7 @@
     .flex.flex-col.w-full.justify-center.gap-y-12(v-if="!isConnectionsEmpty")
       .title.text-center.text-2xl
         | Connections
-      .grid.grid-cols-3.gap-8.w-full()
+      .grid.grid-cols-3.gap-8.w-full(style="grid-auto-rows: 1fr;")
         quick-connect-card.w-full(v-for="c in connections" :c="c")
         add-connection-card
 </template>

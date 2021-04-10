@@ -3,6 +3,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 import app.models.orm as models
 import app.models.schemas as schemas
+from app.vendors.base import Vendor
 from .base import router
 from app.database import get_db
 from .base import get_current_active_user
@@ -64,11 +65,10 @@ def destroy(id: int, db: Session = Depends(get_db)):
 
 @router.get("/connections/{id}/test", response_model=bool)
 def test_with_id(id: int, db: Session = Depends(get_db)):
-    connection = (
-        db.query(models.Connection).filter(models.Connection.id == id).one()
-    )
+    conn = db.query(models.Connection).filter(models.Connection.id == id).one()
+    vendor: Vendor = conn.get_vendor()
     try:
-        return connection.ping()
+        return vendor.ping()
     except Exception as e:
         print(e)
         return False
@@ -77,11 +77,8 @@ def test_with_id(id: int, db: Session = Depends(get_db)):
 @router.post("/connections/test", response_model=bool)
 def test_with_payload(connection: schemas.ConnectionTestIn):
     conn: models.Connection = models.Connection(**connection.dict())
-    try:
-        return conn.ping()
-    except Exception as e:
-        print(e)
-        return False
+    vendor: Vendor = conn.get_vendor()
+    return vendor.ping()
 
 
 @router.post("/connections/schemas", response_model=List[schemas.Schema])

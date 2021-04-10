@@ -1,3 +1,4 @@
+from typing import Text
 from sqlalchemy.orm import relationship
 from sqlalchemy import (
     func,
@@ -8,11 +9,13 @@ from sqlalchemy import (
     Integer,
     String,
     DateTime,
+    Text,
 )
 from sqlalchemy.orm.base import attribute_str
 
 from .base import Base
 from app.models.schemas.oracle.redact.base import Expression
+from app.vendors.oracle import Oracle
 
 
 class Category(Base):
@@ -21,17 +24,20 @@ class Category(Base):
 
     name = Column(String(255), unique=True)
     description = Column(String(255))
-    policy_expression_name = Column(String(4000))
-    function_type = Column(Integer)
-    function_parameters = Column(String(4000))
 
-    policy_expression: Expression
+    options: Column(Text)
 
-    @property
-    def function_type_name(self):
-        for ft in redact.get_function_types():
-            if ft.function_type == self.function_type:
-                return ft.name
+    # policy_expression_name = Column(String(4000))
+    # function_type = Column(Integer)
+    # function_parameters = Column(String(4000))
+
+    # policy_expression: Expression
+
+    # @property
+    # def function_type_name(self):
+    #     for ft in Oracle.function_types:
+    #         if ft.function_type == self.function_type:
+    #             return ft.name
 
     def __init__(self, **kw):
         super().__init__(**kw)

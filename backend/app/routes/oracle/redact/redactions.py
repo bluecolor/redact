@@ -11,7 +11,7 @@ import pydash
 
 
 @router.post(
-    "/connections/oracle/{conn_id}/redact/ask/columns",
+    "/connections/{conn_id}/oracle/redact/ask/columns",
     response_model=List[s.ColumnAnswerOut],
 )
 def ask_columns(
@@ -44,7 +44,7 @@ def ask_columns(
 
 
 @router.get(
-    "/connections/oracle/{conn_id}/redact/ask/policy",
+    "/connections/{conn_id}/oracle/redact/ask/policy",
     response_model=dict,  # todo
 )
 def ask_policy(
@@ -64,7 +64,7 @@ def ask_policy(
 
 
 @router.get(
-    "/connections/oracle/{conn_id}/redact/ask/expression",
+    "/connections/{conn_id}/oracle/redact/ask/expression",
     response_model=dict,  # todo
 )
 def ask_expression(
@@ -85,7 +85,7 @@ def ask_expression(
 
 
 @router.get(
-    "/connections/oracle/{conn_id}/redact/ask/info",
+    "/connections/{conn_id}/oracle/redact/ask/info",
     response_model=dict,  # todo
 )
 def ask_redaction_info(

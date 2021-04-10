@@ -18,7 +18,7 @@ header
         .icon-btn.las.la-search(@click="isSearchBox=true")
         t-icon-dropdown(
           :classes="{icon: 'las la-plug'}"
-          :emitValue="true" :items="connectionsWithIcons", displayProp="name", valueProp="id" @select="onSelectConnection")
+          :items="connectionsWithIcons", displayProp="name", valueProp="id" @select="onSelectConnection")
         t-icon-dropdown(
           :classes="{icon: 'las la-sliders-h'}"
           :emitValue="true" :items="settings", valueProp="path" @select="onSelectSetting")
@@ -92,9 +92,9 @@ export default {
   methods: {
     ...mapActions('connection', ['getConnections']),
     ...mapActions('app', ['setConnection']),
-    onSelectConnection (id) {
+    onSelectConnection ({ id, vendor }) {
       this.setConnection(id)
-      this.$router.push(`/connections/${id}`)
+      this.$router.push(`/connections/${id}/${vendor}`)
     },
     onSelectSetting (path) {
       this.$router.push(path)

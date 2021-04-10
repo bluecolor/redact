@@ -2,7 +2,6 @@ from app.models.schemas.discovery import SearchResult
 from typing import List
 
 from sqlalchemy.sql.expression import column, table
-from app.models.orm import Connection, Discovery
 from app.models.schemas import Rule, Table
 import app.models.schemas.discovery as sd
 from . import queries as q

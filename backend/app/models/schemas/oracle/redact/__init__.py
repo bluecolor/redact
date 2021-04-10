@@ -1,8 +1,3 @@
-from .category import (
-    CategoryCreateIn,
-    CategoryOut,
-    CategoryUpdateIn,
-)
 from .expression import (
     ExpressionApplyIn,
     ExpressionOut,

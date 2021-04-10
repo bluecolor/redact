@@ -4,7 +4,6 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 import app.models.orm as models
 import app.models.schemas as s
-from app.models.schemas.oracle.redact import CategoryOut
 from app.models.schemas.discovery import PlanOut, RuleOut
 from .base import router
 from app.database import get_db

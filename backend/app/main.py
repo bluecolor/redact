@@ -18,7 +18,7 @@ from fastapi_pagination import add_pagination
 from starlette.requests import Request
 from starlette_context.middleware import ContextMiddleware
 
-from app.vendors import oracle
+from app.vendors import oracle, mssql
 
 from app.app import app
 from app.routes import (
@@ -30,6 +30,7 @@ from app.routes import (
     app_settings,
     notifications,
     application,
+    categories,
 )
 from app.routes.discovery import plan_instances, plans, rules, discoveries
 from app.routes import metadata, oracle

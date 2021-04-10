@@ -81,9 +81,9 @@ class Redaction(VendorABC):
     def __init__(self) -> None:
         super().__init__()
 
-    @property
     @classmethod
     def function_parameters(cls) -> List[s.FunctionParametersOut]:
+
         return parse_obj_as(
             List[s.FunctionParametersOut],
             [
@@ -181,7 +181,6 @@ class Redaction(VendorABC):
             ],
         )
 
-    @property
     @classmethod
     def function_types(cls) -> List[s.FunctionTypeOut]:
         return parse_obj_as(
@@ -204,7 +203,6 @@ class Redaction(VendorABC):
             ],
         )
 
-    @property
     @classmethod
     def actions(cls) -> List[s.ActionOut]:
         return parse_obj_as(

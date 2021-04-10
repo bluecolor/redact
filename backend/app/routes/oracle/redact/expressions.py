@@ -9,7 +9,7 @@ from app.vendors.oracle import Oracle
 
 
 @router.get(
-    "/connections/oracle/{conn_id}/redact/expressions",
+    "/connections/{conn_id}/oracle/redact/expressions",
     response_model=List[s.ExpressionOut],
 )
 def get_all(
@@ -24,7 +24,7 @@ def get_all(
 
 
 @router.get(
-    "/connections/oracle/{conn_id}/redact/expressions/{name}",
+    "/connections/{conn_id}/oracle/redact/expressions/{name}",
     response_model=s.ExpressionOut,
 )
 def get_one(
@@ -36,20 +36,21 @@ def get_one(
 
 
 @router.post(
-    "/connections/oracle/{conn_id}/redact/expressions", response_model=bool,
+    "/connections/{conn_id}/oracle/redact/expressions", response_model=bool,
 )
 def create(
     policy_expression: s.ExpressionCreateIn,
     conn_id: int,
     db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    redact.create_policy_expression(connection, policy_expression.dict())
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    oracle.create_policy_expression(policy_expression.dict())
     return True
 
 
 @router.put(
-    "/connections/oracle/{conn_id}/redact/expressions/{name}",
+    "/connections/{conn_id}/oracle/redact/expressions/{name}",
     response_model=bool,
 )
 def update(
@@ -58,23 +59,25 @@ def update(
     conn_id: int,
     db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    redact.update_policy_expression(connection, payload.dict())
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    oracle.update_policy_expression(payload.dict())
     return True
 
 
 @router.delete(
-    "/connections/oracle/{conn_id}/redact/expressions/{name}",
+    "/connections/{conn_id}/oracle/redact/expressions/{name}",
     response_model=bool,
 )
 def delete(conn_id: int, name=str, db: Session = Depends(get_db)):
-    connection = db.query(models.Connection).get(conn_id)
-    redact.drop_policy_expression(connection, {"policy_expression_name": name})
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    oracle.drop_policy_expression({"policy_expression_name": name})
     return True
 
 
 @router.put(
-    "/connections/oracle/{conn_id}/redact/expressions/{policy_expression_name}/apply-to-column",
+    "/connections/{conn_id}/oracle/redact/expressions/{policy_expression_name}/apply-to-column",
     response_model=bool,
 )
 def apply(
@@ -83,7 +86,8 @@ def apply(
     policy_expression_name: str,
     db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    redact.apply_policy_expr_to_col(connection, payload.dict())
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    oracle.apply_policy_expr_to_col(payload.dict())
     return True
 

@@ -54,7 +54,7 @@ class Vendor(VendorABC):
         result = False
         with self.connect() as conn:
             try:
-                result = conn.ping() is None
+                result = True
             except Exception as e:
                 print(e)
                 result = False

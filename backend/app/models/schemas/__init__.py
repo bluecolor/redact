@@ -11,3 +11,4 @@ from .settings import ExportIn
 from .auth import TokenOut
 from .app_settings import SettingIn, SettingOut
 from .application import VersionOut
+from .category import CategoryOut, CategoryCreateIn, CategoryUpdateIn

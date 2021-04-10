@@ -13,7 +13,7 @@
 <script>
 import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
-import SideNav from '@/components/oracle/SideNav'
+import SideNav from '@/components/vendors/oracle/SideNav'
 
 export default {
   props: ['connectionId'],

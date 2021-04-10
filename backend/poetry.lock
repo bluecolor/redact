@@ -434,12 +434,12 @@ typing-extensions = ">=3.7.4,<4.0.0"
 
 [package.extras]
 gino = ["gino[starlette] (>=1.0.1,<2.0.0)", "SQLAlchemy (>=1.3.20,<2.0.0)", "sqlalchemy-stubs (>=0.4,<0.5)"]
-all = ["gino[starlette] (>=1.0.1,<2.0.0)", "SQLAlchemy (>=1.3.20,<2.0.0)", "sqlalchemy-stubs (>=0.4,<0.5)", "databases[mysql,postgresql,sqlite] (>=0.4.0,<0.5.0)", "orm (>=0.1.5,<0.2.0)", "tortoise-orm[asyncpg,aiosqlite,aiomysql] (>=0.16.18,<0.17.0)", "asyncpg (==0.22.0)"]
+all = ["gino[starlette] (>=1.0.1,<2.0.0)", "SQLAlchemy (>=1.3.20,<2.0.0)", "sqlalchemy-stubs (>=0.4,<0.5)", "databases[sqlite,mysql,postgresql] (>=0.4.0,<0.5.0)", "orm (>=0.1.5,<0.2.0)", "tortoise-orm[aiomysql,aiosqlite,asyncpg] (>=0.16.18,<0.17.0)", "asyncpg (==0.22.0)"]
 sqlalchemy = ["SQLAlchemy (>=1.3.20,<2.0.0)", "sqlalchemy-stubs (>=0.4,<0.5)"]
 asyncpg = ["SQLAlchemy (>=1.3.20,<2.0.0)", "asyncpg (==0.22.0)"]
-databases = ["databases[mysql,postgresql,sqlite] (>=0.4.0,<0.5.0)"]
-orm = ["databases[mysql,postgresql,sqlite] (>=0.4.0,<0.5.0)", "orm (>=0.1.5,<0.2.0)"]
-tortoise = ["tortoise-orm[asyncpg,aiosqlite,aiomysql] (>=0.16.18,<0.17.0)"]
+databases = ["databases[sqlite,mysql,postgresql] (>=0.4.0,<0.5.0)"]
+orm = ["databases[sqlite,mysql,postgresql] (>=0.4.0,<0.5.0)", "orm (>=0.1.5,<0.2.0)"]
+tortoise = ["tortoise-orm[aiomysql,aiosqlite,asyncpg] (>=0.16.18,<0.17.0)"]
 
 [[package]]
 name = "filelock"
@@ -943,6 +943,14 @@ python-versions = ">=3.6"
 Markdown = ">=3.2"
 
 [[package]]
+name = "pymssql"
+version = "2.2.0"
+description = "DB-API interface to Microsoft SQL Server for Python. (new Cython-based version)"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "python-dateutil"
 version = "2.8.1"
 description = "Extensions to the standard Python datetime module"
@@ -1348,7 +1356,7 @@ python-versions = ">=3.6.1"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "083137c2db70d960b1eac71166d9449db1b24aa63476940827a411df2ef846cb"
+content-hash = "2a42d766ea25d44cbb9f7f76c4e6afbabadf4d8cf92e507901f05633031a4807"
 
 [metadata.files]
 aiofiles = [
@@ -1850,6 +1858,26 @@ pygments = [
 pymdown-extensions = [
     {file = "pymdown-extensions-8.1.1.tar.gz", hash = "sha256:632371fa3bf1b21a0e3f4063010da59b41db049f261f4c0b0872069a9b6d1735"},
     {file = "pymdown_extensions-8.1.1-py3-none-any.whl", hash = "sha256:478b2c04513fbb2db61688d5f6e9030a92fb9be14f1f383535c43f7be9dff95b"},
+]
+pymssql = [
+    {file = "pymssql-2.2.0-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:4c5481682937b2ed191980b78d91abd480d74c6b6e75ad6c9120ef9868004e2b"},
+    {file = "pymssql-2.2.0-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:cb63071f7cc3a5ae06241457f9d707293d438d069cbb1f53be6de2e25e1606fe"},
+    {file = "pymssql-2.2.0-cp37-cp37m-macosx_10_14_x86_64.whl", hash = "sha256:f0b7f259ceec1bda9ecf01cdc355e376c269d1de1308845b32fc45465fde5adf"},
+    {file = "pymssql-2.2.0-cp37-cp37m-manylinux1_i686.whl", hash = "sha256:e7e97fca8485f45df57e9b6dd2aebdb1752481418284b0b6dcd7b847c2cab7fb"},
+    {file = "pymssql-2.2.0-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:b63265ff588448c925ed08fa0520da0081933d32f0530f5ab83c7cf3c3aeee3f"},
+    {file = "pymssql-2.2.0-cp37-cp37m-win32.whl", hash = "sha256:a458b536960a4036f62718726582f24844db8585f6f8f635b336e8cf7b0a85aa"},
+    {file = "pymssql-2.2.0-cp37-cp37m-win_amd64.whl", hash = "sha256:d142aeadf364590d8289a91a1e4ecc6869979232bdd0b55444f1558c3e2aa13d"},
+    {file = "pymssql-2.2.0-cp38-cp38-macosx_10_14_x86_64.whl", hash = "sha256:13a99caf54e4c5807118dbeae5772110a1827f21d2dde65f21aba9aa9339db96"},
+    {file = "pymssql-2.2.0-cp38-cp38-manylinux1_i686.whl", hash = "sha256:29aa99e03c518391b954d7cc53657bbf0d0105001e73a0b1a3f39c7afeecb419"},
+    {file = "pymssql-2.2.0-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:2589d113e0a96ceed07fcd508b194d0ed3abf7c6b1549d44fe30ab135583208f"},
+    {file = "pymssql-2.2.0-cp38-cp38-win32.whl", hash = "sha256:05d8f23809a4bf1bbd419b75c9879e16ad4c172aedd3db85b6b80b5b47035342"},
+    {file = "pymssql-2.2.0-cp38-cp38-win_amd64.whl", hash = "sha256:436e51c34bf44f1e8d870227ccd160a2b667d23864371a972a1e972aeea63663"},
+    {file = "pymssql-2.2.0-cp39-cp39-macosx_10_14_x86_64.whl", hash = "sha256:0c619e10ebebaf86d29b6d9ec6c4fc09e4fcc7bdaa6ad3e9878883c0b7c1ef95"},
+    {file = "pymssql-2.2.0-cp39-cp39-manylinux1_i686.whl", hash = "sha256:e6271b4d08de2fb72d13a1ce4c4fdeeec1657cacebd724d24011342acfc7cbbb"},
+    {file = "pymssql-2.2.0-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:e8d795c1da83edcbff50579f55dc676a5542228d9f05703d23f5df314d4e7070"},
+    {file = "pymssql-2.2.0-cp39-cp39-win32.whl", hash = "sha256:8bea5b5fd256800e458a1582166b751c9b392658510e9b823cfc71f800b3961a"},
+    {file = "pymssql-2.2.0-cp39-cp39-win_amd64.whl", hash = "sha256:0157d2c0f31449d46a2b7bfa77b82eec59b51664050ef9ae2e599405f78a8c44"},
+    {file = "pymssql-2.2.0.tar.gz", hash = "sha256:a9f684712390d14116ae0daeb3002af1c1f865a1ad3ff7eeaf7979125c160e82"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},

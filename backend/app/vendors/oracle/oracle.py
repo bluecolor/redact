@@ -88,9 +88,6 @@ class Oracle(Vendor, Redaction, Discovery):
         super(Oracle, self).__init__(config, *args, **kwargs)
 
     def connect(self) -> Any:
-        print(
-            self.config.username, self.config.password_plain, self.config.dsn
-        )
         return cx_Oracle.connect(
             self.config.username, self.config.password_plain, self.config.dsn
         )

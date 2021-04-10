@@ -16,12 +16,11 @@ export default {
       items: [{
         name: 'Oracle',
         icon: 'oracle',
-        path: '/settings/connections/oracle/create'
+        path: '/settings/connections/create/oracle'
       }, {
         name: 'SQL Server',
         icon: 'sqlserver',
-        path: '',
-        disabled: true
+        path: '/settings/connections/create/mssql'
       }, {
         name: 'MySQL',
         icon: 'mysql',

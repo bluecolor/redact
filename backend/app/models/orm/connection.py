@@ -25,7 +25,7 @@ class Connection(Base):
     __tablename__ = "connections"
     __table_args__ = {"extend_existing": True}
 
-    name = Column(String(255), unique=True)
+    name = Column(String(255), unique=True, nullable=False)
     vendor = Column(String(50))
     host = Column(String(255))
     port = Column(Integer)

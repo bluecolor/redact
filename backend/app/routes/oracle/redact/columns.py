@@ -6,10 +6,11 @@ import app.models.schemas.oracle.redact as s
 import app.models.schemas.metadata as ms
 from .base import router
 from app.database import get_db
+from app.vendors.oracle import Oracle
 
 
 @router.get(
-    "/connections/oracle/{conn_id}/redact/columns",
+    "/connections/{conn_id}/oracle/redact/columns",
     response_model=List[s.ColumnOut],
 )
 def get_all(
@@ -18,5 +19,6 @@ def get_all(
     object_name: Optional[str] = None,
     db: Session = Depends(get_db),
 ) -> List[s.ColumnOut]:
-    connection = db.query(models.Connection).get(conn_id)
-    return redact.get_columns(connection, object_owner, object_name)
+    conn = db.query(models.Connection).get(conn_id)
+    oracle: Oracle = conn.get_vendor()
+    return oracle.get_columns(object_owner, object_name)

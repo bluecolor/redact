@@ -6,6 +6,7 @@ import Notifications from '@/pages/appsettings/notifications'
 import Preferences from '@/pages/appsettings/preferences'
 
 import { connectionRoutes as oracleConnectionRoutes } from './oracle'
+import { connectionRoutes as mssqlConnectionRoutes } from './mssql'
 
 const routes = [
   {
@@ -42,6 +43,7 @@ const routes = [
         meta: { title: 'Connections', group: 'connections' }
       },
       ...oracleConnectionRoutes,
+      ...mssqlConnectionRoutes,
       {
         name: 'users',
         path: 'users',

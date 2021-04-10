@@ -19,7 +19,7 @@ t-card.card
             :emitValue="true" :items="menu", valueProp="path")
         .spinner.lds-dual-ring(v-else)
   template(v-slot:default)
-    |{{c.host}}:{{c.port}}/{{c.service}}
+    |{{c.host}}:{{c.port}}/{{c.database}}
 </template>
 
 <script>
