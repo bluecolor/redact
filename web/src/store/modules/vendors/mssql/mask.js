@@ -17,6 +17,9 @@ const actions = {
   },
   addMask ({ rootGetters }, payload) {
     return api.addMask(rootGetters['app/connectionId'], payload)
+  },
+  dropMask ({ rootGetters }, params) {
+    return api.dropMask(rootGetters['app/connectionId'], params)
   }
 }
 

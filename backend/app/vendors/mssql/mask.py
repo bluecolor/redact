@@ -1,7 +1,8 @@
 from typing import Any, List, Optional
-from app.models.schemas.mssql import MaskingFunction, MaskIn
+from app.models.schemas.mssql import MaskingFunction, MaskIn, MaskedColumn
 from pydantic import parse_obj_as
 from app.vendors.base import VendorABC
+from . import queries as q
 
 MASKING_FUNCTIONS = [
     {"title": "Default", "name": "default"},
@@ -32,3 +33,18 @@ class MaskMixin(VendorABC):
 
         """
         self.execute(stmt)
+
+    def get_masked_columns(
+        self, schema_name: str, table_name: str
+    ) -> List[MaskedColumn]:
+        query = q.masked_columns(schema_name, table_name)
+        return parse_obj_as(List[MaskedColumn], self.queryall(query))
+
+    def drop_mask(self, schema_name: str, table_name: str, column_name: str):
+        stmt = f"""
+            ALTER TABLE {schema_name}.{table_name}
+     	    ALTER COLUMN {column_name}
+            DROP MASKED
+        """
+        self.execute(stmt)
+

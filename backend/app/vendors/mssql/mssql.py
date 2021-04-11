@@ -40,7 +40,6 @@ class SqlServer(Vendor, MaskMixin):
         self, schema_name: Optional[str], table_name: Optional[str],
     ) -> List[s.Column]:
         query = q.columns(schema_name, table_name)
-        print(query)
         return parse_obj_as(List[s.Column], self.queryall(query))
 
     def get_table_packs(
@@ -55,12 +54,6 @@ class SqlServer(Vendor, MaskMixin):
         self, schema_name: str, table_name: str, column_name: str
     ) -> List[dict]:
         ...
-
-    def get_masked_columns(
-        self, schema_name: str, table_name: str
-    ) -> List[MaskedColumn]:
-        query = q.masked_columns(schema_name, table_name)
-        return parse_obj_as(List[MaskedColumn], self.queryall(query))
 
 
 register_vendor(SqlServer)

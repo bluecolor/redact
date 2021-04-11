@@ -11,24 +11,53 @@
   .flex.justify-center.w-full(v-if="!isLoading && !isMaskedColumnsEmpty")
     .body.w-full.flex.items-center.flex-col
       .gap-y-3.flex.flex-col.w-full
-        //- policy-card(v-for="i in items" :="i")
+      t-table.d-table(:headers="headers" :data="items" style="overflow:unset;")
+        template(slot='row' slot-scope='props')
+          tr(:class="[props.trClass, 'hover:bg-gray-50']")
+            td.overflow-ellipsis(:class='props.tdClass')
+              | {{ props.row.schema_name }}
+            td.overflow-ellipsis(:class='props.tdClass')
+              | {{ props.row.table_name }}
+            td.overflow-ellipsis(:class='props.tdClass')
+              | {{ props.row.column_name }}
+            td.overflow-ellipsis(:class='props.tdClass')
+              | {{ props.row.masking_function }}
+            td.flex.gap-x-3.justify-end(:class='props.tdClass')
+              t-icon-dropdown(
+                :classes="{icon: 'las la-ellipsis-v'}"
+                :emitValue="true" :items="menu", valueProp="value"
+                @select="(menu) =>  onMenuItemClick(menu, props.row)"
+              )
       t-button.mt-10.w-full.text-center(tagName="a" :href="`/connections/${connectionId}/mssql/masks/columns/create`")
         | Add New Column
 </template>
 
 <script>
+/* eslint-disable camelcase */
+
+import _ from 'lodash'
 import SvgIcon from '@/components/SvgIcon'
 import { loaderMixin } from '@/mixins'
 import { mapActions } from 'vuex'
+import TIconDropdown from '@/components/TIconDropdown'
+
 export default {
   props: ['connectionId'],
   mixins: [loaderMixin],
   components: {
-    SvgIcon
+    SvgIcon, TIconDropdown
   },
   data () {
     return {
-      items: []
+      items: [],
+      menu: [
+        { name: 'Remove mask', value: 'drop-mask', icon: 'las la-trash-alt' },
+        { name: 'Edit', value: 'edit', icon: 'las la-pen' },
+        { name: 'Grant unmask', value: 'grant-unmask', icon: 'las la-user-secret text-red-400' },
+        { name: 'Revoke unmask', value: 'revoke-unmask', icon: 'las la-user text-blue-400' }
+      ],
+      headers: ['Schema', 'Table', 'Column', 'Function']
+
     }
   },
   computed: {
@@ -37,7 +66,25 @@ export default {
     }
   },
   methods: {
-    ...mapActions('mask', ['getMaskedColumns'])
+    ...mapActions('mask', ['getMaskedColumns', 'dropMask']),
+    onDropMask ({ schema_name, table_name, column_name }) {
+      this.startSpinner()
+      this.dropMask({ schema_name, table_name, column_name }).then(() => {
+        const i = _.findIndex(this.items, { schema_name, table_name, column_name })
+        if (i > -1) {
+          this.items.splice(i, 1)
+        }
+        this.$toasted.success('Success. Removed mask from column')
+      }).catch(error => {
+        console.log(error)
+        this.$toasted.error('Error. Failed to remove mask')
+      }).finally(this.stopSpinner)
+    },
+    onMenuItemClick (menu, item) {
+      switch (menu) {
+        case 'drop-mask': this.onDropMask(item); break
+      }
+    }
   },
   created () {
     this.startLoader()
@@ -47,3 +94,12 @@ export default {
   }
 }
 </script>
+
+<style lang="postcss" scoped>
+.row-action-btn {
+  @apply text-gray-400;
+}
+.d-table, .d-table th, .d-table tr, .d-table td {
+  border: 0 !important
+}
+</style>

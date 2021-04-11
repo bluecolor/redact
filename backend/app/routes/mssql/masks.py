@@ -23,6 +23,22 @@ def get_masked_columns(
     return mssql.get_masked_columns(schema_name, table_name)
 
 
+@router.delete(
+    "/connections/{conn_id}/mssql/masks/columns", response_model=bool,
+)
+def drop_mask(
+    conn_id: int,
+    schema_name: str,
+    table_name: str,
+    column_name: str,
+    db: Session = Depends(get_db),
+) -> List[s.MaskedColumn]:
+    conn = db.query(models.Connection).get(conn_id)
+    mssql: SqlServer = conn.get_vendor()
+    mssql.drop_mask(schema_name, table_name, column_name)
+    return True
+
+
 @router.post(
     "/connections/{conn_id}/mssql/masks/columns", response_model=bool,
 )
@@ -31,7 +47,8 @@ def add_mask(
 ) -> bool:
     conn = db.query(models.Connection).get(conn_id)
     mssql: SqlServer = conn.get_vendor()
-    return mssql.add_mask(mask)
+    mssql.add_mask(mask)
+    return True
 
 
 @router.get(

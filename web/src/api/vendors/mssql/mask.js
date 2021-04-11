@@ -11,5 +11,8 @@ export default {
   },
   addMask (connId, payload) {
     return request.post(`/connections/${connId}/mssql/masks/columns`, payload)
+  },
+  dropMask (connId, params) {
+    return request.delete(`/connections/${connId}/mssql/masks/columns?${qs.stringify(params)}`)
   }
 }
