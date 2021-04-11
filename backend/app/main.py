@@ -33,7 +33,7 @@ from app.routes import (
     categories,
 )
 from app.routes.discovery import plan_instances, plans, rules, discoveries
-from app.routes import metadata, oracle
+from app.routes import metadata, oracle, mssql
 
 
 app.include_router(router, prefix="/api/v1")

@@ -77,7 +77,7 @@ DBMS_REDACT = dict(
 )
 
 
-class Redaction(VendorABC):
+class RedactionMixin(VendorABC):
     def __init__(self) -> None:
         super().__init__()
 
@@ -243,10 +243,10 @@ class Redaction(VendorABC):
         return parse_obj_as(List[s.PolicyOut], self.queryall(query))
 
     def get_expressions_in_columns(
-        connection: models.Connection, columns: List[ms.ColumnIn]
+        self, columns: List[ms.ColumnIn]
     ) -> List[s.ExpressionOut]:
         query = q.redaction_expressions_in_columns(columns)
-        return parse_obj_as(List[s.ExpressionOut], queryall(connection, query))
+        return parse_obj_as(List[s.ExpressionOut], self.queryall(query))
 
     def get_columns_in_columns(
         self, columns: List[ms.ColumnIn]

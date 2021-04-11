@@ -5,12 +5,13 @@ import app from './modules/app'
 import md from './modules/md'
 import connection from './modules/connection'
 
-import category from './modules/category'
 import column from './modules/vendors/oracle/redact/column'
 import expression from './modules/vendors/oracle/redact/expression'
 import func from './modules/vendors/oracle/redact/func'
 import policy from './modules/vendors/oracle/redact/policy'
 import redaction from './modules/vendors/oracle/redact/redaction'
+
+import mask from './modules/vendors/mssql/mask'
 
 import discovery from './modules/discovery/discovery'
 import planInstance from './modules/discovery/planInstance'
@@ -20,6 +21,7 @@ import impexp from './modules/vendors/oracle/settings/impexp'
 import user from './modules/user'
 import appsetting from './modules/appsetting'
 import notification from './modules/notification'
+import category from './modules/category'
 
 Vue.use(Vuex)
 
@@ -47,6 +49,7 @@ export default new Vuex.Store({
     impexp,
     user,
     appsetting,
-    notification
+    notification,
+    mask
   }
 })

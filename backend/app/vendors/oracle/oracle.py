@@ -9,8 +9,8 @@ from pydantic import parse_obj_as
 import app.models.schemas as s
 from pydash.arrays import chunk
 from app.vendors import register_vendor
-from .redaction import Redaction
-from .discovery import Discovery
+from .redaction import RedactionMixin
+from .discovery import DiscoveryMixin
 
 DBMS_REDACT = dict(
     NONE=0,
@@ -79,7 +79,7 @@ DBMS_REDACT = dict(
 )
 
 
-class Oracle(Vendor, Redaction, Discovery):
+class Oracle(Vendor, RedactionMixin, DiscoveryMixin):
     @classmethod
     def type(cls):
         return "oracle"

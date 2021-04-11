@@ -10,23 +10,25 @@ from app.vendors.base import Vendor
 
 
 @router.get(
+    "/connections/{conn_id}/metadata/schemas",
+    response_model=List[schemas.Schema],
+)
+def get_schemas(conn_id: int, db: Session = Depends(get_db)):
+    conn = db.query(models.Connection).get(conn_id)
+    vendor: Vendor = conn.get_vendor()
+    return vendor.get_schemas()
+
+
+@router.get(
     "/connections/{conn_id}/metadata/tables",
     response_model=List[schemas.Table],
 )
 def get_tables(
-    conn_id: int, owner: Optional[str], db: Session = Depends(get_db)
+    conn_id: int, schema_name: Optional[str], db: Session = Depends(get_db)
 ):
     conn = db.query(models.Connection).get(conn_id)
-    return md.get_all_tables(connection=conn, owner=owner)
-
-
-@router.get(
-    "/connections/{conn_id}/metadata/schemas",
-    response_model=List[schemas.Schema],
-)
-def get_object_owners(conn_id: int, db: Session = Depends(get_db)):
-    conn = db.query(models.Connection).get(conn_id)
-    return md.get_object_owners(connection=conn)
+    vendor: Vendor = conn.get_vendor()
+    return vendor.get_tables(schema_name)
 
 
 @router.get(
@@ -35,12 +37,13 @@ def get_object_owners(conn_id: int, db: Session = Depends(get_db)):
 )
 def get_columns(
     conn_id: int,
-    owner: Optional[str] = None,
+    schema_name: Optional[str] = None,
     table_name: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    return md.get_all_tab_cols(connection, owner, table_name)
+    conn = db.query(models.Connection).get(conn_id)
+    vendor: Vendor = conn.get_vendor()
+    return vendor.get_columns(schema_name, table_name)
 
 
 @router.get(

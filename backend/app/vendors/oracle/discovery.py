@@ -8,7 +8,7 @@ from . import queries as q
 from app.vendors.base import VendorABC
 
 
-class Discovery(VendorABC):
+class DiscoveryMixin(VendorABC):
     def __init__(self) -> None:
         super().__init__()
 

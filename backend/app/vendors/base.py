@@ -1,12 +1,30 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional, Any
 from app.models.orm import Connection
-from app.models.schemas import MetadataOut
+from app.models.schemas import MetadataOut, Schema, Table, Column
 
 
 class VendorABC(ABC):
     @abstractmethod
     def connect(self) -> Any:
+        ...
+
+    @abstractmethod
+    def execute(self, stmt: str):
+        ...
+
+    @abstractmethod
+    def get_schemas(self) -> List[Schema]:
+        ...
+
+    @abstractmethod
+    def get_tables(self, schema_name: Optional[str]) -> List[Table]:
+        ...
+
+    @abstractmethod
+    def get_columns(
+        self, schema_name: Optional[str], table_name: Optional[str],
+    ) -> List[Column]:
         ...
 
     @abstractmethod
@@ -41,6 +59,12 @@ class Vendor(VendorABC):
         ]
         rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
         return rows
+
+    def execute(self, stmt: str):
+        with self.connect() as conn:
+            cursor = conn.cursor()
+            cursor.execute(stmt)
+            conn.commit()
 
     def queryall(self, query: str, lower_keys=True) -> List[dict]:
         with self.connect() as conn:

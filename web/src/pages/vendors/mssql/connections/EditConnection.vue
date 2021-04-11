@@ -13,8 +13,8 @@
           t-input-group(label='Port', required)
             t-input(v-model.number="payload.port" required type="number")
         .form-item
-          t-input-group(label='Service', required)
-            t-input(v-model="payload.service" required)
+          t-input-group(label='Database', required)
+            t-input(v-model="payload.database" required)
         .form-item
           t-input-group(label='Username', required)
             t-input(v-model="payload.username" required)

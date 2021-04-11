@@ -21,18 +21,14 @@ const actions = {
       return result
     })
   },
-  getSchemas ({ commit, rootGetters }, connectionId) {
-    const connId = connectionId ?? rootGetters['app/connectionId']
-    return api.getObjectSchemas(connId).then(result => {
-      commit(SET_OBJECT_SCHEMAS, result)
-      return result
-    })
+  getSchemas ({ rootGetters }) {
+    return api.getSchemas(rootGetters['app/connectionId'])
   },
-  getTables ({ rootGetters }, owner) {
-    return api.getTables(rootGetters['app/connectionId'], owner)
+  getTables ({ rootGetters }, schema_name) {
+    return api.getTables(rootGetters['app/connectionId'], schema_name)
   },
-  getColumns ({ rootGetters }, { object_schema, object_name }) {
-    return api.getColumns(rootGetters['app/connectionId'], object_schema, object_name)
+  getColumns ({ rootGetters }, { schema_name, table_name }) {
+    return api.getColumns(rootGetters['app/connectionId'], schema_name, table_name)
   },
   searchMetadata ({ rootGetters }, q) {
     return api.search(rootGetters['app/connectionId'], q)

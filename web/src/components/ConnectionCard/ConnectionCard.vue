@@ -8,7 +8,7 @@ t-card.card
           | {{c.name}}
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
-          router-link.icon-btn.las.la-pen(:to="`connections/${c.id}`" v-slot="{ navigate }")
+          router-link.icon-btn.las.la-pen(:to="`connections/${c.id}/${c.vendor}`" v-slot="{ navigate }")
           .icon-btn.las.la-vial(
             content="Test connection" v-tippy='{ placement : "top" }'
             @click="onTest(c.id)"

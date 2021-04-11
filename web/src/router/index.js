@@ -6,6 +6,7 @@ import Home from '@/pages/Home.vue'
 import Login from '@/pages/auth'
 
 import oracleRoutes from './oracle'
+import mssqlRoutes from './mssql'
 import sharedRoutes from './shared'
 
 Vue.use(VueRouter)
@@ -26,7 +27,8 @@ const routes = [
         meta: { title: 'Home' }
       },
       ...sharedRoutes,
-      ...oracleRoutes
+      ...oracleRoutes,
+      ...mssqlRoutes
     ]
   }
 ]

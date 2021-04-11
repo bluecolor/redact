@@ -3,15 +3,15 @@ import request from './request'
 import qs from 'qs'
 
 export default {
-  getObjectSchemas (connId) {
-    return request.get(`/connections/${connId}/metadata/object_owners`)
+  getSchemas (connId) {
+    return request.get(`/connections/${connId}/metadata/schemas`)
   },
-  getTables (connId, owner) {
-    return request.get(`/connections/${connId}/metadata/tables?owner=${encodeURI(owner)}`)
+  getTables (connId, schema_name) {
+    return request.get(`/connections/${connId}/metadata/tables?schema_name=${encodeURI(schema_name)}`)
   },
-  getColumns (connId, object_schema, object_name) {
+  getColumns (connId, schema_name, table_name) {
     return request.get(
-      `/connections/${connId}/metadata/columns?owner=${encodeURI(object_schema)}&table_name=${encodeURI(object_name)}`)
+      `/connections/${connId}/metadata/columns?${qs.stringify({ schema_name, table_name })}`)
   },
   search (connId, q) {
     return request.get(`/connections/${connId}/metadata/search?q=${encodeURI(q)}`)
