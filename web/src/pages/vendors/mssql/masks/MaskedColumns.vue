@@ -7,7 +7,7 @@
       svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
     .flex.justify-center.mt-10
       t-button.mt-10.w-full.text-center(tagName="a" :href="`/connections/${connectionId}/mssql/masks/columns/create`")
-        | Add New Column
+        | Add New
   .flex.justify-center.w-full(v-if="!isLoading && !isMaskedColumnsEmpty")
     .body.w-full.flex.items-center.flex-col
       .gap-y-3.flex.flex-col.w-full
@@ -29,7 +29,7 @@
                 @select="(menu) =>  onMenuItemClick(menu, props.row)"
               )
       t-button.mt-10.w-full.text-center(tagName="a" :href="`/connections/${connectionId}/mssql/masks/columns/create`")
-        | Add New Column
+        | Add New
 </template>
 
 <script>
