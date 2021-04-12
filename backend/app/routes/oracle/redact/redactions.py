@@ -8,6 +8,7 @@ from app.vendors.oracle.oracle import Oracle
 from .base import router
 from app.database import get_db
 import pydash
+from app.vendors.oracle import Oracle
 
 
 @router.post(
@@ -18,23 +19,26 @@ def ask_columns(
     conn_id: int, columns: List[ms.ColumnIn], db: Session = Depends(get_db),
 ):
     connection = db.query(models.Connection).get(conn_id)
-    expressions = redact.get_expressions_in_columns(connection, columns)
-    red_columns = redact.get_columns_in_columns(connection, columns)
+    oracle: Oracle = connection.get_vendor()
+    expressions = oracle.get_expressions_in_columns(columns)
+    red_columns = oracle.get_columns_in_columns(columns)
     answers: List[s.ColumnAnswerOut] = []
 
     for c in columns:
         answer: s.ColumnAnswerOut = s.ColumnAnswerOut(
-            owner=c.owner, table_name=c.table_name, column_name=c.column_name
+            owner=c.schema_name,
+            table_name=c.table_name,
+            column_name=c.column_name,
         )
         answer.column = pydash.find(
             red_columns,
-            lambda x: x.object_owner == c.owner
+            lambda x: x.object_owner == c.schema_name
             and x.object_name == c.table_name
             and x.column_name == c.column_name,
         )
         answer.expression = pydash.find(
             expressions,
-            lambda x: x.object_owner == c.owner
+            lambda x: x.object_owner == c.schema_name
             and x.object_name == c.table_name
             and x.column_name == c.column_name,
         )

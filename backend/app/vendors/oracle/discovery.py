@@ -41,29 +41,20 @@ class DiscoveryMixin(VendorABC):
 
         return query
 
-    def search_tables(
-        self, tables: List[Table], rules: List[Rule]
-    ) -> sd.SearchResult:
-        for t, r in [(table, rule) for rule in rules for table in tables]:
-            if r.type == "metadata":
-                yield from self.search_table_metadata(table=t, rule=r)
-            elif r.type == "data":
-                yield from self.search_table_data(table=t, rule=r)
-
     def search_table_metadata(
         self, table: Table, rule: Rule
     ) -> sd.SearchResult:
         query = q.columns_like(
-            schema=table.owner,
+            schema=table.schema_name,
             table_name=table.table_name,
             expression=rule.expression,
         )
-        print(f"m => {table.owner}.{table.table_name}")
+        print(f"m => {table.schema_name}.{table.table_name}")
         results = self.queryall(query)
         for r in results:
             discovery = sd.Discovery(
                 rule=rule,
-                schema_name=table.owner,
+                schema_name=table.schema_name,
                 table_name=table.table_name,
                 column_name=r["column_name"],
             )
@@ -84,9 +75,11 @@ class DiscoveryMixin(VendorABC):
 
     def search_table_data(self, table: Table, rule: Rule) -> sd.SearchResult:
         query = self._build_data_search_query(
-            schema=table.owner, table=table.table_name, rule=rule
+            schema_name=table.schema_name,
+            table_name=table.table_name,
+            rule=rule,
         )
-        print(f"d => {table.owner}.{table.table_name}")
+        print(f"d => {table.schema_name}.{table.table_name}")
         results: List[dict] = []
         try:
             results = self.queryall(query, lower_keys=False)
@@ -98,7 +91,7 @@ class DiscoveryMixin(VendorABC):
                 if is_match == 1:
                     discovery = sd.Discovery(
                         rule=rule,
-                        schema_name=table.owner,
+                        schema_name=table.schema_name,
                         table_name=table.table_name,
                         column_name=col_name,
                     )

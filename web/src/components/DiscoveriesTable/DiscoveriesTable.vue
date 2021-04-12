@@ -56,12 +56,12 @@ export default {
   computed: {
     columns () {
       return _.map(this.d, d => {
-        return { owner: d.schema_name, table_name: d.table_name, column_name: d.column_name }
+        return { schema_name: d.schema_name, table_name: d.table_name, column_name: d.column_name }
       })
     },
     tables () {
       return _.map(this.d, d => {
-        return { owner: d.schema_name, table_name: d.table_name }
+        return { schema_name: d.schema_name, table_name: d.table_name }
       })
     }
   },
@@ -89,13 +89,13 @@ export default {
     },
     hasPolicy ({ schema_name, table_name }) {
       const result = _.find(this.redaction.policies, p => {
-        return p.table.owner === schema_name && p.table.table_name === table_name
+        return p.table.schema_name === schema_name && p.table.table_name === table_name
       })
       return result?.policy
     },
     hasExpression ({ schema_name, table_name, column_name }) {
       const result = _.find(this.redaction.columns, c => {
-        return c.owner === schema_name && c.table_name === table_name && c.column_name === column_name
+        return c.schema_name === schema_name && c.table_name === table_name && c.column_name === column_name
       })
       return result?.expression
     },

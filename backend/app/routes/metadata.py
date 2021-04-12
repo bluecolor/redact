@@ -69,8 +69,7 @@ def get_col_sample_data(
     column_name: str,
     db: Session = Depends(get_db),
 ):
-    connection = db.query(models.Connection).get(conn_id)
-    return md.get_col_sample_data(
-        connection, schema_name, table_name, column_name
-    )
+    conn = db.query(models.Connection).get(conn_id)
+    vendor: Vendor = conn.get_vendor()
+    return vendor.get_sample(schema_name, table_name, column_name)
 

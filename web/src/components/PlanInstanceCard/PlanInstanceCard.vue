@@ -45,7 +45,7 @@ t-card.card.plan-instance-card
           .flex.justify-end
             router-link(
               class="hover:underline"
-              :to="`/connections/${p.plan.connection.id}/discovery/plans/${p.plan.id}/instances/${p.id}/discoveries-by-rule`")
+              :to="`/connections/${p.plan.connection.id}/oracle/discovery/plans/${p.plan.id}/instances/${p.id}/discoveries-by-rule`")
               | {{p.discoveries.length}} discoveries
       k-progress.progressbar(v-if="showProgressbar" :percent="progressbar.percent"
         color="#60A5FA"
@@ -97,7 +97,7 @@ export default {
   computed: {
     progress () {
       if (this.searchResult?.table?.table_name) {
-        return `${this.searchResult?.table?.owner}.${this.searchResult.table.table_name}`
+        return `${this.searchResult?.table?.schema_name}.${this.searchResult.table.table_name}`
       }
       return ''
     },

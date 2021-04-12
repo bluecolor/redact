@@ -1,5 +1,6 @@
 from celery.result import allow_join_result
 from typing import List, Union
+from sqlalchemy.sql.expression import outerjoin
 import json
 from celery import chord
 
@@ -15,6 +16,7 @@ from app.tasks.notification import (
     notify_plan_instance_start,
     notify_plan_instance_success,
 )
+from app.vendors.base import Vendor
 
 
 def update_status(p: Union[m.Plan, m.PlanInstance], status: str, db: Session):
@@ -81,7 +83,9 @@ def on_chord_error(task_id, conn_id, plan_id, plan_instance_id):
 @celery_app.task(acks_late=True)
 def start(conn_id: int, plan_instance_id: int):
     for db in get_db():
-        plan_instance: m.PlanInstance = db.query(m.PlanInstance).filter(
+        plan_instance: m.PlanInstance = db.query(m.PlanInstance).outerjoin(
+            m.Plan
+        ).outerjoin(m.Connection).filter(
             m.Connection.id == conn_id, m.PlanInstance.id == plan_instance_id
         ).one()
         update_status(plan_instance, "running", db)
@@ -89,8 +93,11 @@ def start(conn_id: int, plan_instance_id: int):
 
         schemas = json.loads(plan_instance.schemas)
         connection = db.query(m.Connection).get(conn_id)
-        packs: List[List[Table]] = get_table_packs(
-            connection, schemas, plan_instance.worker_count
+
+        vendor: Vendor = connection.get_vendor()
+
+        packs: List[List[Table]] = vendor.get_table_packs(
+            schemas, plan_instance.worker_count
         )
         plan_id: int = plan_instance.plan_id
 
@@ -134,9 +141,9 @@ def run(
             .one()
         )
         tables = [Table.parse_obj(t) for t in json.loads(tables_json)]
+        vendor: Vendor = connection.get_vendor()
 
-        for result in search_tables(
-            connection=connection,
+        for result in vendor.search_tables(
             tables=tables,
             rules=[Rule.from_orm(r) for r in plan_instance.plan.rules],
         ):

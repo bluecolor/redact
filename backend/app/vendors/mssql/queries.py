@@ -53,6 +53,32 @@ USERS = """
     order by username
 """
 
+TABLES_AND_COLUMNS = """
+    select
+        'column' type,
+     	s.name schema_name,
+     	t.name table_name,
+     	c.name column_name
+     from
+     	sys.columns c,
+     	sys.tables 	t,
+     	sys.schemas s
+     where
+     	s.schema_id  = t.schema_id and
+     	t.object_id  = c.object_id
+    union
+    select
+        'table' type,
+     	s.name schema_name,
+     	t.name table_name,
+     	null column_name
+     from
+     	sys.tables 	t,
+     	sys.schemas s
+     where
+     	s.schema_id  = t.schema_id
+"""
+
 
 def users():
     return USERS
@@ -75,6 +101,22 @@ def columns(schema_name: str, table_name: str):
     """
 
 
+def tables_and_columns_in_schemas(search_str, schemas):
+    query = f"""
+        select q.* from ({TABLES_AND_COLUMNS}) as q
+        where
+            lower(concat(q.schema_name, '.', q.table_name, '.', q.column_name)) like lower('%{search_str}%') or
+            lower(concat(q.schema_name, '.', q.table_name)) like lower('%{search_str}%') or
+            lower(concat(q.table_name, '.', q.column_name)) like lower('%{search_str}%')
+    """
+
+    if len(schemas) > 0:
+        filters = ", ".join([f"'{s}'" for s in schemas])
+        return f"""select s.* from ({query}) as s where schema_name in ({filters})"""
+
+    return query
+
+
 def masked_columns(
     schema_name: str, table_name: str, column_name: Optional[str] = None
 ):
@@ -90,3 +132,12 @@ def masked_columns(
         return MASKED_COLUMNS
 
     return f"{MASKED_COLUMNS} and {' and '.join(filters)}"
+
+
+def sample(schema_name: str, table_name: str, column_name: str) -> str:
+    return f"""select q.{column_name} from (
+        select {column_name} from {schema_name}.{table_name}
+        ) q
+        order by 1 offset 0 rows fetch next 10 rows only
+    """
+

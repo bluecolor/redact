@@ -182,37 +182,37 @@ const routes = [
       meta: { title: 'Plan Runs', group: 'planInstances' }
     }, {
       name: 'allPlanInstances',
-      path: '/connections/:connectionId/discovery/plans/instances',
+      path: '/connections/:connectionId/oracle/discovery/plans/instances',
       component: AllPlanInstances,
       props: true,
       meta: { title: 'All Plan Runs', group: 'planInstances' }
     }, {
       name: 'editPlan',
-      path: '/connections/:connectionId/discovery/plans/:id',
+      path: '/connections/:connectionId/oracle/discovery/plans/:id',
       component: EditPlan,
       props: true,
       meta: { title: 'Edit Plan', group: 'plans' }
     }, {
       name: 'discoveries',
-      path: '/connections/:connectionId/discovery/plans/instances/:planInstanceId/discoveries',
+      path: '/connections/:connectionId/oracle/discovery/plans/instances/:planInstanceId/discoveries',
       component: Discoveries,
       props: true,
       meta: { title: 'Discoveries', group: 'planInstances' }
     }, {
       name: 'discoveriesGroupByRule',
-      path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/discoveries-by-rule',
+      path: '/connections/:connectionId/oracle/discovery/plans/:planId/instances/:planInstanceId/discoveries-by-rule',
       component: DiscoveriesGroupByRule,
       props: true,
       meta: { title: 'Discoveries by Rule', group: 'planInstances' }
     }, {
       name: 'discoveriesForRule',
-      path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/rules/:ruleId/discoveries',
+      path: '/connections/:connectionId/oracle/discovery/plans/:planId/instances/:planInstanceId/rules/:ruleId/discoveries',
       component: DiscoveriesForRule,
       props: true,
       meta: { title: 'Discoveries for Rule', group: 'planInstances' }
     }, {
       name: 'discoveriesDashboard',
-      path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/dashboard',
+      path: '/connections/:connectionId/oracle/discovery/plans/:planId/instances/:planInstanceId/dashboard',
       component: DiscoveryDashboard,
       props: true,
       meta: { title: 'Discovery Dashboard', group: 'planInstances' }

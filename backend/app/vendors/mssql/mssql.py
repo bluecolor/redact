@@ -1,3 +1,4 @@
+import json
 from typing import Any, List, Optional
 import pymssql
 from app.models.orm import Connection
@@ -8,9 +9,10 @@ from app.models.schemas.mssql import MaskedColumn, SqlServerUser
 from . import queries as q
 from pydantic import parse_obj_as
 from .mask import MaskMixin
+from .discovery import DiscoveryMixin
 
 
-class SqlServer(Vendor, MaskMixin):
+class SqlServer(Vendor, MaskMixin, DiscoveryMixin):
     @classmethod
     def type(cls):
         return "mssql"
@@ -48,12 +50,21 @@ class SqlServer(Vendor, MaskMixin):
         ...
 
     def search(self, search_str: str) -> List[s.MetadataOut]:
-        ...
+        schemas = []
+        try:
+            options: dict = json.loads(self.options)
+            schemas = options.get("search", {}).get("schemas", [])
+        except:
+            ...
+
+        query = q.tables_and_columns_in_schemas(search_str, schemas)
+        return parse_obj_as(List[s.MetadataOut], self.queryall(query))
 
     def get_sample(
         self, schema_name: str, table_name: str, column_name: str
     ) -> List[dict]:
-        ...
+        query = q.sample(schema_name, table_name, column_name)
+        return self.queryall(query)
 
     def get_users(self) -> List[SqlServerUser]:
         query = q.users()

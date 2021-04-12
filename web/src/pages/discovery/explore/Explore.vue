@@ -14,7 +14,7 @@
       .flex.justify-center.w-full(v-if="!isEmpty && !isLoading")
         .body.w-full.flex.items-center.flex-col
           .gap-y-3.flex.flex-col.w-full
-            metadata-card(v-for="m in items" :m="m")
+            metadata-card(v-for="m in items" :m="m", :vendor="connection.vendor")
 
 </template>
 
@@ -33,6 +33,7 @@ export default {
     return {
       isLoading: false,
       isSpinner: false,
+      connection: {},
       search: '',
       items: []
     }
@@ -51,6 +52,7 @@ export default {
     isEmpty () { return this.items.length === 0 }
   },
   methods: {
+    ...mapActions('connection', ['getConnection']),
     ...mapActions('md', ['searchMetadata']),
     doSearch (q) {
       this.isLoading = true
@@ -66,6 +68,10 @@ export default {
     if (this.s) {
       this.doSearch(this.s)
     }
+    this.isLoading = true
+    this.getConnection(this.connectionId).then(result => {
+      this.connection = result
+    }).finally(() => { this.isLoading = false })
   }
 }
 </script>

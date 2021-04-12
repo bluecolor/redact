@@ -23,7 +23,7 @@ REDACTION_COLUMNS = """
 """
 
 ALL_TABLES = """
-    select owner, table_name from all_tables
+    select owner schema_name, table_name from all_tables
 """
 
 ALL_SCHEMAS = """
@@ -118,7 +118,7 @@ def redaction_policies(
 
 def redaction_policies_for_tables(tables: List[ms.Table]) -> str:
     filters = [
-        f"(object_owner = '{t.owner}' and object_name = '{t.table_name}')"
+        f"(object_owner = '{t.schema_name}' and object_name = '{t.table_name}')"
         for t in tables
     ]
     return f"{REDACTION_POLICIES} where {' or '.join(filters)}"
@@ -142,7 +142,7 @@ def redaction_expressions(
 
 def redaction_expressions_in_columns(columns: List[ms.ColumnIn]) -> str:
     filters = [
-        f"(object_owner = '{c.owner}' and object_name='{c.table_name}' and column_name='{c.column_name}')"
+        f"(object_owner = '{c.schema_name}' and object_name='{c.table_name}' and column_name='{c.column_name}')"
         for c in columns
     ]
     return f"{REDACTION_EXPRESSIONS} where {' and '.join(filters)}"
@@ -150,7 +150,7 @@ def redaction_expressions_in_columns(columns: List[ms.ColumnIn]) -> str:
 
 def redaction_columns_in_columns(columns: List[ms.ColumnIn]) -> str:
     filters = [
-        f"(object_owner = '{c.owner}' and object_name='{c.table_name}' and column_name='{c.column_name}')"
+        f"(object_owner = '{c.schema_name}' and object_name='{c.table_name}' and column_name='{c.column_name}')"
         for c in columns
     ]
     return f"{REDACTION_COLUMNS} where {' and '.join(filters)}"

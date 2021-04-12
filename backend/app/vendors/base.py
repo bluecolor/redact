@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional, Any
 from app.models.orm import Connection
-from app.models.schemas import MetadataOut, Schema, Table, Column
+from app.models.schemas import MetadataOut, Schema, Table, Column, Rule
+from app.models.schemas.discovery import SearchResult
 
 
 class VendorABC(ABC):
@@ -51,6 +52,31 @@ class VendorABC(ABC):
     def search(self, q: str) -> List[MetadataOut]:
         ...
 
+    @abstractmethod
+    def get_sample(
+        self, schema_name: str, table_name: str, column_name: str
+    ) -> List[str]:
+        ...
+
+    @abstractmethod
+    def get_table_packs(
+        self, schemas: List[str], pack_count: int
+    ) -> List[List[Table]]:
+        ...
+
+    @abstractmethod
+    def search_table_data(self, table: Table, rule: Rule) -> SearchResult:
+        ...
+
+    def search_table_metadata(self, table: Table, rule: Rule) -> SearchResult:
+        ...
+
+    @abstractmethod
+    def search_tables(
+        self, tables: List[Table], rules: List[Rule]
+    ) -> SearchResult:
+        ...
+
 
 class Vendor(VendorABC):
     def __init__(self, config: Connection, *args, **kwargs) -> None:
@@ -93,3 +119,12 @@ class Vendor(VendorABC):
             cursor = conn.cursor()
             cursor.callproc(proc, keywordParameters=params)
             cursor.close()
+
+    def search_tables(
+        self, tables: List[Table], rules: List[Rule]
+    ) -> SearchResult:
+        for t, r in [(table, rule) for rule in rules for table in tables]:
+            if r.type == "metadata":
+                yield from self.search_table_metadata(table=t, rule=r)
+            elif r.type == "data":
+                yield from self.search_table_data(table=t, rule=r)
