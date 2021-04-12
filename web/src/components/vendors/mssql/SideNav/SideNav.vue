@@ -30,34 +30,29 @@ export default {
         title: 'Masked Columns',
         group: 'masks',
         icon: 'las la-theater-masks'
-      }, {
-        path: `/connections/${this.connectionId}/oracle/categories`,
-        title: 'Categories',
-        group: 'categories',
-        icon: 'las la-tag'
       }, { category: true, title: 'Discovery' }, {
-        path: `/connections/${this.connectionId}/oracle/discovery/explore`,
+        path: `/connections/${this.connectionId}/mssql/discovery/explore`,
         title: 'Explore',
         group: 'explore',
         icon: 'las la-compass'
       }, {
-        path: `/connections/${this.connectionId}/oracle/discovery/rules`,
+        path: `/connections/${this.connectionId}/mssql/discovery/rules`,
         title: 'Rules',
         group: 'rules',
         icon: 'las la-ruler'
       }, {
-        path: `/connections/${this.connectionId}/oracle/discovery/plans`,
+        path: `/connections/${this.connectionId}/mssql/discovery/plans`,
         title: 'Plans',
         group: 'plans',
         icon: 'las la-box'
       }, {
-        path: `/connections/${this.connectionId}/oracle/discovery/plans/instances`,
+        path: `/connections/${this.connectionId}/mssql/discovery/plans/instances`,
         title: 'Plan Runs',
         group: 'planInstances',
         icon: 'las la-shipping-fast'
       }, { category: true, title: 'Settings' },
       {
-        path: `/connections/${this.connectionId}/oracle/settings/export-import`,
+        path: `/connections/${this.connectionId}/mssql/settings/export-import`,
         title: 'Export/Import',
         group: 'export-import',
         icon: 'las la-share'
