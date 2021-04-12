@@ -30,7 +30,10 @@ export default {
     return request.post('/connections/schemas', payload)
   },
   getSchemas (id) {
-    return request.get(`/connections/${id}/schemas`, id)
+    return request.get(`/connections/${id}/schemas`)
+  },
+  getUsers (id) {
+    return request.get(`/connections/${id}/users`)
   }
 
 }

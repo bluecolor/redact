@@ -10,7 +10,8 @@
     template(v-if="!loading && items.length > 0" v-for="i in items")
       div(:class="cls.menuItem + (i.disabled ? ' disabled' : '')" @click="onItemClick(i)")
         div(v-if="i.icon" :class="`${cls.itemIcon} ${i.icon}`")
-        .text-base.block.px-4.py-2.leading-tight {{i[displayProp]}}
+        .text-base.block.px-2.py-2.leading-tight {{i[displayProp]}}
+        .side.flex-grow.text-right.text-sm.text-gray-400(v-if="i.side") {{i.side}}
     t-simple-spinner(v-if="loading")
     div(v-if="items.length === 0" :class="cls.empty")
       | {{emptyText}}

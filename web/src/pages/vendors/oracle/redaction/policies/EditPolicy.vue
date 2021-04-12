@@ -125,7 +125,7 @@ export default {
           promises.push(this.getRedColumns({ policy_name, object_name, object_owner }))
         }
         if (this.columns.length === 0) {
-          promises.push(this.getColumns({ object_schema: object_owner, object_name }))
+          promises.push(this.getColumns({ schema_name: object_owner, table_name: object_name }))
         }
         this.isSpinner = true
         Promise.all([...promises, Promise.resolve()]).then((result) => {
@@ -193,11 +193,11 @@ export default {
     } = this.$route.query
     const promises = [
       this.getPolicy({ policy_name, object_name, object_owner }),
-      this.getColumns({ object_schema: object_owner, object_name })
+      this.getColumns({ schema_name: object_owner, table_name: object_name })
     ]
-    _.isEmpty(this.functionTypes) && promises.push(this.getFunctionTypes())
-    _.isEmpty(this.functionParameters) && promises.push(this.getFunctionParameters())
-    _.isEmpty(this.actions) && promises.push(this.getActions())
+    promises.push(this.getFunctionTypes())
+    promises.push(this.getFunctionParameters())
+    promises.push(this.getActions())
 
     Promise.all(promises).then(([policy, columns]) => {
       const { object_owner, ...p } = policy

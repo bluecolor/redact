@@ -4,7 +4,7 @@ from app.models.orm import Connection
 from app.vendors.base import Vendor
 from app.vendors import register_vendor
 import app.models.schemas as s
-from app.models.schemas.mssql import MaskedColumn
+from app.models.schemas.mssql import MaskedColumn, SqlServerUser
 from . import queries as q
 from pydantic import parse_obj_as
 from .mask import MaskMixin
@@ -54,6 +54,10 @@ class SqlServer(Vendor, MaskMixin):
         self, schema_name: str, table_name: str, column_name: str
     ) -> List[dict]:
         ...
+
+    def get_users(self) -> List[SqlServerUser]:
+        query = q.users()
+        return parse_obj_as(List[SqlServerUser], self.queryall(query))
 
 
 register_vendor(SqlServer)

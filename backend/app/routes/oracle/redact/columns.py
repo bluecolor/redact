@@ -21,4 +21,4 @@ def get_all(
 ) -> List[s.ColumnOut]:
     conn = db.query(models.Connection).get(conn_id)
     oracle: Oracle = conn.get_vendor()
-    return oracle.get_columns(object_owner, object_name)
+    return oracle.get_redaction_columns(object_owner, object_name)

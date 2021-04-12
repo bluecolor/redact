@@ -71,6 +71,9 @@ const actions = {
   },
   getSchemas ({ commit }, id) {
     return api.getSchemas(id)
+  },
+  getUsers ({ rootGetters }) {
+    return api.getUsers(rootGetters['app/connectionId'])
   }
 }
 

@@ -35,9 +35,9 @@ class MaskMixin(VendorABC):
         self.execute(stmt)
 
     def get_masked_columns(
-        self, schema_name: str, table_name: str
+        self, schema_name: str, table_name: str, column_name: str = None
     ) -> List[MaskedColumn]:
-        query = q.masked_columns(schema_name, table_name)
+        query = q.masked_columns(schema_name, table_name, column_name)
         return parse_obj_as(List[MaskedColumn], self.queryall(query))
 
     def drop_mask(self, schema_name: str, table_name: str, column_name: str):
@@ -48,3 +48,18 @@ class MaskMixin(VendorABC):
         """
         self.execute(stmt)
 
+    def grant_unmask(
+        self, username: str,
+    ):
+        stmt = f"""
+            GRANT UNMASK TO {username}
+        """
+        self.execute(stmt)
+
+    def revoke_unmask(
+        self, username: str,
+    ):
+        stmt = f"""
+            REVOKE UNMASK TO {username}
+        """
+        self.execute(stmt)

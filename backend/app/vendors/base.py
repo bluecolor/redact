@@ -10,6 +10,10 @@ class VendorABC(ABC):
         ...
 
     @abstractmethod
+    def get_users(self) -> Any:
+        ...
+
+    @abstractmethod
     def execute(self, stmt: str):
         ...
 

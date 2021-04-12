@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 from app.models.schemas.metadata import Column
 from pydantic import BaseModel
 
@@ -19,3 +19,16 @@ class MaskIn(BaseModel):
     column_name: str
     func: str
     args: Optional[str]
+
+
+class UnmaskIn(BaseModel):
+    username: str
+
+
+class SqlServerUser(BaseModel):
+    username: str
+    create_date: Any
+    modify_date: Any
+    type: str
+    authentication_type: str
+

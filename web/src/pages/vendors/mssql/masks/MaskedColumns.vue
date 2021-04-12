@@ -35,6 +35,7 @@
 <script>
 /* eslint-disable camelcase */
 
+import qs from 'qs'
 import _ from 'lodash'
 import SvgIcon from '@/components/SvgIcon'
 import { loaderMixin } from '@/mixins'
@@ -80,9 +81,27 @@ export default {
         this.$toasted.error('Error. Failed to remove mask')
       }).finally(this.stopSpinner)
     },
+    onEditMask ({ column_name, table_name, schema_name }) {
+      const params = { column_name, table_name, schema_name }
+      const path = `/connections/${this.connectionId}/mssql/masks/columns/edit?${qs.stringify(params)}`
+      this.$router.push({ path })
+    },
+    onGrantUnnask ({ column_name, table_name, schema_name }) {
+      const params = { column_name, table_name, schema_name }
+      const path = `/connections/${this.connectionId}/mssql/masks/columns/grant?${qs.stringify(params)}`
+      this.$router.push({ path })
+    },
+    onRevokeUnnask ({ column_name, table_name, schema_name }) {
+      const params = { column_name, table_name, schema_name }
+      const path = `/connections/${this.connectionId}/mssql/masks/columns/revoke?${qs.stringify(params)}`
+      this.$router.push({ path })
+    },
     onMenuItemClick (menu, item) {
       switch (menu) {
         case 'drop-mask': this.onDropMask(item); break
+        case 'edit': this.onEditMask(item); break
+        case 'grant-unmask': this.onGrantUnnask(item); break
+        case 'revoke-unmask': this.onRevokeUnnask(item); break
       }
     }
   },

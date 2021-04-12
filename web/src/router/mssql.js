@@ -1,5 +1,5 @@
 import { SqlServerLayout } from '@/layouts'
-import MaskedColumns, { CreateMask } from '@/pages/vendors/mssql/masks'
+import MaskedColumns, { CreateMask, EditMask, GrantUnmask, RevokeUnmask } from '@/pages/vendors/mssql/masks'
 
 import {
   CreateConnection,
@@ -11,6 +11,7 @@ const routes = [{
   path: '/connections/:connectionId/mssql',
   props: true,
   component: SqlServerLayout,
+  redirect: '/connections/:connectionId/mssql/masks/columns',
   children: [{
     name: 'maskedColumns',
     path: '/connections/:connectionId/mssql/masks/columns',
@@ -24,6 +25,24 @@ const routes = [{
     props: true,
     component: CreateMask,
     meta: { group: 'masks', title: 'Add Mask to Column' }
+  }, {
+    name: 'editMask',
+    path: '/connections/:connectionId/mssql/masks/columns/edit',
+    props: true,
+    component: EditMask,
+    meta: { group: 'masks', title: 'Edit Mask' }
+  }, {
+    name: 'grantUnmask',
+    path: '/connections/:connectionId/mssql/masks/columns/grant',
+    props: true,
+    component: GrantUnmask,
+    meta: { group: 'masks', title: 'Grant Unmask' }
+  }, {
+    name: 'revokeUnmask',
+    path: '/connections/:connectionId/mssql/masks/columns/revoke',
+    props: true,
+    component: RevokeUnmask,
+    meta: { group: 'masks', title: 'Revoke Unmask' }
   }]
 }]
 

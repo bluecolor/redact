@@ -20,7 +20,14 @@ const actions = {
   },
   dropMask ({ rootGetters }, params) {
     return api.dropMask(rootGetters['app/connectionId'], params)
+  },
+  grantUnmask ({ rootGetters }, payload) {
+    return api.grantUnmask(rootGetters['app/connectionId'], payload)
+  },
+  revokeUnmask ({ rootGetters }, payload) {
+    return api.revokeUnmask(rootGetters['app/connectionId'], payload)
   }
+
 }
 
 const mutations = {

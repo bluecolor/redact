@@ -76,7 +76,8 @@ export default {
           if (status === false) { return 'text-red-400' }
           if (!status) { return 'text-gray-400' }
         })(c.status)
-        return { ...c, icon }
+        const side = c.vendor
+        return { ...c, icon, side }
       })
     },
     connectionId () {

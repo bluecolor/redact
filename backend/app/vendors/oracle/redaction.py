@@ -292,7 +292,7 @@ class RedactionMixin(VendorABC):
             return parse_obj_as(s.ExpressionOut, result[0])
         return None
 
-    def get_columns(
+    def get_redaction_columns(
         self,
         object_owner: Optional[str] = None,
         object_name: Optional[str] = None,

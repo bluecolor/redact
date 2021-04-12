@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 from fastapi import Depends
 from sqlalchemy.orm import Session
 import app.models.orm as models
@@ -79,6 +79,16 @@ def test_with_payload(connection: schemas.ConnectionTestIn):
     conn: models.Connection = models.Connection(**connection.dict())
     vendor: Vendor = conn.get_vendor()
     return vendor.ping()
+
+
+@router.get("/connections/{id}/users", response_model=List[Any])
+def get_users(id: int, db: Session = Depends(get_db)):
+
+    conn = db.query(models.Connection).get(id)
+    vendor: Vendor = conn.get_vendor()
+    # print(vendor.get_users())
+    return vendor.get_users()
+    # return []
 
 
 @router.post("/connections/schemas", response_model=List[schemas.Schema])

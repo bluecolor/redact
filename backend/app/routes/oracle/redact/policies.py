@@ -22,7 +22,8 @@ def get_one(
     db: Session = Depends(get_db),
 ):
     conn = db.query(models.Connection).get(conn_id)
-    return conn.get_policy(object_owner, object_name, policy_name)
+    oracle: Oracle = conn.get_vendor()
+    return oracle.get_policy(object_owner, object_name, policy_name)
 
 
 @router.get(

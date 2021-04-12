@@ -130,5 +130,8 @@ class Oracle(Vendor, RedactionMixin, DiscoveryMixin):
         query = q.sample(schema_name, table_name, column_name)
         return self.queryall(query)
 
+    def get_users(self) -> List[Any]:
+        ...
+
 
 register_vendor(Oracle)

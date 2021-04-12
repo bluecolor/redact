@@ -26,6 +26,7 @@ export default {
         icon: 'mysql',
         path: '',
         disabled: true
+
       }, {
         name: 'PostgreSQL',
         icon: 'postgresql',

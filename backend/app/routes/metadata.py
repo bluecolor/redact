@@ -73,3 +73,4 @@ def get_col_sample_data(
     return md.get_col_sample_data(
         connection, schema_name, table_name, column_name
     )
+

@@ -16,11 +16,12 @@ def get_masked_columns(
     conn_id: int,
     schema_name: Optional[str] = None,
     table_name: Optional[str] = None,
+    column_name: Optional[str] = None,
     db: Session = Depends(get_db),
 ) -> List[s.MaskedColumn]:
     conn = db.query(models.Connection).get(conn_id)
     mssql: SqlServer = conn.get_vendor()
-    return mssql.get_masked_columns(schema_name, table_name)
+    return mssql.get_masked_columns(schema_name, table_name, column_name)
 
 
 @router.delete(
@@ -32,10 +33,36 @@ def drop_mask(
     table_name: str,
     column_name: str,
     db: Session = Depends(get_db),
-) -> List[s.MaskedColumn]:
+):
     conn = db.query(models.Connection).get(conn_id)
     mssql: SqlServer = conn.get_vendor()
     mssql.drop_mask(schema_name, table_name, column_name)
+    return True
+
+
+@router.post(
+    "/connections/{conn_id}/mssql/masks/columns/grant-unmask",
+    response_model=bool,
+)
+def grant_unmask(
+    conn_id: int, unmask: s.UnmaskIn, db: Session = Depends(get_db),
+):
+    conn = db.query(models.Connection).get(conn_id)
+    mssql: SqlServer = conn.get_vendor()
+    mssql.grant_unmask(unmask.username)
+    return True
+
+
+@router.post(
+    "/connections/{conn_id}/mssql/masks/columns/revoke-unmask",
+    response_model=bool,
+)
+def revoke_unmask(
+    conn_id: int, unmask: s.UnmaskIn, db: Session = Depends(get_db),
+):
+    conn = db.query(models.Connection).get(conn_id)
+    mssql: SqlServer = conn.get_vendor()
+    mssql.revoke_unmask(unmask.username)
     return True
 
 

@@ -32,7 +32,7 @@ ALL_SCHEMAS = """
 
 
 ALL_TAB_COLS = """
-    select owner, table_name, column_name, data_type from all_tab_cols
+    select owner schema_name, table_name, column_name, data_type from all_tab_cols
 """
 
 ALL_TABS_AND_COLS = """

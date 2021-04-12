@@ -78,7 +78,7 @@ export default {
     },
     addColumnUrl () {
       const query = { action: 1, ...this.$route.query }
-      return `/connections/${this.connectionId}/policies/edit?${qs.stringify(query)}`
+      return `/connections/${this.connectionId}/oracle/policies/edit?${qs.stringify(query)}`
     }
   },
   methods: {
@@ -97,12 +97,12 @@ export default {
     },
     onEditColumn ({ column_name }) {
       const query = { action: 4, column_name, ...this.$route.query }
-      const path = `/connections/${this.connectionId}/policies/edit?${qs.stringify(query)}`
+      const path = `/connections/${this.connectionId}/oracle/policies/edit?${qs.stringify(query)}`
       this.$router.push({ path })
     },
     onDropColumn ({ column_name }) {
       const query = { action: 2, column_name, ...this.$route.query }
-      const path = `/connections/${this.connectionId}/policies/edit?${qs.stringify(query)}`
+      const path = `/connections/${this.connectionId}/oracle/policies/edit?${qs.stringify(query)}`
       this.$router.push({ path })
     },
     onModifyExpression ({ column_name }) {

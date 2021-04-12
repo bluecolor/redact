@@ -40,6 +40,23 @@ COLUMNS = """
      	t.object_id  = c.object_id
 """
 
+USERS = """
+    select name as username,
+        create_date,
+        modify_date,
+        type_desc as type,
+        authentication_type_desc as authentication_type
+    from sys.database_principals
+    where type not in ('A', 'G', 'R', 'X')
+        and sid is not null
+        and name != 'guest'
+    order by username
+"""
+
+
+def users():
+    return USERS
+
 
 def schemas():
     return SCHEMAS
@@ -58,12 +75,16 @@ def columns(schema_name: str, table_name: str):
     """
 
 
-def masked_columns(schema_name: str, table_name: str):
+def masked_columns(
+    schema_name: str, table_name: str, column_name: Optional[str] = None
+):
     filters = []
     if schema_name:
-        filters.append(f"schema_name = '{schema_name}'")
+        filters.append(f"s.name = '{schema_name}'")
     if table_name:
-        filters.append(f"table_name = '{table_name}'")
+        filters.append(f"t.name = '{table_name}'")
+    if column_name:
+        filters.append(f"c.name = '{column_name}'")
 
     if len(filters) == 0:
         return MASKED_COLUMNS
