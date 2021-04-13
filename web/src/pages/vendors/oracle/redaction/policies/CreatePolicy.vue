@@ -7,15 +7,15 @@
           t-input-group(label='Name')
             t-input(v-model="payload.policy_name" required autofocus)
         .form-item
-          t-input-group(label='Object Owners')
+          t-input-group(label='Schema')
             t-select(
               v-model="payload.object_schema"
               placeholder="Select schema"
-              :options="objectSchemas",
-              value-attribute='name',
-              text-attribute="name"
+              :options="schemas",
+              value-attribute='schema_name',
+              text-attribute="schema_name"
               required
-              @input="onOwnerSelect"
+              @input="onSchemaSelect"
             )
         .form-item
           t-input-group(label='Table')
@@ -49,6 +49,7 @@
           .form-item
             t-input-group(label='Category')
               t-select(
+                placeholder="Select category"
                 v-model.number="categoryId"
                 :options="categories",
                 value-attribute='id',
@@ -108,6 +109,7 @@ export default {
       categoryId: undefined,
       columns: [],
       tables: [],
+      schemas: [],
       payload: {
         object_schema: this.object_schema,
         object_name: this.object_name,
@@ -121,50 +123,53 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('md', ['objectSchemas']),
     ...mapGetters('func', ['functionTypes', 'functionParameters']),
-    ...mapGetters('category', ['categories']),
-    payload_ () {
-      if (this.categoryId) {
-        const {
-          function_type, function_parameters, policy_expression: {
-            expression, policy_description
-          }
-        } = _.find(this.categories, { id: this.categoryId })
-        return {
-          ...this.payload,
-          function_type,
-          function_parameters,
-          expression,
-          policy_description
-        }
-      }
-      return this.payload
-    }
+    ...mapGetters('category', ['categories'])
   },
   methods: {
-    ...mapActions('md', ['getObjectSchemas', 'getTables', 'getColumns']),
+    ...mapActions('expression', ['getExpression']),
+    ...mapActions('md', ['getSchemas', 'getTables', 'getColumns']),
     ...mapActions('policy', ['createPolicy']),
     ...mapActions('func', ['getFunctionTypes', 'getFunctionParameters']),
     ...mapActions('category', ['getCategories']),
     onSubmit (e) {
       e.preventDefault()
       this.isSpinner = true
-      this.createPolicy(this.payload_).then(() => {
-        this.$toast.success('Success. Policy created')
-      }).catch(error => {
-        console.log(error)
-        this.$toast.error('Error. Failed to create policy')
-      }).finally(() => {
-        this.isSpinner = false
-      })
+      if (this.categoryId) {
+        const category = _.find(this.categories, { id: this.categoryId })
+        const { policy_expression_name, function_type, function_parameters } = JSON.parse(category.options)
+        console.log(function_type, function_parameters)
+        this.getExpression(policy_expression_name).then(({ expression }) => {
+          const payload = { ...this.payload, function_type, function_parameters, expression }
+          this.createPolicy(payload).then(() => {
+            this.$toast.success('Success. Policy created')
+          }).catch(error => {
+            console.log(error)
+            this.$toast.error('Error. Failed to create policy')
+          }).finally(() => {
+            this.isSpinner = false
+          })
+        })
+      } else {
+        this.createPolicy(this.payload).then(() => {
+          this.$toast.success('Success. Policy created')
+        }).catch(error => {
+          console.log(error)
+          this.$toast.error('Error. Failed to create policy')
+        }).finally(() => {
+          this.isSpinner = false
+        })
+      }
     },
     onCancel () { window.history.back() },
     loadColumns () {
       const { object_schema, object_name } = this.payload
-      this.getColumns({ object_schema, object_name }).then(result => { this.columns = result })
+      this.getColumns({
+        schema_name: object_schema,
+        table_name: object_name
+      }).then(result => { this.columns = result })
     },
-    onOwnerSelect (owner) {
+    onSchemaSelect (owner) {
       this.getTables(owner).then(result => { this.tables = result })
     },
     onTableSelect (table) {
@@ -174,20 +179,22 @@ export default {
   created () {
     this.isSpinner = true
     const promises = [
-      this.getObjectSchemas(),
+      this.getSchemas(),
       this.getFunctionTypes(),
       this.getFunctionParameters(),
       this.getCategories()
     ]
 
     if (this.object_name) {
-      promises.push(this.onOwnerSelect(this.object_schema))
+      promises.push(this.onSchemaSelect(this.object_schema))
     }
     if (this.column_name) {
       promises.push(this.onTableSelect(this.object_name))
     }
 
-    Promise.all(promises).finally(() => { this.isSpinner = false })
+    Promise.all(promises).then(([schemas, _]) => {
+      this.schemas = schemas
+    }).finally(() => { this.isSpinner = false })
   }
 }
 </script>

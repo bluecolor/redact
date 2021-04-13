@@ -9,6 +9,7 @@ t-card.card
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
           router-link.icon-btn.las.la-plus(
+            content="Add column" v-tippy='{ placement : "top" }'
             :to="`categories/${c.id}/add-column`")
           router-link.icon-btn.las.la-pen(
             :to="`categories/${c.id}`")

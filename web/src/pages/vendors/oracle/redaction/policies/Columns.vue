@@ -39,8 +39,10 @@ import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 import SvgIcon from '@/components/SvgIcon'
 import qs from 'qs'
+import { loaderMixin } from '@/mixins'
 
 export default {
+  mixins: [loaderMixin],
   props: ['connectionId'],
   components: {
     SvgIcon
@@ -101,9 +103,21 @@ export default {
       this.$router.push({ path })
     },
     onDropColumn ({ column_name }) {
-      const query = { action: 2, column_name, ...this.$route.query }
-      const path = `/connections/${this.connectionId}/oracle/policies/edit?${qs.stringify(query)}`
-      this.$router.push({ path })
+      const {
+        policy_name, object_name, object_owner
+      } = this.$route.query
+      const payload = { action: 2, policy_name, object_name, object_schema: object_owner, column_name }
+      this.startLoader()
+      this.updatePolicy(payload).then(() => {
+        this.$toasted.success('Success. Column removed from policy')
+        const i = _.findIndex(this.redColumns, { column_name })
+        if (i > -1) {
+          this.redColumns.splice(i, 1)
+        }
+      }).catch(error => {
+        console.log(error)
+        this.$toasted.error('Error. Failed to remove column')
+      }).finally(this.stopLoader)
     },
     onModifyExpression ({ column_name }) {
       const params = { ...this.$route.query, column_name }

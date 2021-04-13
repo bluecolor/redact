@@ -33,15 +33,6 @@ def get_all(conn_id: int, db: Session = Depends(get_db)):
     response_model=s.CategoryOut,
 )
 def get_one(conn_id: int, id: int, db: Session = Depends(get_db)):
-    conn = db.query(models.Connection).get(conn_id)
-    oracle: Oracle = conn.get_vendor()
-    expressions = oracle.get_expressions()
-
-    def get_expression(policy_expression_name):
-        for e in expressions:
-            if e.policy_expression_name == policy_expression_name:
-                return e
-
     category = (
         db.query(models.Category)
         .filter(
@@ -49,10 +40,6 @@ def get_one(conn_id: int, id: int, db: Session = Depends(get_db)):
         )
         .one()
     )
-    category.policy_expression = get_expression(
-        category.policy_expression_name
-    )
-
     return s.CategoryOut.from_orm(category)
 
 
@@ -69,12 +56,6 @@ def create(
     db.add(new_category)
     db.commit()
     db.refresh(new_category)
-    oracle: Oracle = new_category.connection.get_vendor()
-
-    policy_expression = oracle.get_expression(
-        new_category.policy_expression_name
-    )
-    new_category.policy_expression = policy_expression
     return s.CategoryOut.from_orm(new_category)
 
 

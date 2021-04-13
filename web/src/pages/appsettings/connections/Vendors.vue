@@ -19,7 +19,7 @@ export default {
         path: '/settings/connections/create/oracle'
       }, {
         name: 'SQL Server',
-        icon: 'sqlserver',
+        icon: 'mssql',
         path: '/settings/connections/create/mssql'
       }, {
         name: 'MySQL',

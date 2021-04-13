@@ -7,7 +7,7 @@
           t-input-group(label='Name')
             t-input(v-model="payload.policy_name" required autofocus disabled)
         .form-item
-          t-input-group(label='Object Owners')
+          t-input-group(label='Schema')
             t-select(
               disabled
               v-model="payload.object_schema"

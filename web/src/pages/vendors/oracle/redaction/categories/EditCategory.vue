@@ -93,7 +93,7 @@ export default {
     },
     onCancel () { window.history.back() }
   },
-  mounted () {
+  created () {
     this.isSpinner = true
     const promises = []
     promises.push(this.getExpressions(this.connectionId))
@@ -101,10 +101,13 @@ export default {
     promises.push(this.getFunctionParameters())
     Promise.all([this.getCategory(+this.id), ...promises]).then(([category]) => {
       const {
-        name, policy_expression: { policy_expression_name }, description,
-        function_type
-      } = category
-      this.payload = { ...this.payload, name, policy_expression_name, description, function_type }
+        policy_expression_name, function_type, function_parameters
+      } = JSON.parse(category.options)
+      this.policy_expression_name = policy_expression_name
+      this.functionTypes = function_type
+      this.function_parameters = function_parameters
+      const { name, description } = category
+      this.payload = { ...this.payload, name, description }
     }).finally(() => { this.isSpinner = false })
   }
 }

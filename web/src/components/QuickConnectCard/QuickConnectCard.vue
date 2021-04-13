@@ -23,9 +23,6 @@ export default {
   },
   computed: {
     icon () {
-      switch (this.c.vendor) {
-        case 'mssql': return 'sqlserver'
-      }
       return this.c.vendor
     }
   },

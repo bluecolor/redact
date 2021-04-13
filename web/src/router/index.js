@@ -19,10 +19,12 @@ const routes = [
   {
     path: '/',
     component: MainLayout,
+    props: true,
     children: [
       {
         name: 'home',
         path: '',
+        props: true,
         component: Home,
         meta: { title: 'Home' }
       },

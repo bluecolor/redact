@@ -57,7 +57,6 @@ export default {
           disabled: this.hasExpression || !this.hasPolicy,
           path: (() => {
             const { schema_name: object_owner, table_name: object_name, column_name } = this.m
-            console.log(this.info)
             if (this.info?.policies?.length > 0) {
               const { policy_name } = this.info.policies[0]
               const params = { policy_name, object_owner, object_name, column_name, action: 1 }

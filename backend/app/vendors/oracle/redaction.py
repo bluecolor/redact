@@ -269,7 +269,7 @@ class RedactionMixin(VendorABC):
     def get_policy_owners(self) -> List[ms.Schema]:
         query = q.redaction_policy_owners()
         result = self.queryall(query)
-        return parse_obj_as(List[s.ObjectOwner], result)
+        return parse_obj_as(List[ms.Schema], result)
 
     def get_policy_tables(self, owner: str) -> List[ms.Table]:
         query = q.redaction_policy_tables(owner)

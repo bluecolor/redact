@@ -98,7 +98,7 @@ class Oracle(Vendor, RedactionMixin, DiscoveryMixin):
 
     def get_schemas(self) -> List[s.Schema]:
         query = q.schemas()
-        return parse_obj_as(List[s.Table], self.queryall(query))
+        return parse_obj_as(List[s.Schema], self.queryall(query))
 
     def get_columns(
         self, schema_name: Optional[str], table_name: Optional[str],

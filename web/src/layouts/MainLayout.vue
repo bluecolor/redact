@@ -11,6 +11,7 @@ import Navbar from '@/components/Navbar'
 import { mapActions } from 'vuex'
 
 export default {
+  props: ['connectionId'],
   name: 'App',
   components: {
     Navbar
@@ -21,6 +22,11 @@ export default {
     }
   },
   watch: {
+    connectionId () {
+      if (!this.connectionId) {
+        this.setConnection(undefined)
+      }
+    }
   },
   methods: {
     ...mapActions('app', ['setConnection']),
@@ -30,6 +36,8 @@ export default {
     const { connectionId } = this.$route.params
     if (connectionId) {
       this.setConnection(+connectionId)
+    } else {
+      this.setConnection(undefined)
     }
     const channel = 'ws/notifications'
     this.ws = new WebSocket(`ws://localhost:8000/api/v1/${channel}`)

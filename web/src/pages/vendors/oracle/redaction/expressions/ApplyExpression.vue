@@ -19,8 +19,8 @@
               v-model="payload.object_schema"
               placeholder="Select schema"
               :options="policyOwners",
-              value-attribute='name',
-              text-attribute="name"
+              value-attribute='schema_name',
+              text-attribute="schema_name"
               required
               @input="onOwnerSelect"
             )

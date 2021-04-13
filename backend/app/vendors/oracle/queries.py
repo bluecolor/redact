@@ -7,11 +7,11 @@ REDACTION_POLICIES = """
 """
 
 REDACTION_POLICY_OWNERS = """
-    select distinct object_owner as name from redaction_policies
+    select distinct object_owner as schema_name from redaction_policies
 """
 
 REDACTION_POLICY_TABLES = """
-    select distinct object_owner as owner, object_name as table_name from redaction_policies
+    select distinct object_owner as schema_name, object_name as table_name from redaction_policies
 """
 
 REDACTION_EXPRESSIONS = """
@@ -27,7 +27,7 @@ ALL_TABLES = """
 """
 
 ALL_SCHEMAS = """
-    select username as name from all_users
+    select username as schema_name from all_users
 """
 
 

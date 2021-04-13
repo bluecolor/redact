@@ -25,7 +25,7 @@ class Category(Base):
     name = Column(String(255), unique=True)
     description = Column(String(255))
 
-    options: Column(Text)
+    options = Column(Text)
 
     # policy_expression_name = Column(String(4000))
     # function_type = Column(Integer)

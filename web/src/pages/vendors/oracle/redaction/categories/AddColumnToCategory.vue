@@ -10,22 +10,24 @@
         .form-item
           t-input-group(label='Expression Name')
             t-input(
-              v-model="category.policy_expression.policy_expression_name"
+              v-model="category.policy_expression_name"
               required
               disabled
             )
         .form-item
           t-input-group(label='Expression')
             t-textarea(
-              v-model="category.policy_expression.expression"
+              v-model="category.expression"
               required
               disabled
             )
         .form-item
           t-input-group(label='Function Type')
-            t-input(
-              v-model="category.function_type_name"
-              required
+            t-select(
+              v-model.number="category.function_type"
+              :options="functionTypes",
+              value-attribute='function_type',
+              text-attribute="name"
               disabled
             )
         .form-item
@@ -41,8 +43,8 @@
               v-model="payload.object_schema"
               placeholder="Select schema"
               :options="schemas",
-              value-attribute='name',
-              text-attribute="name"
+              value-attribute='schema_name',
+              text-attribute="schema_name"
               required
               @input="onSchemaSelect"
             )
@@ -103,13 +105,18 @@ export default {
       isLoading: false,
       isSpinner: false,
       isValid: false,
-      category: { policy_expression: {} },
+      category: {
+        policy_expression_name: undefined,
+        expression: undefined,
+        function_type: undefined,
+        function_parameters: ''
+      },
       schemas: [],
       tables: [],
       columns: [],
       policy: undefined,
-      expression: undefined,
       policy_name: undefined,
+      expression: undefined,
       payload: {
         object_schema: '',
         object_name: '',
@@ -120,10 +127,11 @@ export default {
   computed: {
   },
   methods: {
+    ...mapActions('func', ['getFunctionTypes']),
     ...mapActions('policy', ['updatePolicy', 'createPolicy']),
-    ...mapActions('expression', ['applyExpressionToColumn']),
+    ...mapActions('expression', ['applyExpressionToColumn', 'getExpression']),
     ...mapActions('redaction', ['askRedactionPolicy', 'askRedactionExpression']),
-    ...mapActions('md', ['getObjectSchemas', 'getTables', 'getColumns']),
+    ...mapActions('md', ['getSchemas', 'getTables', 'getColumns']),
     ...mapActions('category', ['getCategory']),
     onSubmit (e) {
       e.preventDefault()
@@ -160,8 +168,8 @@ export default {
       })
     },
     loadColumns () {
-      const { object_schema, object_name } = this.payload
-      this.getColumns({ object_schema, object_name }).then(result => { this.columns = result })
+      const { object_schema: schema_name, object_name: table_name } = this.payload
+      this.getColumns({ schema_name, table_name }).then(result => { this.columns = result })
     },
     onColumnSelect (column_name) {
       return this.checkExpression()
@@ -188,7 +196,7 @@ export default {
       }).finally(() => { this.isSpinner = false })
     },
     applyExpressionWithCategory () {
-      const { policy_expression_name } = this.category.policy_expression
+      const { policy_expression_name } = this.category
       const { object_schema, object_name, column_name } = this.payload
       this.isSpinner = true
       this.applyExpressionToColumn({ policy_expression_name, object_schema, object_name, column_name }).then(result => {
@@ -202,7 +210,7 @@ export default {
       const { object_schema, object_name, column_name } = this.payload
       const { policy_name } = this
       const { function_type, function_parameters } = this.category
-      const expression = this.category.policy_expression.expression
+      const { expression } = this.category
       if (!policy_name) {
         this.$toasted.info('Policy name must be given')
         return
@@ -253,9 +261,16 @@ export default {
     this.isLoading = true
     const promises = []
     promises.push(this.getCategory(+this.id))
-    promises.push(this.getObjectSchemas())
-    Promise.all(promises).then(([category, schemas]) => {
+    promises.push(this.getSchemas())
+    promises.push(this.getFunctionTypes())
+    Promise.all(promises).then(([category, schemas, functionTypes]) => {
       this.category = category
+      this.functionTypes = functionTypes
+      const { policy_expression_name, function_type, function_parameters } = JSON.parse(category.options)
+      this.category = { policy_expression_name, function_type, function_parameters }
+      this.getExpression(policy_expression_name).then(({ expression, function_type }) => {
+        this.category = { ...this.category, expression }
+      })
       this.schemas = schemas
     }).finally(() => { this.isLoading = false })
   }

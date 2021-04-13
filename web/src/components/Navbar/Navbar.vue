@@ -5,10 +5,11 @@ header
     .relative.flex.items-center.justify-between.h-12
       .flex.items-center.gap-x-10
         svg-icon.cursor-pointer.home(@click="onHome" name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-700")
-        .connection-title.flex.gap-x-3
+        .connection-title.flex.gap-x-3.items-center
+          svg-icon(v-if="vendor" :name="connection.vendor", addClass="fill-current text-gray-300 w-8 h-8")
           router-link.connection.cursor-pointer.text-gray-700(
             v-if="isConnectionLayout"
-            :to="`/connections/${connectionId}`"
+            :to="`/connections/${connectionId}/${vendor}`"
             class="hover:text-gray-900 hover:font-black"
           ) {{connectionName}}
           .sep(v-if="isConnectionLayout && _title && connectionName") /
@@ -63,6 +64,9 @@ export default {
     ...mapGetters('connection', ['connections']),
     ...mapGetters('app', ['connection', 'title']),
     ...mapGetters('notification', ['notifications']),
+    vendor () {
+      return this.connection?.vendor
+    },
     isConnectionLayout () {
       return this.$route.path.startsWith('/connections')
     },
