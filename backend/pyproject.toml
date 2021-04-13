@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "reduck"
-version = "0.5.13"
+version = "0.5.14"
 description = "Data Redaction Application"
 authors = ["Ceyhun Kerti <ceyhun.kerti@bluecolor.io>"]
 packages = [
