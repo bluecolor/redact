@@ -53,9 +53,9 @@ export default {
       this.isSpinner = true
       this.testConnection(id).then(result => {
         if (result) {
-          this.$toast.success('Success')
+          this.$toast.success('Success. Connection works')
         } else {
-          this.$toast.success('Error')
+          this.$toast.error('Error. Check connection')
         }
       }).catch(e => {
         console.log(e)

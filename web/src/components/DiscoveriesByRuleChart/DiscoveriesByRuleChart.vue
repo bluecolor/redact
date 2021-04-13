@@ -45,7 +45,6 @@ export default {
 
       const source = [['count', 'category']]
       source.push(..._.map(this.discoveries, d => [d.count, d.rule.name]))
-      console.log(source)
       const option = {
         dataset: { source },
         visualMap: {

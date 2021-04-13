@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import MainLayout from '@/layouts'
 import Home from '@/pages/Home.vue'
+import Notifications from '@/pages/Notifications.vue'
 
 import Login from '@/pages/auth'
 
@@ -27,6 +28,13 @@ const routes = [
         props: true,
         component: Home,
         meta: { title: 'Home' }
+      },
+      {
+        name: 'allNotifications',
+        path: '/notifications',
+        props: true,
+        component: Notifications,
+        meta: { title: 'Notifications' }
       },
       ...sharedRoutes,
       ...oracleRoutes,

@@ -9,11 +9,10 @@ t-card.card.plan-instance-card
       .actions.flex.justify-end
         .btns.gap-x-3.flex(v-if="!isSpinner")
           .icon-btn.las.la-sync-alt(@click="onReload")
-          t-icon-dropdown(
-            @select="onMenuItem"
-            content="Discoveries" v-tippy='{ placement : "top" }'
-            :classes="{icon: 'las la-map-marker'}"
-            :emitValue="false" :items="menu", valueProp="value")
+          router-link.icon-btn.las.la-chart-bar(
+            content="Dashboard" v-tippy='{ placement : "top" }'
+            :to="`/connections/${p.plan.connection_id}/discovery/plans/${p.plan.id}/instances/${p.id}/dashboard`"
+          )
           .icon-btn.las.la-stop-circle(
             v-if="p.status==='running'"
             content="Stop" v-tippy='{ placement : "top" }'
