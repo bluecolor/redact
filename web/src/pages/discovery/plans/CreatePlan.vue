@@ -18,8 +18,8 @@
           t-input-group(label='Schemas', required)
             t-rich-select(v-model="payload.schemas" required
               :options="schemas"
-              valueAttribute="name"
-              textAttribute="name"
+              valueAttribute="schema_name"
+              textAttribute="schema_name"
               multiple
             )
         .form-item
@@ -42,18 +42,20 @@
 
 <script>
 
+import { loaderMixin } from '@/mixins'
 import { mapActions, mapGetters } from 'vuex'
 import SimpleSpinner from '@/components/loaders'
 
 export default {
+  mixins: [loaderMixin],
   props: ['connectionId'],
   components: {
     SimpleSpinner
   },
   data () {
     return {
-      isSpinner: false,
       isValid: false,
+      schemas: [],
       payload: {
         name: '',
         rules: [],
@@ -65,8 +67,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('rule', ['rules']),
-    ...mapGetters('md', ['schemas'])
+    ...mapGetters('rule', ['rules'])
   },
   methods: {
     ...mapActions('rule', ['getRules']),
@@ -86,8 +87,10 @@ export default {
     onCancel () { window.history.back() }
   },
   created () {
-    this.getRules()
-    this.getSchemas()
+    this.startSpinner()
+    Promise.all([this.getRules(), this.getSchemas()]).then(([rules, schemas]) => {
+      this.schemas = schemas
+    }).finally(this.stopSpinner)
   }
 }
 </script>

@@ -97,9 +97,9 @@ export default {
       })
     },
     fetchColumns () {
-      const { schema_name: object_schema, table_name: object_name } = this.m
+      const { schema_name, table_name } = this.m
       this.isSpinner = true
-      this.getColumns({ object_schema, object_name }).then(result => {
+      this.getColumns({ schema_name, table_name }).then(result => {
         this.sample = _.map(result, r => r.column_name)
       }).finally(() => { this.isSpinner = false })
     },

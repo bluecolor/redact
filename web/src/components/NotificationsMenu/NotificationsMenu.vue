@@ -18,9 +18,9 @@
     .empty.p-2.text-base(v-if="items.length === 0")
       | {{emptyText}}
     .footer.text-gray-700.border-t.flex.justify-between
-      .see-all.p-2.gap-x-2.flex.border-r.items-center.justify-center(class="w-1/2 hover:bg-green-50")
+      router-link.see-all.p-2.gap-x-2.flex.border-r.items-center.justify-center(to="/notifications" class="w-1/2 hover:bg-green-50")
         .las.la-angle-double-right(class="text-green-400")
-        router-link.text-base.block.leading-tight(to="/notifications") See all
+        .text-base.block.leading-tight See all
       .clear-all.p-2.gap-x-2.flex.items-center.justify-center(class="w-1/2 hover:bg-red-50")
         div.las.la-broom(class="text-red-400")
         div.text-base.block.leading-tight(@click="onClear") Clear all

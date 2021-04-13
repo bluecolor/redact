@@ -31,6 +31,7 @@ t-card.card
         .flex.justify-end
           .status(@click="onNavLastRun(p)")
             t-tag.p-1.cursor-pointer(
+              v-if="p.status"
               content="Last run" v-tippy='{ placement : "left" }'
               :class="{\
                 'bg-blue-100': p.status=='running',\

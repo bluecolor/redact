@@ -18,8 +18,8 @@
           t-input-group(label='Schemas', required)
             t-rich-select(v-model="payload.schemas" required
               :options="schemas"
-              valueAttribute="name"
-              textAttribute="name"
+              valueAttribute="schema_name"
+              textAttribute="schema_name"
               multiple
             )
         .form-item

@@ -7,7 +7,7 @@
         .flex.justify-center.mt-10.w-full()
           svg-icon(name="box", addClass="fill-current text-gray-300 w-24 h-24")
       notification-card(v-for="n in notifications", :n="n")
-      t-button.mt-10.w-full.text-center(@click="onClear" variant="secondary") Clear All
+      t-button.mt-10.w-full.text-center(v-if="!isNotificationsEmpty" @click="onClear" variant="secondary") Clear All
 </template>
 
 <script>

@@ -95,37 +95,37 @@ const routes = [{
     meta: { title: 'Plan Runs', group: 'planInstances' }
   }, {
     name: 'mssqlAllPlanInstances',
-    path: '/connections/:connectionId/discovery/plans/instances',
+    path: '/connections/:connectionId/mssql/discovery/plans/instances',
     component: AllPlanInstances,
     props: true,
     meta: { title: 'All Plan Runs', group: 'planInstances' }
   }, {
     name: 'mssqlEditPlan',
-    path: '/connections/:connectionId/discovery/plans/:id',
+    path: '/connections/:connectionId/mssql/discovery/plans/:id',
     component: EditPlan,
     props: true,
     meta: { title: 'Edit Plan', group: 'plans' }
   }, {
     name: 'mssqlDiscoveries',
-    path: '/connections/:connectionId/discovery/plans/instances/:planInstanceId/discoveries',
+    path: '/connections/:connectionId/mssql/discovery/plans/instances/:planInstanceId/discoveries',
     component: Discoveries,
     props: true,
     meta: { title: 'Discoveries', group: 'planInstances' }
   }, {
     name: 'mssqlDiscoveriesGroupByRule',
-    path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/discoveries-by-rule',
+    path: '/connections/:connectionId/mssql/discovery/plans/:planId/instances/:planInstanceId/discoveries-by-rule',
     component: DiscoveriesGroupByRule,
     props: true,
     meta: { title: 'Discoveries by Rule', group: 'planInstances' }
   }, {
     name: 'mssqlDiscoveriesForRule',
-    path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/rules/:ruleId/discoveries',
+    path: '/connections/:connectionId/mssql/discovery/plans/:planId/instances/:planInstanceId/rules/:ruleId/discoveries',
     component: DiscoveriesForRule,
     props: true,
     meta: { title: 'Discoveries for Rule', group: 'planInstances' }
   }, {
     name: 'mssqlDiscoveriesDashboard',
-    path: '/connections/:connectionId/discovery/plans/:planId/instances/:planInstanceId/dashboard',
+    path: '/connections/:connectionId/mssql/discovery/plans/:planId/instances/:planInstanceId/dashboard',
     component: DiscoveryDashboard,
     props: true,
     meta: { title: 'Discovery Dashboard', group: 'planInstances' }

@@ -58,7 +58,10 @@ def create(conn_id: int, rule: s.RuleCreateIn, db: Session = Depends(get_db)):
     "/connections/{conn_id}/discovery/rules/{id}", response_model=s.RuleOut,
 )
 def update(
-    rule: s.RuleUpdateIn, conn_id: int, id: int, db: Session = Depends(get_db),
+    rule_new: s.RuleUpdateIn,
+    conn_id: int,
+    id: int,
+    db: Session = Depends(get_db),
 ):
     rule = (
         db.query(models.Rule)
@@ -69,7 +72,7 @@ def update(
     if rule is None:
         return None
 
-    for var, value in vars(rule).items():
+    for var, value in vars(rule_new).items():
         setattr(rule, var, value) if value else None
 
     db.add(rule)

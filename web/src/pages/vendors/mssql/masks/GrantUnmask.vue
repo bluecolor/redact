@@ -14,7 +14,7 @@
           t-input-group(label='Column')
             t-input(v-model="column_name" required)
         .form-item
-          t-input-group(label='Function')
+          t-input-group(label='User')
             t-select(
               v-model="payload.username"
               placeholder="Select user"
