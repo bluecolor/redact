@@ -141,3 +141,20 @@ def sample(schema_name: str, table_name: str, column_name: str) -> str:
         order by 1 offset 0 rows fetch next 10 rows only
     """
 
+
+def tables_in_schemas(schemas: List[str]) -> str:
+    return f"""select q.* from ({TABLES}) as q where q.schema_name in ({', '.join(["'"+s+"'" for s in schemas]) })"""
+
+
+def columns_like(*, schema, table_name=None, expression) -> str:
+    if table_name is None:
+        return f"""
+            select q.* from ({COLUMNS}) q where q.schema_name = '{schema}' and
+            patindex('%' + q.column_name +'%','{expression}')  !=0
+        """
+
+    return f"""
+        select q.* from ({COLUMNS}) q where q.schema_name = '{schema}' and
+        q.table_name = '{table_name}' and
+        patindex('%' + q.column_name +'%','{expression}')  !=0
+    """

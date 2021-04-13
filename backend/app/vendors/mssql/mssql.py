@@ -10,6 +10,7 @@ from . import queries as q
 from pydantic import parse_obj_as
 from .mask import MaskMixin
 from .discovery import DiscoveryMixin
+from pydash.arrays import chunk
 
 
 class SqlServer(Vendor, MaskMixin, DiscoveryMixin):
@@ -47,7 +48,9 @@ class SqlServer(Vendor, MaskMixin, DiscoveryMixin):
     def get_table_packs(
         self, schemas: List[str], pack_count: int
     ) -> List[List[s.Table]]:
-        ...
+        query = q.tables_in_schemas(schemas)
+        tables = parse_obj_as(List[s.Table], self.queryall(query))
+        return chunk(tables, pack_count)
 
     def search(self, search_str: str) -> List[s.MetadataOut]:
         schemas = []

@@ -28,7 +28,8 @@ t-table.d-table(:headers="headers" :data="d" style="overflow:unset;")
 
 <script>
 /* eslint-disable camelcase */
-import { mapActions } from 'vuex'
+import qs from 'qs'
+import { mapActions, mapGetters } from 'vuex'
 import _ from 'lodash'
 import TIconDropdown from '@/components/TIconDropdown'
 
@@ -54,6 +55,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('app', ['connection']),
+    vendor () {
+      return this.connection?.vendor
+    },
     columns () {
       return _.map(this.d, d => {
         return { schema_name: d.schema_name, table_name: d.table_name, column_name: d.column_name }
@@ -66,9 +71,32 @@ export default {
     }
   },
   methods: {
+    ...mapActions('mask', ['getMaskedColumns']),
     ...mapActions('policy', ['askPolicyTables']),
     ...mapActions('redaction', ['askRedactionColumns']),
+    getSqlServerMenu ({ schema_name, table_name, column_name }) {
+      const info = _.find(this.maskedColumns, { schema_name, table_name, column_name })
+      return [{
+        name: 'Add masking',
+        value: 'add-masking',
+        icon: 'las la-theater-masks',
+        path: `masks/columns/edit?${qs.stringify(info)}`,
+        disabled: !_.isEmpty(info)
+      }, {
+        name: 'Edit masking',
+        value: 'edit-masking',
+        icon: 'las la-pen',
+        path: 'masks/columns/create',
+        disabled: _.isEmpty(info)
+      }]
+    },
     getMenu (d) {
+      switch (this.vendor) {
+        case 'oracle': return this.getOracleMenu(d)
+        case 'mssql': return this.getSqlServerMenu(d)
+      }
+    },
+    getOracleMenu (d) {
       return _.map(this.menu, m => {
         switch (m.value) {
           case 'apply-expression':
@@ -108,18 +136,30 @@ export default {
           })
           break
       }
+    },
+    loadOracle () {
+      this.isSpinner = true
+      const p = this.askPolicyTables(this.tables)
+      const c = this.askRedactionColumns(this.columns)
+      return Promise.all([p, c]).then(([policies, columns]) => {
+        this.redaction.policies.push(...policies)
+        this.redaction.columns.push(...columns)
+      }).finally(() => {
+        this.isSpinner = false
+      })
+    },
+    loadSqlServer () {
+      this.isSpinner = true
+      this.getMaskedColumns().then(result => {
+        this.maskedColumns = result
+      }).finally(() => { this.isSpinner = false })
     }
   },
   created () {
-    this.isSpinner = true
-    const p = this.askPolicyTables(this.tables)
-    const c = this.askRedactionColumns(this.columns)
-    Promise.all([p, c]).then(([policies, columns]) => {
-      this.redaction.policies.push(...policies)
-      this.redaction.columns.push(...columns)
-    }).finally(() => {
-      this.isSpinner = false
-    })
+    switch (this.vendor) {
+      case 'oracle': this.loadOracle(); break
+      case 'mssql': this.loadSqlServer(); break
+    }
   }
 }
 </script>

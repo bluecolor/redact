@@ -11,7 +11,7 @@ t-card.card.plan-instance-card
           .icon-btn.las.la-sync-alt(@click="onReload")
           router-link.icon-btn.las.la-chart-bar(
             content="Dashboard" v-tippy='{ placement : "top" }'
-            :to="`/connections/${p.plan.connection_id}/discovery/plans/${p.plan.id}/instances/${p.id}/dashboard`"
+            :to="`/connections/${p.plan.connection_id}/${vendor}/discovery/plans/${p.plan.id}/instances/${p.id}/dashboard`"
           )
           .icon-btn.las.la-stop-circle(
             v-if="p.status==='running'"
@@ -44,7 +44,7 @@ t-card.card.plan-instance-card
           .flex.justify-end
             router-link(
               class="hover:underline"
-              :to="`/connections/${p.plan.connection.id}/oracle/discovery/plans/${p.plan.id}/instances/${p.id}/discoveries-by-rule`")
+              :to="`/connections/${p.plan.connection.id}/${vendor}/discovery/plans/${p.plan.id}/instances/${p.id}/discoveries-by-rule`")
               | {{p.discoveries.length}} discoveries
       k-progress.progressbar(v-if="showProgressbar" :percent="progressbar.percent"
         color="#60A5FA"
@@ -53,7 +53,7 @@ t-card.card.plan-instance-card
 
 <script>
 /* eslint-disable camelcase */
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { dateMixin } from '@/mixins'
 import KProgress from 'k-progress'
 import TIconDropdown from '@/components/TIconDropdown'
@@ -94,6 +94,10 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('app', ['connection']),
+    vendor () {
+      return this.connection?.vendor
+    },
     progress () {
       if (this.searchResult?.table?.table_name) {
         return `${this.searchResult?.table?.schema_name}.${this.searchResult.table.table_name}`
