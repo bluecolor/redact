@@ -65,6 +65,7 @@ export default {
   },
   created () {
     this.doSearch = _.debounce(this.doSearch, 300)
+    console.log(this.s)
     if (this.s) {
       this.doSearch(this.s)
     }

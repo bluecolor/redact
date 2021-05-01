@@ -1,10 +1,12 @@
 import click
-from .users import users
 import uvicorn
+
 from app.main import app
-from app.settings import HOST, PORT, LOG_LEVEL
+from app.settings import HOST, LOG_LEVEL, PORT
+
 from .celery import celery
 from .db import db
+from .users import users
 
 
 @click.group()

@@ -17,6 +17,7 @@
         .form-item
           t-input-group(label='Expression')
             t-textarea(
+              v-if="category"
               v-model="category.expression"
               required
               disabled
@@ -180,6 +181,7 @@ export default {
         return
       }
       return this.askRedactionPolicy({ schema_name, table_name }).then(({ policy }) => {
+        console.log(policy)
         this.policy = policy
         return policy
       })
@@ -234,9 +236,8 @@ export default {
     addColumnWithCategory () {
       const action = 1 // add column
       const { object_schema, object_name, column_name } = this.payload
-      const policy_name = this.policy.name
-      const expression = this.category.policy_expression.expression
-      const { function_type, function_parameters } = this.category
+      const { policy_name } = this.policy
+      const { expression, function_type, function_parameters } = this.category
       this.isSpinner = false
       this.updatePolicy({
         action,
@@ -266,10 +267,10 @@ export default {
     Promise.all(promises).then(([category, schemas, functionTypes]) => {
       this.category = category
       this.functionTypes = functionTypes
-      const { policy_expression_name, function_type, function_parameters } = JSON.parse(category.options)
-      this.category = { policy_expression_name, function_type, function_parameters }
+      const { policy_expression_name, function_parameters, function_type } = JSON.parse(category.options)
+      this.category = { ...this.category, function_parameters, function_type }
       this.getExpression(policy_expression_name).then(({ expression, function_type }) => {
-        this.category = { ...this.category, expression }
+        this.category = { ...this.category, policy_expression_name, expression, function_type, function_parameters }
       })
       this.schemas = schemas
     }).finally(() => { this.isLoading = false })

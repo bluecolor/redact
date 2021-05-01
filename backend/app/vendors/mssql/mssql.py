@@ -1,16 +1,19 @@
 import json
 from typing import Any, List, Optional
+
 import pymssql
-from app.models.orm import Connection
-from app.vendors.base import Vendor
-from app.vendors import register_vendor
-import app.models.schemas as s
-from app.models.schemas.mssql import MaskedColumn, SqlServerUser
-from . import queries as q
 from pydantic import parse_obj_as
-from .mask import MaskMixin
-from .discovery import DiscoveryMixin
 from pydash.arrays import chunk
+
+import app.models.schemas as s
+from app.models.orm.connection import Connection
+from app.models.schemas.mssql import MaskedColumn, SqlServerUser
+from app.vendors import register_vendor
+from app.vendors.base import Vendor
+
+from . import queries as q
+from .discovery import DiscoveryMixin
+from .mask import MaskMixin
 
 
 class SqlServer(Vendor, MaskMixin, DiscoveryMixin):

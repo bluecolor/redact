@@ -9,7 +9,7 @@
       .flex.flex-col.pt-2.w-full.result-list
         template(v-for="(i, idx) in items")
           .w-full.item.flex.px-4.content-center.items-center(
-            @click="onMenuItem"
+            @click="onMenuItem(i)"
             :class="'hover:bg-gray-200 cursor-pointer ' + 'result-item-'+idx"
           )
             .text-2xl.text-gray-400(v-if="i.icon" :class="i.icon")
@@ -104,6 +104,7 @@ export default {
           params: { connectionId: this.connectionId, s: name }
         })
       } catch (e) {
+        console.log(e)
       }
       this.$emit('hide')
     },
@@ -129,11 +130,11 @@ export default {
         this.searchMetadata(q).then(result => {
           this.items.push(..._.map(result, r => {
             const fullName = (m) => {
-              const { type, owner, table_name, column_name } = m
+              const { type, schema_name, table_name, column_name } = m
               if (type === 'column') {
-                return `${owner}.${table_name}.${column_name}`
+                return `${schema_name}.${table_name}.${column_name}`
               }
-              return `${owner}.${table_name}`
+              return `${schema_name}.${table_name}`
             }
             const icon = (m) => {
               const { type } = m
