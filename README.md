@@ -1,9 +1,9 @@
-# DUCK
+# REDACT
 
 Online data masking and sensitve data discovery platform for common rdbms.
 
 ## Documentation
-[https://bluecolor.github.io/duck/](https://bluecolor.github.io/duck/)
+[https://bluecolor.github.io/redact/](https://bluecolor.github.io/redact/)
 
 ## LICENCE
 

@@ -94,7 +94,7 @@ export default {
           this.$router.push({ path: '/settings/preferences' })
           break
         case 'help':
-          window.location = 'https://bluecolor.github.io/duck/'
+          window.location = 'https://bluecolor.github.io/redact/'
           break
         case 'about':
           this.isAbout = true

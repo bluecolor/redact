@@ -1,12 +1,14 @@
-from typing import List, Any
+from typing import Any, List
+
 from fastapi import Depends
 from sqlalchemy.orm import Session
+
 import app.models.orm as models
 import app.models.schemas as schemas
-from app.vendors.base import Vendor
-from .base import router
 from app.database import get_db
-from .base import get_current_active_user
+from app.vendors.base import Vendor
+
+from .base import get_current_active_user, router
 
 
 @router.post(
@@ -86,19 +88,19 @@ def get_users(id: int, db: Session = Depends(get_db)):
 
     conn = db.query(models.Connection).get(id)
     vendor: Vendor = conn.get_vendor()
-    # print(vendor.get_users())
     return vendor.get_users()
-    # return []
 
 
 @router.post("/connections/schemas", response_model=List[schemas.Schema])
 def get_schemas_with_payload(connection: schemas.ConnectionTestIn):
     conn: models.Connection = models.Connection(**connection.dict())
-    return md.get_schemas(conn)
+    vendor: Vendor = conn.get_vendor()
+    return vendor.get_schemas()
 
 
 @router.post("/connections/{id}/schemas", response_model=List[schemas.Schema])
 def get_schemas(id: int, db: Session = Depends(get_db)):
-    connection = db.query(models.Connection).get(id)
-    return md.get_schemas(connection)
+    conn = db.query(models.Connection).get(id)
+    vendor: Vendor = conn.get_vendor()
+    return vendor.get_schemas()
 

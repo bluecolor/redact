@@ -1,12 +1,12 @@
-# Duck
+# Redact
 
-Duck is an online data masking, redaction and sensitive data discovery platform
+Redact is an online data masking, redaction and sensitive data discovery platform
 that leverages and extends the existing capabilities of common database management systems.
 
 ## Supported Databases
 
 - [x] Oracle
-- [ ] SQLServer
+- [x] SQLServer
 - [ ] PostgreSQL
 - [ ] MySQL
 

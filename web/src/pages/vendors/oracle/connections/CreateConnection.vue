@@ -25,8 +25,8 @@
           t-input-group(label='Schemas in search', required)
             t-rich-select(v-model="payload.options.search.schemas" required
               :options="options.search.schemas"
-              valueAttribute="name"
-              textAttribute="name"
+              valueAttribute="schema_name"
+              textAttribute="schema_name"
               multiple
               @focus="onSearchSchemasFocus",
               @blur="onSearchSchemasBlur"
@@ -57,7 +57,7 @@ export default {
       isSpinner: false,
       isValid: false,
       payload: {
-        vendor: 'mssql',
+        vendor: 'oracle',
         name: '',
         host: 'localhost',
         port: 1521,

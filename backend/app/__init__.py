@@ -1,2 +1,1 @@
-from .cli import duck
-
+from .cli import redact

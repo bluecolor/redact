@@ -3,7 +3,7 @@
   .min-h-screen.flex.items-center.justify-center.bg-gray-50.py-12.px-4(class='sm:px-6 lg:px-8')
     .max-w-md.w-full.space-y-8
       div
-        img.mx-auto.h-12.w-auto(src='@/svg/duck.svg' alt='Duck')
+        img.mx-auto.h-16.w-auto(src='@/svg/marker.svg' alt='Redact')
         h2.mt-6.text-center.text-3xl.font-extrabold.text-gray-900
           | Sign in to your account
       form.mt-8.space-y-6(autocomplete="off" @submit="onSubmit")
@@ -16,17 +16,17 @@
       .left.flex
         .footer-item.company © {{year}} SCF & Blue
       .right.flex.gap-x-3
-        a(href="https://github.com/bluecolor/duck")
+        a(href="https://github.com/bluecolor/redact")
           .footer-item.help.lab.la-github.icon-btn(
             content="Source code" v-tippy='{ placement : "top" }'
           )
-        a(href="https://bluecolor.github.io/duck/")
+        a(href="https://bluecolor.github.io/redact/")
           .footer-item.help.las.la-question-circle.icon-btn
-        a(href="https://github.com/bluecolor/duck/issues")
+        a(href="https://github.com/bluecolor/redact/issues")
           .footer-item.bug.las.la-bug.icon-btn(
             content="Issues" v-tippy='{ placement : "top" }'
           )
-        a(href="https://github.com/bluecolor/duck/issues")
+        a(href="https://github.com/bluecolor/redact/issues")
           .footer-item.mail.las.la-envelope.icon-btn
 </template>
 

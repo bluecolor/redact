@@ -184,6 +184,14 @@ export default {
     loadColumns () {
       const { object_schema, object_name } = this.payload
       return this.getColumns({ object_schema, object_name })
+    },
+    getFunctionTypeId (name) {
+      // todo
+      // in redaction_columns table function type is text
+      // all types shoud match an id
+      switch (name) {
+        case 'FULL REDACTION': return 1
+      }
     }
   },
   created () {
@@ -193,15 +201,29 @@ export default {
     } = this.$route.query
     const promises = [
       this.getPolicy({ policy_name, object_name, object_owner }),
-      this.getColumns({ schema_name: object_owner, table_name: object_name })
+      this.getColumns({ schema_name: object_owner, table_name: object_name }),
+      this.getRedColumns({ object_owner, object_name, column_name })
     ]
     promises.push(this.getFunctionTypes())
     promises.push(this.getFunctionParameters())
     promises.push(this.getActions())
 
-    Promise.all(promises).then(([policy, columns]) => {
+    Promise.all(promises).then(([policy, columns, redColumns]) => {
       const { object_owner, ...p } = policy
-      this.payload = { ...this.payload, object_schema: object_owner, ...p, action, column_name }
+      let function_type, function_parameters
+      if (!_.isEmpty(redColumns)) {
+        function_type = this.getFunctionTypeId(redColumns[0].function_type)
+        function_parameters = redColumns[0].function_parameters
+      }
+      this.payload = {
+        ...this.payload,
+        object_schema: object_owner,
+        ...p,
+        action,
+        column_name,
+        function_type,
+        function_parameters
+      }
       this.schemas.push(object_owner)
       this.tables.push(object_name)
       this.columns = columns

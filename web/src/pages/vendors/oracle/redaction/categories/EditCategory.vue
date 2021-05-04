@@ -29,6 +29,7 @@
             t-select(
               v-model="function_parameters"
               :options="functionParameters",
+              placeholder="Select function parameters"
               value-attribute='function_parameters',
               text-attribute="function_parameters"
             )
@@ -104,8 +105,10 @@ export default {
         policy_expression_name, function_type, function_parameters
       } = JSON.parse(category.options)
       this.policy_expression_name = policy_expression_name
-      this.functionTypes = function_type
-      this.function_parameters = function_parameters
+      this.function_type = function_type
+      if (function_parameters) {
+        this.function_parameters = function_parameters
+      }
       const { name, description } = category
       this.payload = { ...this.payload, name, description }
     }).finally(() => { this.isSpinner = false })

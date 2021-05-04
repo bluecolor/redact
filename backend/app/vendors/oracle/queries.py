@@ -1,6 +1,6 @@
 from typing import List, Optional
-import app.models.schemas.metadata as ms
 
+import app.models.schemas.metadata as ms
 
 REDACTION_POLICIES = """
     select * from redaction_policies
@@ -50,7 +50,8 @@ def tables(schema_name: Optional[str] = None) -> str:
 
 
 def schemas() -> str:
-    return ALL_SCHEMAS
+    subq = ALL_SCHEMAS
+    return f"select * from ({subq}) order by schema_name"
 
 
 def columns(schema_name: str = Optional[None], table_name: str = None):
@@ -63,7 +64,8 @@ def columns(schema_name: str = Optional[None], table_name: str = None):
     if len(filters) == 0:
         return ALL_TAB_COLS
 
-    return f"{ALL_TAB_COLS} where {' and '.join(filters)}"
+    subq = f"{ALL_TAB_COLS} where {' and '.join(filters)}"
+    return f"select * from ({subq}) order by column_name"
 
 
 def tables_in_schemas(schemas: List[str]) -> str:
@@ -169,7 +171,7 @@ def redaction_columns(
     if object_name:
         filters.append(f"object_name = '{object_name}'")
     if column_name:
-        filters.append(f"object_name = '{column_name}'")
+        filters.append(f"column_name = '{column_name}'")
     if len(filters) == 0:
         return REDACTION_COLUMNS
 
@@ -181,10 +183,12 @@ def columns_like(*, schema, table_name=None, expression) -> str:
         return f"""
             select table_name, column_name from all_tab_cols where
             owner = '{schema}' and regexp_like(column_name, '{expression}', 'i')
+            order by column_name, table_name
         """
 
     return f"""
         select table_name, column_name from all_tab_cols where
         owner = '{schema}' and table_name = '{table_name}' and regexp_like(column_name, '{expression}', 'i')
+        order by order by column_name, table_name
     """
 

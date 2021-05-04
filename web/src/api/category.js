@@ -12,7 +12,7 @@ export default {
     return request.post(`/connections/${connId}/categories`, payload)
   },
   delete (connId, id) {
-    return request.delete(`/connections${connId}/categories/${id}`)
+    return request.delete(`/connections/${connId}/categories/${id}`)
   },
   update (connId, payload) {
     const { id } = payload

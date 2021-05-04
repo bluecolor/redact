@@ -4,7 +4,7 @@ header
   .w-full.mx-auto.px-5
     .relative.flex.items-center.justify-between.h-12
       .flex.items-center.gap-x-10
-        svg-icon.cursor-pointer.home(@click="onHome" name="duck", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-700")
+        svg-icon.cursor-pointer.home(@click="onHome" name="marker", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-700")
         .connection-title.flex.gap-x-3.items-center
           svg-icon(v-if="vendor" :name="connection.vendor", addClass="fill-current text-gray-300 w-8 h-8")
           router-link.connection.cursor-pointer.text-gray-700(

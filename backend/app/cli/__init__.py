@@ -10,7 +10,7 @@ from .users import users
 
 
 @click.group()
-def duck():
+def redact():
     """Duck"""
 
 
@@ -24,8 +24,8 @@ def run():
     uvicorn.run(app, host=HOST, port=PORT, log_level=LOG_LEVEL)
 
 
-duck.add_command(run)
-duck.add_command(db)
-duck.add_command(users)
-duck.add_command(hello)
-duck.add_command(celery)
+redact.add_command(run)
+redact.add_command(db)
+redact.add_command(users)
+redact.add_command(hello)
+redact.add_command(celery)

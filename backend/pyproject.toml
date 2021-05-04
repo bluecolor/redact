@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "reduck"
-version = "0.5.14"
+name = "dbredact"
+version = "0.5.15"
 description = "Data Redaction Application"
 authors = ["Ceyhun Kerti <ceyhun.kerti@bluecolor.io>"]
 packages = [
@@ -8,9 +8,9 @@ packages = [
 ]
 include=["app/public"]
 readme="README.md"
-repository="https://github.com/bluecolor/duck"
+repository="https://github.com/bluecolor/redact"
 license="CC BY-NC-SA 4.0"
-documentation="https://bluecolor.github.io/duck/"
+documentation="https://bluecolor.github.io/redact/"
 keywords=["redaction", "masking"]
 
 
@@ -58,9 +58,6 @@ isort = {version = "^4.3.21", extras = ["pyproject"]}
 # Launch Commands for Local Development
 app = "uvicorn app.main:app --reload"
 worker = "LD_LIBRARY_PATH=/home/ceyhun/projects/lab/duck/lib/instantclient_12_2 arq app.worker.WorkerSettings --watch ./"
-# Docker-Compose Tasks
-compose-up = "docker-compose -f docker-compose.local.yml -f docker-compose.worker.yml -f docker-compose.yml up --build"
-compose-down = "docker-compose -f docker-compose.local.yml -f docker-compose.worker.yml -f docker-compose.yml down --remove-orphans"
 
 [tool.black]
 line-length = 79
@@ -91,4 +88,4 @@ known_third_party = ["alembic", "arq", "fastapi", "pydantic", "sentry_sdk", "sql
 
 
 [tool.poetry.scripts]
-duck = 'app.cli:duck'
+redact = 'app.cli:redact'

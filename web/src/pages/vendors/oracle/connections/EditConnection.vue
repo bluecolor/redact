@@ -65,6 +65,7 @@ export default {
         }
       },
       payload: {
+        vendor: 'oracle',
         name: '',
         host: '',
         port: undefined,

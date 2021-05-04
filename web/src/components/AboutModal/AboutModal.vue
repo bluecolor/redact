@@ -1,27 +1,33 @@
 <template lang="pug">
-t-modal(header='About' v-model="v" @closed="onClose")
+t-modal(header='About - Reddact' v-model="v" @closed="onClose" hideCloseButton)
   .flex.flex-col.gap-y-3
     t-alert.alert(v-if="hasNewVersion" variant="warning" show :dismissible="false")
       a(href="https://pypi.org/project/reduck/") New version exists {{pypi.info.version}}. Click here.
     .body.flex.flex-col.justify-center
       p
-        |Duck, sensitive data masking and discovery tool.
+        |Redact, sensitive data masking and discovery tool.
       p
         | Version: <span class="font-medium">{{version}}</span>
   template(v-slot:footer='')
-    .flex.justify-end
-      .spinner.lds-dual-ring(v-if="isSpinner")
-      t-button(v-else type='button' @click="onClose")
-        | Ok
+    .flex.justify-between.align-center
+      svg-icon.home(name="marker", addClass="fill-current w-8 h-8 text-gray-500 hover:text-gray-700")
+      .flex.justify-end
+        .spinner.lds-dual-ring(v-if="isSpinner")
+        t-button(v-else type='button' @click="onClose")
+          | Ok
 </template>
 
 <script>
 import axios from 'axios'
 import { mapActions } from 'vuex'
+import SvgIcon from '@/components/SvgIcon'
 
 export default {
   name: 'AboutModal',
   props: { visible: { type: Boolean, default: false } },
+  components: {
+    SvgIcon
+  },
   data () {
     return {
       v: this.visible,
