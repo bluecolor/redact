@@ -189,6 +189,6 @@ def columns_like(*, schema, table_name=None, expression) -> str:
     return f"""
         select table_name, column_name from all_tab_cols where
         owner = '{schema}' and table_name = '{table_name}' and regexp_like(column_name, '{expression}', 'i')
-        order by order by column_name, table_name
+        order by column_name, table_name
     """
 

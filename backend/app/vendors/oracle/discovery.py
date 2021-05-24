@@ -1,11 +1,13 @@
-from app.models.schemas.discovery import SearchResult
 from typing import List
 
 from sqlalchemy.sql.expression import column, table
-from app.models.schemas import Rule, Table
+
 import app.models.schemas.discovery as sd
-from . import queries as q
+from app.models.schemas import Rule, Table
+from app.models.schemas.discovery import SearchResult
 from app.vendors.base import VendorABC
+
+from . import queries as q
 
 
 class DiscoveryMixin(VendorABC):
